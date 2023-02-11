@@ -32,7 +32,7 @@ export default {
     font-family: Arial, Helvetica, sans-serif;
     font-weight: lighter;
     font-size: 26px;
-    text-indent: 0.8em;
+    text-indent: 0.5em;
 }
 
 #linkContainer {
