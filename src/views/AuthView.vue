@@ -1,15 +1,19 @@
 <script lang="ts">
 export default {
+    data(){
+        return {
+            displayStatus: true
+        }
+    },
     methods: {
         selectToRegister() {
             this.$refs.form_box.style.transform = 'translateX(80%)';
-            this.$refs.login_box.classList.add('hidden');
-            this.$refs.register_box.classList.remove('hidden');
+            this.displayStatus = false;
+
         },
         selectToLogin() {
             this.$refs.form_box.style.transform = 'translateX(0%)';
-            this.$refs.register_box.classList.add('hidden');
-            this.$refs.login_box.classList.remove('hidden');
+            this.displayStatus = true;
         }
     }
 }
@@ -18,21 +22,21 @@ export default {
     <div class="root">
         <div class="container">
             <div ref="form_box" id="form_box" class="form-box">
+                <!-- Login Box -->
+                <div v-if="displayStatus" ref="login_box" id="login_box" class="login-box">
+                    <h1>Login</h1>
+                    <input type="text" placeholder="Username" />
+                    <input type="password" placeholder="Password" />
+                    <button type="button">Login</button>
+                </div>
                 <!-- Register Box -->
-                <div ref="register_box" id="register_box" class="register-box hidden">
+                <div v-else ref="register_box" id="register_box" class="register-box hidden">
                     <h1>Register</h1>
                     <input type="text" placeholder="Username" />
                     <input type="password" placeholder="Password" />
                     <input type="password" placeholder="Confirm passowrd" />
                     <input type="email" placeholder="Email" />
                     <button type="button">Register</button>
-                </div>
-                <!-- Login Box -->
-                <div ref="login_box" id="login_box" class="login-box">
-                    <h1>Login</h1>
-                    <input type="text" placeholder="Username" />
-                    <input type="password" placeholder="Password" />
-                    <button type="button">Login</button>
                 </div>
             </div>
             <div class="con-box left">
@@ -94,10 +98,7 @@ export default {
     width: 100%;
 }
 
-.hidden {
-    display: none;
-    transition: 0.5s;
-}
+
 
 .login-box,
 .register-box h1 {
