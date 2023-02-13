@@ -1,6 +1,6 @@
 <script lang="ts">
 export default {
-    data(){
+    data() {
         return {
             displayStatus: true
         }
@@ -42,14 +42,16 @@ export default {
             <div class="con-box left">
                 <h2>Welcome to <span>TinyGallery</span></h2>
                 <p>Share your artworks! </p>
+                <img src="../assets/TinyGallery_Logo.png" />
                 <p>Had an account already?</p>
                 <button @click="selectToLogin()" type="button">Go to login!</button>
             </div>
             <div class="con-box right">
                 <h2>Welcome to <span>TinyGallery</span></h2>
                 <p>Share your artworks! </p>
+                <img src="../assets/TinyGallery_Logo.png" />
                 <p>Don't have an account?</p>
-                <button @click="selectToRegister()" type="button">Go to register</button>
+                <button @click="selectToRegister()" type="button">Go to register!</button>
             </div>
         </div>
     </div>
@@ -57,6 +59,19 @@ export default {
 </template>
 
 <style>
+@keyframes FadeIn {
+    from {
+        opacity: 0;
+        top: 10px;
+    }
+
+    to {
+        opacity: 1;
+        top: 0px;
+    }
+}
+
+
 .root {
     width: 100%;
     height: 100vh;
@@ -72,6 +87,7 @@ export default {
     border-radius: 5px;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
     position: relative;
+    animation: FadeIn 0.5s;
 }
 
 .form-box {
@@ -96,6 +112,7 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 100%;
+    animation: FadeIn 0.5s;
 }
 
 
