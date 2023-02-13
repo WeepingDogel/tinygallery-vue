@@ -2,7 +2,13 @@
 export default {
     data() {
         return {
-            displayStatus: true
+            displayStatus: true,
+            logUserName: '',
+            logPassWord: '',
+            regUserName: '',
+            regPassWord: '',
+            regConfirmPassword: '',
+            regEmail: ''
         }
     },
     methods: {
@@ -14,6 +20,12 @@ export default {
         selectToLogin() {
             this.$refs.form_box.style.transform = 'translateX(0%)';
             this.displayStatus = true;
+        },
+        RegisterAccount() {
+
+        },
+        LoginAccount() {
+
         }
     }
 }
@@ -25,18 +37,18 @@ export default {
                 <!-- Login Box -->
                 <div v-if="displayStatus" ref="login_box" id="login_box" class="login-box">
                     <h1>Login</h1>
-                    <input type="text" placeholder="Username" />
-                    <input type="password" placeholder="Password" />
-                    <button type="button">Login</button>
+                    <input v-model="logUserName" type="text" placeholder="Username" />
+                    <input v-model="logPassWord" type="password" placeholder="Password" />
+                    <button @click="LoginAccount" type="button">Login</button>
                 </div>
                 <!-- Register Box -->
                 <div v-else ref="register_box" id="register_box" class="register-box hidden">
                     <h1>Register</h1>
-                    <input type="text" placeholder="Username" />
-                    <input type="password" placeholder="Password" />
-                    <input type="password" placeholder="Confirm passowrd" />
-                    <input type="email" placeholder="Email" />
-                    <button type="button">Register</button>
+                    <input v-model="regUserName" type="text" placeholder="Username" />
+                    <input v-model="regPassWord" type="password" placeholder="Password" />
+                    <input v-model="regConfirmPassword" type="password" placeholder="Confirm passowrd" />
+                    <input v-model="regEmail" type="email" placeholder="Email" />
+                    <button @click="RegisterAccount" type="button">Register</button>
                 </div>
             </div>
             <div class="con-box left">
@@ -112,7 +124,7 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    animation: FadeIn 0.5s;
+    animation: FadeIn 1s;
 }
 
 
