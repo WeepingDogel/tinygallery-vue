@@ -1,4 +1,6 @@
 <script lang="ts">
+import axios from 'axios'
+
 export default {
     data() {
         return {
@@ -22,7 +24,18 @@ export default {
             this.displayStatus = true;
         },
         RegisterAccount() {
-
+            axios.post(
+                '/users/register',
+                {
+                    userName: this.regUserName,
+                    password: this.regPassWord
+                }
+            ).then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {    
+                console.log(error);    
+            });
         },
         LoginAccount() {
 
