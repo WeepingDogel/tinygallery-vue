@@ -1,5 +1,11 @@
 <script lang="ts">
-
+export default {
+    methods: {
+        BackToTop() {
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
+        }
+    }
+}
 </script>
 
 <template>
@@ -11,7 +17,9 @@
             <h2 class="ImageTitle">Title Test</h2>
             <p class="ImageDescription">Description</p>
         </div>
-
+    </div>
+    <div class="BackToTop">
+        <button @click="BackToTop" class="TopButton">Top</button>
     </div>
 </template>
 
@@ -31,6 +39,8 @@
 
 .Container {
     width: 100%;
+    /* height: 200vh; */
+    /* Test ScrollTop */
     display: flex;
     justify-content: space-around;
     animation: FadeIn 1s;
@@ -79,5 +89,30 @@
     overflow: hidden;
     white-space: pre-line;
     padding: 15px;
+}
+
+.BackToTop {
+    position: fixed;
+    float: right;
+    right: 2%;
+    top: 80%;
+}
+
+.TopButton {
+    padding: 2px;
+    width: 40px;
+    height: 40px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    background-color: #7C4DFF;
+    color: #FFFFFF;
+    border-radius: 8px;
+}
+
+.TopButton:hover {
+    background-color: #303F9F;
+    color: #C5CAE9;
+    transition: background-color 0.5s ease;
 }
 </style>
