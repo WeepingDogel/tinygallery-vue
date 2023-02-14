@@ -32,6 +32,11 @@ export default {
                 }
             ).then(function (response) {
                 console.log(response);
+                if(response.status == 200){
+                    alert(response.status + "Success!");
+                }else{
+                    alert(response.status + "Error!")
+                }
             })
             .catch(function (error) {    
                 console.log(error);    
