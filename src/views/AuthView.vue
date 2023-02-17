@@ -89,6 +89,30 @@ export default {
 </template>
 
 <style>
+
+
+@keyframes ContainerLoadIn {
+    from{
+        opacity: 0;
+        transform: translateX(90%);
+    }
+    to{
+        opacity: 1;
+        transform: translateX(0%);
+    }
+}
+
+@keyframes formBoxLoadIn{
+    from{
+        opacity: 0;
+        transform: translateY(-90%);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}
+
 @keyframes FadeIn {
     from {
         opacity: 0;
@@ -118,6 +142,7 @@ export default {
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
     position: relative;
     animation: FadeIn 0.5s;
+    animation: ContainerLoadIn 1s;
 }
 
 .form-box {
@@ -134,6 +159,7 @@ export default {
     align-items: center;
     z-index: 2;
     transition: 0.5s ease-in-out;
+    animation: formBoxLoadIn 1s;
 }
 
 .register-box,
