@@ -10,37 +10,46 @@ export default {
             regUserName: '',
             regPassWord: '',
             regConfirmPassword: '',
-            regEmail: ''
+            regEmail: '',
+            Result: ''
         }
     },
     methods: {
         selectToRegister() {
             this.$refs.form_box.style.transform = 'translateX(80%)';
             this.displayStatus = false;
+            this.Result = "";
 
         },
         selectToLogin() {
             this.$refs.form_box.style.transform = 'translateX(0%)';
             this.displayStatus = true;
+            this.Result = "";
         },
         RegisterAccount() {
-            axios.post(
-                '/users/register',
-                {
-                    userName: this.regUserName,
-                    password: this.regPassWord
-                }
-            ).then(function (response) {
-                console.log(response);
-                if(response.status == 200){
-                    alert(response.status + "Success!");
-                }else{
-                    alert(response.status + "Error!")
-                }
-            })
-            .catch(function (error) {    
-                console.log(error);    
-            });
+            if (this.regPassWord == this.regConfirmPassword) {
+                axios.post(
+                    '/auth/register',
+                    {
+                        userName: this.regUserName,
+                        password: this.regPassWord,
+                        email: this.regEmail
+                    }
+                ).then((response: any) => {
+                    console.log(response.data.status);
+                    this.selectToLogin();
+
+                }).catch( (error:any) => {
+                    this.Result = error.response.data.detail
+                    console.log(error.response.data.detail);
+                });
+            } else {
+                this.Result = "The password typed twice are different!";
+            }
+            this.regUserName = "";
+            this.regPassWord = "";
+            this.regConfirmPassword = "";
+            this.regEmail = "";
         },
         LoginAccount() {
 
@@ -67,6 +76,7 @@ export default {
                     <input v-model="regConfirmPassword" type="password" placeholder="Confirm passowrd" />
                     <input v-model="regEmail" type="email" placeholder="Email" />
                     <button @click="RegisterAccount" type="button">Register</button>
+                    <span class="StatusMessage">{{ Result }}</span>
                 </div>
             </div>
             <div class="con-box left">
@@ -85,29 +95,28 @@ export default {
             </div>
         </div>
     </div>
-
 </template>
 
 <style>
-
-
 @keyframes ContainerLoadIn {
-    from{
+    from {
         opacity: 0;
         transform: translateX(90%);
     }
-    to{
+
+    to {
         opacity: 1;
         transform: translateX(0%);
     }
 }
 
-@keyframes formBoxLoadIn{
-    from{
+@keyframes formBoxLoadIn {
+    from {
         opacity: 0;
         transform: translateY(-90%);
     }
-    to{
+
+    to {
         opacity: 1;
         transform: translateY(0%);
     }
@@ -221,6 +230,15 @@ input:focus::placeholder {
     letter-spacing: 2px;
     border: none;
     cursor: pointer;
+}
+
+.StatusMessage{
+    position: relative;
+    top: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 12px;
+    color: #FFFFFF;
 }
 
 .form-box button:hover {
