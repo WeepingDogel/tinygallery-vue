@@ -1,5 +1,7 @@
 <script lang="ts">
 import axios from 'axios'
+let request = window.indexedDB.open()
+
 
 export default {
     data() {
@@ -39,7 +41,7 @@ export default {
                     console.log(response.data.status);
                     this.selectToLogin();
 
-                }).catch( (error:any) => {
+                }).catch((error: any) => {
                     this.Result = error.response.data.detail
                     console.log(error.response.data.detail);
                 });
@@ -52,7 +54,27 @@ export default {
             this.regEmail = "";
         },
         LoginAccount() {
-
+            if (this.logUserName == "" || this.logPassWord == "") {
+                this.Result = "Username or password can't be empty!"
+                console.log("Username or password can't be empty!")
+            } else {
+                let bodyFormData = new FormData();
+                bodyFormData.append('username', this.logUserName);
+                bodyFormData.append('password', this.logPassWord);
+                axios({
+                    method: "post",
+                    url: "/auth/token",
+                    data: bodyFormData,
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                }).then((response: any) => {
+                    console.log(response.data.access_token);
+                }).catch((error: any) => {
+                    this.Result = error.response.data.detail
+                    console.log(error.response.data.detail);
+                });
+                this.logUserName = "";
+                this.logPassWord = "";
+            }
         }
     }
 }
@@ -67,6 +89,7 @@ export default {
                     <input v-model="logUserName" type="text" placeholder="Username" />
                     <input v-model="logPassWord" type="password" placeholder="Password" />
                     <button @click="LoginAccount" type="button">Login</button>
+                    <span class="StatusMessage">{{ Result }}</span>
                 </div>
                 <!-- Register Box -->
                 <div v-else ref="register_box" id="register_box" class="register-box hidden">
@@ -232,12 +255,17 @@ input:focus::placeholder {
     cursor: pointer;
 }
 
-.StatusMessage{
+
+
+span.StatusMessage {
     position: relative;
     top: 20px;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: lighter;
     font-size: 12px;
+    text-transform: none;
+    line-height: 20px;
+    letter-spacing: 0px;
     color: #FFFFFF;
 }
 
