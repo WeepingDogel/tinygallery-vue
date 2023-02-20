@@ -1,7 +1,11 @@
 <script lang="ts">
-import axios from 'axios'
-let request = window.indexedDB.open()
+import axios from 'axios';
+const dbName = "AuthenticationDB";
+const databaseRequest = indexedDB.open(dbName, 2);
+const db = databaseRequest.result;
+databaseRequest.onupgradeneeded = (event: any) => {
 
+}
 
 export default {
     data() {
@@ -13,7 +17,7 @@ export default {
             regPassWord: '',
             regConfirmPassword: '',
             regEmail: '',
-            Result: ''
+            Result: '',
         }
     },
     methods: {
@@ -68,6 +72,7 @@ export default {
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 }).then((response: any) => {
                     console.log(response.data.access_token);
+                    this.Result = "";
                 }).catch((error: any) => {
                     this.Result = error.response.data.detail
                     console.log(error.response.data.detail);
