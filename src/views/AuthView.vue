@@ -5,29 +5,33 @@ export default {
     data() {
         return {
             displayStatus: true,
-            logUserName: '',
-            logPassWord: '',
-            regUserName: '',
-            regPassWord: '',
-            regConfirmPassword: '',
-            regEmail: '',
-            Result: '',
+            logUserName: '', // The username to login.
+            logPassWord: '', // The password to login.
+            regUserName: '', // The username gonna be created
+            regPassWord: '', // The password to register
+            regConfirmPassword: '', // To confirm the password.
+            regEmail: '', // The Email to change password and contact with the users.
+            Result: '',  // The result of response from the backend.
+            db: null// The database object.
         }
     },
-    methods: {
+    methods: { // The Methods to deal with the user actions.
+        // Click button to register a account.
         selectToRegister() {
             this.$refs.form_box.style.transform = 'translateX(80%)';
             this.displayStatus = false;
             this.Result = "";
 
         },
+        // Click button to login a account.
         selectToLogin() {
             this.$refs.form_box.style.transform = 'translateX(0%)';
             this.displayStatus = true;
             this.Result = "";
         },
+        // Register Action
         RegisterAccount() {
-            if (this.regPassWord == this.regConfirmPassword) {
+            if (this.regPassWord == this.regConfirmPassword) { // Check if two passwords are the same.
                 axios.post(
                     '/auth/register',
                     {
@@ -45,12 +49,17 @@ export default {
                 });
             } else {
                 this.Result = "The password typed twice are different!";
+                // If two passwords inputed are different, refuse to send the request to the server.
             }
+
+            // clean the input boxes
             this.regUserName = "";
             this.regPassWord = "";
             this.regConfirmPassword = "";
             this.regEmail = "";
+
         },
+        // Login Action 
         LoginAccount() {
             if (this.logUserName == "" || this.logPassWord == "") {
                 this.Result = "Username or password can't be empty!"
@@ -59,7 +68,6 @@ export default {
                 let bodyFormData = new FormData();
                 bodyFormData.append('username', this.logUserName);
                 bodyFormData.append('password', this.logPassWord);
-                
                 axios({
                     method: "post",
                     url: "/auth/token",
@@ -67,45 +75,21 @@ export default {
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 }).then((response: any) => {
                     console.log(response.data.access_token);
-                    const TokenUserName = this.logUserName;
-
-                    const Token: object = {
-                        userName: TokenUserName,
+                    // Create an object to store the username and token.
+                    const UserToken:object = {
+                        userName: this.logUserName,
                         token: response.data.access_token
                     }
-
-                    const dbName = "AuthenticationDB";
-                    const databaseRequest = indexedDB.open(dbName, 2);
-
-                    databaseRequest.onupgradeneeded = (event: any) => {
-                        const db = databaseRequest.result;
-                        const objectStore = db.createObjectStore(
-                            "tokens",
-                            {
-                                keyPath: "userName"
-                            }
-                        );
-                        objectStore.createIndex(
-                            "userName",
-                            "userName",
-                            {
-                                unique: true
-                            }
-                        );
-
-                        objectStore.transaction.oncomplete = (event: any) => {
-                            let tokenOjbectStore = db.transaction("tokens",
-                                "readwrite").objectStore("tokens");
-
-                            tokenOjbectStore.add(Token);
-                        }
-
-                        this.logUserName = "";
-                        this.logPassWord = "";
-                    }
-
+                    // Clean the input boxes.
+                    this.logUserName = "";
+                    this.logPassWord = "";
+                    // Clean the result Text.
                     this.Result = "";
+                    // Back to homepage.
+                    this.$router.push("/");
+
                 }).catch((error: any) => {
+                    // Return the errors.
                     this.Result = error.response.data.detail;
                     console.log(error.response.data.detail);
                 });
@@ -142,14 +126,14 @@ export default {
                 <p>Share your artworks! </p>
                 <img src="../assets/TinyGallery_Logo.png" />
                 <p>Had an account already?</p>
-                <button @click="selectToLogin()" type="button">Go to login!</button>
+                <button @click="selectToLogin" type="button">Go to login!</button>
             </div>
             <div class="con-box right">
                 <h2>Welcome to <span>TinyGallery</span></h2>
                 <p>Share your artworks! </p>
                 <img src="../assets/TinyGallery_Logo.png" />
                 <p>Don't have an account?</p>
-                <button @click="selectToRegister()" type="button">Go to register!</button>
+                <button @click="selectToRegister" type="button">Go to register!</button>
             </div>
         </div>
     </div>
