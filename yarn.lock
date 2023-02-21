@@ -1372,6 +1372,11 @@ json-stable-stringify-without-jsonify@^1.0.1:
   resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
   integrity sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==
 
+jsstore@^4.5.1:
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/jsstore/-/jsstore-4.5.1.tgz#a437a62172d73ebb1fd049787c9e3bc7198392d0"
+  integrity sha512-XQhplCSX0vvVos3KgAO+L7/fYAsjXqp9hAXJ/DOyUT+lUOipKnQk1CKxLexcChe2TVAXn3tD/jC5NJe684iGfQ==
+
 levn@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/levn/-/levn-0.4.1.tgz#ae4562c007473b932a6200d403268dd2fffc6ade"
