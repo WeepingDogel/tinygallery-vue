@@ -1,11 +1,5 @@
 <script lang="ts">
 import axios from 'axios';
-const dbName = "AuthenticationDB";
-const databaseRequest = indexedDB.open(dbName, 2);
-const db = databaseRequest.result;
-databaseRequest.onupgradeneeded = (event: any) => {
-
-}
 
 export default {
     data() {
@@ -65,6 +59,7 @@ export default {
                 let bodyFormData = new FormData();
                 bodyFormData.append('username', this.logUserName);
                 bodyFormData.append('password', this.logPassWord);
+                
                 axios({
                     method: "post",
                     url: "/auth/token",
@@ -72,13 +67,48 @@ export default {
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 }).then((response: any) => {
                     console.log(response.data.access_token);
+                    const TokenUserName = this.logUserName;
+
+                    const Token: object = {
+                        userName: TokenUserName,
+                        token: response.data.access_token
+                    }
+
+                    const dbName = "AuthenticationDB";
+                    const databaseRequest = indexedDB.open(dbName, 2);
+
+                    databaseRequest.onupgradeneeded = (event: any) => {
+                        const db = databaseRequest.result;
+                        const objectStore = db.createObjectStore(
+                            "tokens",
+                            {
+                                keyPath: "userName"
+                            }
+                        );
+                        objectStore.createIndex(
+                            "userName",
+                            "userName",
+                            {
+                                unique: true
+                            }
+                        );
+
+                        objectStore.transaction.oncomplete = (event: any) => {
+                            let tokenOjbectStore = db.transaction("tokens",
+                                "readwrite").objectStore("tokens");
+
+                            tokenOjbectStore.add(Token);
+                        }
+
+                        this.logUserName = "";
+                        this.logPassWord = "";
+                    }
+
                     this.Result = "";
                 }).catch((error: any) => {
-                    this.Result = error.response.data.detail
+                    this.Result = error.response.data.detail;
                     console.log(error.response.data.detail);
                 });
-                this.logUserName = "";
-                this.logPassWord = "";
             }
         }
     }
