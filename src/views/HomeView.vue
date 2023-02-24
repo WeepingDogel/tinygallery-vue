@@ -67,6 +67,7 @@ export default {
     top: -40px;
     text-overflow: ellipsis;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .displayImage {

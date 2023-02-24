@@ -1,5 +1,7 @@
+<!-- /src/view/AuthView.vue -->
 <script lang="ts">
 import axios from 'axios';
+import { Authentication } from "@/stores/Authentication"
 
 export default {
     data() {
@@ -12,7 +14,13 @@ export default {
             regConfirmPassword: '', // To confirm the password.
             regEmail: '', // The Email to change password and contact with the users.
             Result: '',  // The result of response from the backend.
-            db: null// The database object.
+        }
+        
+    },
+    mounted(){
+        if(Authentication().CheckIfLogged){
+            // console.log(Authentication().CheckIfLogged);
+            this.$router.push("/profile");
         }
     },
     methods: { // The Methods to deal with the user actions.
@@ -76,10 +84,8 @@ export default {
                 }).then((response: any) => {
                     console.log(response.data.access_token);
                     // Create an object to store the username and token.
-                    const UserToken:object = {
-                        userName: this.logUserName,
-                        token: response.data.access_token
-                    }
+                    const token = response.data.access_token;
+                    window.localStorage.setItem("Token", token)
                     // Clean the input boxes.
                     this.logUserName = "";
                     this.logPassWord = "";
@@ -87,6 +93,8 @@ export default {
                     this.Result = "";
                     // Back to homepage.
                     this.$router.push("/");
+                    console.log(Authentication().CheckIfLogged)
+                    // console.log(localStorage.getItem("Token"))
 
                 }).catch((error: any) => {
                     // Return the errors.
