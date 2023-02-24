@@ -1,3 +1,5 @@
+<!-- @/views/RemarkView.vue -->
+
 <script lang="ts">
 export default {
 

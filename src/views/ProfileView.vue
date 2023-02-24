@@ -1,3 +1,5 @@
+<!-- @/views/ProfileView.vue -->
+
 <script lang="ts">
 
 </script>

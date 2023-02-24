@@ -1,3 +1,5 @@
+<!-- @/views/AboutView.vue -->
+
 <script lang="ts">
 export default {
     data(){

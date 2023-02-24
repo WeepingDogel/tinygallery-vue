@@ -1,3 +1,5 @@
+<!-- @/views/HomeView.vue -->
+
 <script lang="ts">
 export default {
     methods: {
