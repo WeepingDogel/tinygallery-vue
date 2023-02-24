@@ -1,7 +1,11 @@
 <script lang="ts">
 import { RouterLink } from 'vue-router'
+
 export default {
-    
+    props:{
+        dynamicLinkName: String,
+        dynamicRouterLocate: String
+    }
 }
 </script>
 
@@ -10,7 +14,7 @@ export default {
         <h1 id="MainTitle">TinyGallery Vue Beta</h1>
         <div id="linkContainer">
             <RouterLink to="/">Home</RouterLink>
-            <RouterLink to="/login">Login</RouterLink>
+            <RouterLink :to="dynamicRouterLocate" >{{ dynamicLinkName }}</RouterLink>
             <RouterLink to="/about">About</RouterLink>
         </div>
     </div>
