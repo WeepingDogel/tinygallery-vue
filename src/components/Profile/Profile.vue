@@ -90,6 +90,7 @@
     top: -200px;
     right: 20px;
     float: right;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
 .ProfileBackGroundEditButton:hover {
@@ -107,6 +108,4 @@
     border-radius: 10px;
     transition: 0.5s ease-in-out;
 }
-
-
 </style>
