@@ -1,10 +1,61 @@
+<!-- @/components/navbar.vue -->
 <script lang="ts">
+import Uploader from "@/components/Upload/Uploader.vue"
 import { RouterLink } from 'vue-router'
+import { Authentication } from '@/stores/Authentication';
+import { storeToRefs } from 'pinia';
 
 export default {
-    props:{
-        dynamicLinkName: String,
-        dynamicRouterLocate: String
+    data(){
+        return {
+            DisplayLink: "/login",
+            DisplayTitle: "Login",
+            functionDisplay: false
+        }
+    },
+    setup() { 
+        const logStatus = Authentication();
+        const UpdateStatus = storeToRefs(logStatus)
+        return {
+            UpdateStatus,logStatus
+        }
+    },
+    watch: {
+        "logStatus.isLogged"(newValue,oldValue){
+            this.changeURL()
+            this.displayLogout()
+        }
+    },
+    methods: {
+        changeURL(){
+            if(this.logStatus.isLogged){
+                this.DisplayLink = "/profile";
+                this.DisplayTitle = "Profile"
+            }else{
+                this.DisplayLink = "/login";
+                this.DisplayTitle = "Login"
+            }
+        },
+        // test(){
+        //     console.log(this.logStatus.isLogged)
+        // },
+        displayLogout(){
+            if(this.logStatus.isLogged){
+                this.functionDisplay = true;
+            }else{
+                this.functionDisplay = false;
+            }
+        },
+        logout(){
+            localStorage.removeItem("Token");
+            Authentication().setLogStatus(false);
+            this.$router.push("/")
+            console.log(this.logStatus.isLogged);
+            console.log("logged out");
+        }
+    },
+    components: {
+        Uploader
     }
 }
 </script>
@@ -13,14 +64,63 @@ export default {
     <div id="bar">
         <h1 id="MainTitle">TinyGallery Vue Beta</h1>
         <div id="linkContainer">
+            
             <RouterLink to="/">Home</RouterLink>
-            <RouterLink :to="dynamicRouterLocate" >{{ dynamicLinkName }}</RouterLink>
+            <RouterLink :to="DisplayLink" >{{ DisplayTitle }}</RouterLink>
+            <button class="functionButton" v-if="functionDisplay" @click="logout">Logout</button>
             <RouterLink to="/about">About</RouterLink>
+            <button class="uploadButton" v-if="functionDisplay">+</button>
+            <!-- <button @click="test">test</button> -->     
         </div>
     </div>
 </template>
 
 <style>
+
+.uploadButton {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 36px;
+    font-weight: lighter;
+    width: 50px;
+    height: 50px;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    color: #FFFFFF;
+    background-color: #7C4DFF;
+    margin: auto 10px;
+    cursor: pointer;
+}
+
+.uploadButton:hover{
+    background-color: #303F9F;
+    color: #C5CAE9;
+    transition: background-color 0.5s ease;
+}
+
+.functionButton {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: lighter;
+    transition: 1000ms;
+    width: 100px;
+    height: 70px;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    color: #C5CAE9;
+    background-color: #3F51B5;
+    margin: auto;
+    cursor: pointer;
+}
+
+.functionButton:hover{
+    transition: 1000ms;
+    background-color: #303F9F;
+    color: #FFFFFF;
+    transition: background-color 0.5s ease;
+}
+
 #bar {
     width: 100%;
     height: 70px;
@@ -52,6 +152,7 @@ export default {
     font-family: Arial, Helvetica, sans-serif;
     font-weight: lighter;
     line-height: 70px;
+    text-align: center;
     width: 100px;
     color: #C5CAE9;
     transition: 1000ms;
