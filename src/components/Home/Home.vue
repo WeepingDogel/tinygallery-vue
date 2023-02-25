@@ -109,6 +109,7 @@ export default {
     background-color: #7C4DFF;
     color: #FFFFFF;
     border-radius: 8px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
 .TopButton:hover {
