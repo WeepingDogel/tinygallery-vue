@@ -6,32 +6,33 @@ import { Authentication } from '@/stores/Authentication';
 import { storeToRefs } from 'pinia';
 
 export default {
-    data(){
+    data() {
         return {
             DisplayLink: "/login",
             DisplayTitle: "Login",
-            functionDisplay: false
+            functionDisplay: false,
+            UploaderON: false
         }
     },
-    setup() { 
+    setup() {
         const logStatus = Authentication();
         const UpdateStatus = storeToRefs(logStatus)
         return {
-            UpdateStatus,logStatus
+            UpdateStatus, logStatus
         }
     },
     watch: {
-        "logStatus.isLogged"(newValue,oldValue){
+        "logStatus.isLogged"(newValue, oldValue) {
             this.changeURL()
             this.displayLogout()
         }
     },
     methods: {
-        changeURL(){
-            if(this.logStatus.isLogged){
+        changeURL() {
+            if (this.logStatus.isLogged) {
                 this.DisplayLink = "/profile";
                 this.DisplayTitle = "Profile"
-            }else{
+            } else {
                 this.DisplayLink = "/login";
                 this.DisplayTitle = "Login"
             }
@@ -39,19 +40,22 @@ export default {
         // test(){
         //     console.log(this.logStatus.isLogged)
         // },
-        displayLogout(){
-            if(this.logStatus.isLogged){
+        displayLogout() {
+            if (this.logStatus.isLogged) {
                 this.functionDisplay = true;
-            }else{
+            } else {
                 this.functionDisplay = false;
             }
         },
-        logout(){
+        logout() {
             localStorage.removeItem("Token");
             Authentication().setLogStatus(false);
             this.$router.push("/")
             console.log(this.logStatus.isLogged);
             console.log("logged out");
+        },
+        OpenUploader() {
+            this.UploaderON = true;
         }
     },
     components: {
@@ -64,19 +68,19 @@ export default {
     <div id="bar">
         <h1 id="MainTitle">TinyGallery Vue Beta</h1>
         <div id="linkContainer">
-            
+
             <RouterLink to="/">Home</RouterLink>
-            <RouterLink :to="DisplayLink" >{{ DisplayTitle }}</RouterLink>
+            <RouterLink :to="DisplayLink">{{ DisplayTitle }}</RouterLink>
             <button class="functionButton" v-if="functionDisplay" @click="logout">Logout</button>
             <RouterLink to="/about">About</RouterLink>
-            <button class="uploadButton" v-if="functionDisplay">+</button>
-            <!-- <button @click="test">test</button> -->     
+            <button @click="OpenUploader" class="uploadButton" v-if="functionDisplay">+</button>
+            <!-- <button @click="test">test</button> -->
         </div>
     </div>
+    <Uploader v-model="UploaderON" />
 </template>
 
 <style>
-
 .uploadButton {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 36px;
@@ -90,9 +94,10 @@ export default {
     background-color: #7C4DFF;
     margin: auto 10px;
     cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
-.uploadButton:hover{
+.uploadButton:hover {
     background-color: #303F9F;
     color: #C5CAE9;
     transition: background-color 0.5s ease;
@@ -114,7 +119,7 @@ export default {
     cursor: pointer;
 }
 
-.functionButton:hover{
+.functionButton:hover {
     transition: 1000ms;
     background-color: #303F9F;
     color: #FFFFFF;
