@@ -1,22 +1,25 @@
+<!-- @/App.vue -->
+
 <script lang="ts">
 import NavBar from './components/navbar.vue'
 import { RouterView } from 'vue-router'
 import { Authentication } from './stores/Authentication';
+import { storeToRefs } from 'pinia';
 export default {
-    data() {
-        return {
-            RouterURL: "",
-            LinkName: ""
+    mounted(){
+        if(localStorage.getItem("Token") == null){
+            // this.logStatus.setLogStatus(true)
+            console.log("false")
+        }else{
+            console.log("true")
+            this.logStatus.setLogStatus(true)
+            console.log(this.logStatus.isLogged)
         }
     },
-    mounted() {
-        if (Authentication().CheckIfLogged) {
-            this.RouterURL = "/profile";
-            this.LinkName = "Profile";
-        } else {
-            this.RouterURL = "/login";
-            this.LinkName = "Login"
-        }
+    setup(){
+        const logStatus = Authentication();
+        const SaveLogStatus = storeToRefs(logStatus)
+        return {logStatus, SaveLogStatus};
     },
     components: {
         NavBar
@@ -25,7 +28,7 @@ export default {
 </script>
 
 <template>
-    <NavBar :dynamicRouterLocate="RouterURL" :dynamicLinkName="LinkName" />
+    <NavBar />
     <RouterView />
 </template>
 
