@@ -15,7 +15,7 @@ export default {
             regEmail: '', // The Email to change password and contact with the users.
             Result: '',  // The result of response from the backend.
         }
-        
+
     },
     methods: { // The Methods to deal with the user actions.
         // Click button to register a account.
@@ -275,6 +275,7 @@ input:focus::placeholder {
     letter-spacing: 2px;
     border: none;
     cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
 
