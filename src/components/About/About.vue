@@ -1,7 +1,7 @@
 <script lang="ts">
 export default {
-    data(){
-        return{
+    data() {
+        return {
             Version: "1.0.0-Beta",
         }
     }
@@ -86,5 +86,4 @@ export default {
     border-radius: 10px;
     animation: FadeIn 1s;
 }
-
 </style>
