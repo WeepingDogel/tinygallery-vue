@@ -42,18 +42,19 @@ export default {
     }
 }
 
-@keyframes CommentLoader{
+@keyframes CommentLoader {
     from {
         opacity: 0;
         transform: translateY(80%);
     }
-    to{
+
+    to {
         opacity: 1;
         transform: translateY(0%);
     }
 }
 
-.CommentButton{
+.CommentButton {
     width: 100px;
     height: 50px;
     background-color: #7C4DFF;
@@ -69,7 +70,7 @@ export default {
     border-radius: 10px;
 }
 
-.CommentButton:hover{
+.CommentButton:hover {
     background-color: #303F9F;
     color: #C5CAE9;
     transition: background-color 0.5s ease;
