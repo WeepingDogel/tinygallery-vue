@@ -1,7 +1,7 @@
 <!-- @/view/AuthView.vue -->
 <script lang="ts">
 import axios from 'axios';
-import { Authentication } from "@/stores/Authentication"
+import { Authentication } from '@/stores/Authentication';
 
 export default {
     data() {
@@ -16,12 +16,6 @@ export default {
             Result: '',  // The result of response from the backend.
         }
         
-    },
-    mounted(){
-        if(Authentication().CheckIfLogged){
-            // console.log(Authentication().CheckIfLogged);
-            this.$router.push("/profile");
-        }
     },
     methods: { // The Methods to deal with the user actions.
         // Click button to register a account.
@@ -65,7 +59,6 @@ export default {
             this.regPassWord = "";
             this.regConfirmPassword = "";
             this.regEmail = "";
-
         },
         // Login Action 
         LoginAccount() {
@@ -86,6 +79,10 @@ export default {
                     // Create an object to store the username and token.
                     const token = response.data.access_token;
                     window.localStorage.setItem("Token", token)
+                    // Set logging status.
+                    Authentication().setLogStatus(true)
+                    // Output logging status
+                    console.log(Authentication().isLogged)
                     // Clean the input boxes.
                     this.logUserName = "";
                     this.logPassWord = "";
@@ -93,8 +90,6 @@ export default {
                     this.Result = "";
                     // Back to homepage.
                     this.$router.push("/");
-                    console.log(Authentication().CheckIfLogged)
-                    // console.log(localStorage.getItem("Token"))
 
                 }).catch((error: any) => {
                     // Return the errors.
