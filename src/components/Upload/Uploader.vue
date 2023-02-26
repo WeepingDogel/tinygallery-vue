@@ -27,6 +27,7 @@ export default {
             <button @click="closeUploader" class="closeButton">X</button>
             <input class="TitleInputer" placeholder="Type Your Title of your artwork." />
             <textarea class="DescriptionText" placeholder="Description"></textarea>
+            <!-- <input type="checkbox" > -->
             <input class="UploaderFile" type="file" />
             <div class="UploaderButtonContainer">
                 <button class="UploaderFunctionButton">Upload</button>
