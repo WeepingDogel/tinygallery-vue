@@ -37,7 +37,7 @@ export default {
                 axios.post(
                     '/auth/register',
                     {
-                        userName: this.regUserName,
+                        user_name: this.regUserName,
                         password: this.regPassWord,
                         email: this.regEmail
                     }
