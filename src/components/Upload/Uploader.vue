@@ -9,13 +9,16 @@ export default {
     emits:['update:modelValue'],
     data(){
         return {
-
+            CustomCover: false,
         }
     },
     methods: {
         closeUploader(){
             this.$emit('update:modelValue', false)
-        }
+        },
+        // test(){
+        //     console.log(this.CustomCover)
+        // }
     }
 }
 </script>
@@ -27,16 +30,41 @@ export default {
             <button @click="closeUploader" class="closeButton">X</button>
             <input class="TitleInputer" placeholder="Type Your Title of your artwork." />
             <textarea class="DescriptionText" placeholder="Description"></textarea>
-            <!-- <input type="checkbox" > -->
-            <input class="UploaderFile" type="file" />
+            <div class="FileSelectionContainer">
+                <input class="UploaderFile" type="file" multiple/>
+                <input type="checkbox" id="isNSFW" >
+                <label class="NSFW" for="isNSFW">NSFW</label>
+                <input type="checkbox" v-model="CustomCover" id="CustomCover" >
+                <label class="NSFW" for="CustomCover">CustomCover</label>
+            </div>
+            <div class="FileSelectionContainer">
+                <input v-if="CustomCover" class="UploaderFile" type="file" />
+            </div>
             <div class="UploaderButtonContainer">
-                <button class="UploaderFunctionButton">Upload</button>
+                <button class="UploaderFunctionButton" >Upload</button>
             </div>
         </div>
     </div>
 </template>
 
 <style>
+
+.NSFW{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 18px;
+    margin: 10px;
+}
+
+.FileSelectionContainer{
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .UploaderFile {
     font-family: Arial, Helvetica, sans-serif;
     font-weight: lighter;
@@ -152,7 +180,7 @@ export default {
 
 .DescriptionText {
     width: 69%;
-    height: 350px;
+    height: 200px;
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: lighter;
