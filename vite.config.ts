@@ -22,6 +22,9 @@ export default defineConfig({
       '/auth/token': {
         target: 'http://127.0.0.1:8000',
       },
+      '/upload/image': {
+        target: 'http://127.0.0.1:8000',
+      }
     },
   },
 })
