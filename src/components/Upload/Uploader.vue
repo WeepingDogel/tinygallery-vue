@@ -1,6 +1,6 @@
 <!-- @/components/Upload/Uploader.vue -->
 <script lang="ts">
-import { Authentication } from '@/stores/Authentication';
+// import { Authentication } from '@/stores/Authentication';
 
 export default {
     props:{
