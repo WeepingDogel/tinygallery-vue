@@ -1,6 +1,21 @@
-
 <script lang="ts">
+import SettingsPanel from "@/components/Profile/SettingsPanel.vue"
 
+export default {
+    components: {
+        SettingsPanel
+    },
+    data(){
+        return {
+            SettingsON: false,
+        }
+    },
+    methods: {
+        openSettings(){
+            this.SettingsON = true;
+        }
+    }
+}
 </script>
 
 <template>
@@ -15,8 +30,9 @@
             <div class="ProfileUserNameContainerBox">
                 <h2 class="ProfileUserName">UserName</h2>
             </div>
-            <button class="ProfileBackGroundEditButton">Edit background</button>
+            <button @click="openSettings" class="ProfileEditButton">Edit</button>
         </div>
+        <SettingsPanel v-model="SettingsON"/>
         <div class="ProfileArtWorks">
 
         </div>
@@ -76,7 +92,7 @@
     top: -160px;
 }
 
-.ProfileBackGroundEditButton {
+.ProfileEditButton {
     font-family: Arial, Helvetica, sans-serif;
     outline: none;
     border: none;
@@ -88,12 +104,12 @@
     cursor: pointer;
     position: relative;
     top: -200px;
-    right: 20px;
+    right: 50px;
     float: right;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
-.ProfileBackGroundEditButton:hover {
+.ProfileEditButton:hover {
     background-color: #303F9F;
     color: #C5CAE9;
     transition: background-color 0.5s ease;
@@ -104,7 +120,7 @@
     height: 50vh;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     animation: FadeIn 0.5s;
-    margin: 0px auto;
+    margin: 5px auto;
     border-radius: 10px;
     transition: 0.5s ease-in-out;
 }
