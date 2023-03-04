@@ -35,7 +35,7 @@ export default {
         RegisterAccount() {
             if (this.regPassWord == this.regConfirmPassword) { // Check if two passwords are the same.
                 axios.post(
-                    '/auth/register',
+                    '/user/register',
                     {
                         user_name: this.regUserName,
                         password: this.regPassWord,
@@ -71,7 +71,7 @@ export default {
                 bodyFormData.append('password', this.logPassWord);
                 axios({
                     method: "post",
-                    url: "/auth/token",
+                    url: "/user/token",
                     data: bodyFormData,
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 }).then((response: any) => {
