@@ -1,21 +1,42 @@
 <script lang="ts">
+import axios from 'axios';
+
 export default {
+    data(){
+        return {
+            pages: 1,
+            displayData:[]
+        }
+    },
     methods: {
         BackToTop() {
             document.body.scrollTop = document.documentElement.scrollTop = 0;
+        },
+        displayIamges(){
+            axios.get('/resources/posts/' + this.pages,{
+            }).then((response) =>{
+                const TextOfDisplayData = response.request.response;
+                const DisplayDataToJSON = JSON.parse(TextOfDisplayData);
+                console.log(DisplayDataToJSON);
+                this.displayData = DisplayDataToJSON;
+            })
         }
+    },
+    mounted(){
+        this.displayIamges()
     }
 }
 </script>
 
 <template>
     <div class="Container">
-        <div class="Card">
+        <div class="Card" v-for="items of displayData" >
             <img class="displayImage"
-                src="https://avatars.githubusercontent.com/u/44858874?s=400&u=1749c0f158a1b0feedeeeb7c2a82f42099a3e1dc&v=4"
+                :src="items.cover_url"
                 alt="" />
-            <h2 class="ImageTitle">Title Test</h2>
-            <p class="ImageDescription">Description</p>
+            <h2 class="ImageTitle">{{ items.post_title }}</h2>
+            <p class="ImageDescription">{{ items.description }}</p>
+            <!-- <button @click="displayIamges">Get</button> -->
         </div>
     </div>
     <div class="BackToTop">
@@ -39,12 +60,14 @@ export default {
 
 .Container {
     width: 100%;
+    /* height: 100vh; */
     /* height: 200vh; */
     /* Test ScrollTop */
     display: flex;
+    align-items: center;
     justify-content: space-around;
+    flex-direction: row;
     animation: FadeIn 1s;
-    flex-wrap: wrap;
 }
 
 .Card {
