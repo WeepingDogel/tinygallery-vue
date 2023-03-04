@@ -1,6 +1,7 @@
 <!-- @/components/Upload/Uploader.vue -->
 <script lang="ts">
-// import { Authentication } from '@/stores/Authentication';
+import { Authentication } from '@/stores/Authentication';
+import axios  from 'axios';
 
 export default {
     props:{
@@ -10,15 +11,39 @@ export default {
     data(){
         return {
             CustomCover: false,
+            uploadImagesFile: [],
+            coverFile: File,
+            is_nsfw: Boolean,
+            post_title: "",
+            description:""
         }
     },
     methods: {
         closeUploader(){
             this.$emit('update:modelValue', false)
         },
-        // test(){
-        //     console.log(this.CustomCover)
-        // }
+        test(){
+            console.log(this.is_nsfw)
+        },
+        loadFile(event:any){
+            this.uploadImagesFile = event.target.files;
+            console.log(this.uploadImagesFile)
+        },
+        uploadPost(){
+            if(this.post_title == "" || this.description == ""){
+                console.log("Title and Dercription can't be empty!");
+            }
+            else {
+                let is_nsfw;
+                let bodyFormData = new FormData();
+                if(this.is_nsfw) {
+                    is_nsfw = "true"
+                }else {
+                    is_nsfw = "false"
+                }
+            }
+            
+        }
     }
 }
 </script>
@@ -26,13 +51,14 @@ export default {
 <template>
     <div class="Mask" v-if="modelValue" >
         <div class="UploaderPanel">
+            <!-- <button @click="test">test</button> -->
             <h1 class="UploaderTitle">Upload Your Creativity</h1>
             <button @click="closeUploader" class="closeButton">X</button>
-            <input class="TitleInputer" placeholder="Type Your Title of your artwork." />
-            <textarea class="DescriptionText" placeholder="Description"></textarea>
+            <input v-model="post_title" class="TitleInputer" placeholder="Type Your Title of your artwork." />
+            <textarea v-model="description" class="DescriptionText" placeholder="Description"></textarea>
             <div class="FileSelectionContainer">
-                <input class="UploaderFile" type="file" multiple/>
-                <input type="checkbox" id="isNSFW" >
+                <input @change="loadFile" class="UploaderFile" type="file" multiple/>
+                <input type="checkbox" v-model="is_nsfw" id="isNSFW" >
                 <label class="NSFW" for="isNSFW">NSFW</label>
                 <input type="checkbox" v-model="CustomCover" id="CustomCover" >
                 <label class="NSFW" for="CustomCover">CustomCover</label>
@@ -41,7 +67,7 @@ export default {
                 <input v-if="CustomCover" class="UploaderFile" type="file" />
             </div>
             <div class="UploaderButtonContainer">
-                <button class="UploaderFunctionButton" >Upload</button>
+                <button @click="uploadPost" class="UploaderFunctionButton" >Upload</button>
             </div>
         </div>
     </div>
