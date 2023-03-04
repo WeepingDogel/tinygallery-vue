@@ -16,13 +16,16 @@ export default defineConfig({
       // '/tests': {
       //   target: 'http://127.0.0.1:8000',
       // },
-      '/auth/register': {
+      '/user/register': {
         target: 'http://127.0.0.1:8000',
       },
-      '/auth/token': {
+      '/user/token': {
         target: 'http://127.0.0.1:8000',
       },
-      '/upload/image': {
+      '/post/create': {
+        target: 'http://127.0.0.1:8000',
+      },
+      '/resources/posts/': {
         target: 'http://127.0.0.1:8000',
       }
     },
