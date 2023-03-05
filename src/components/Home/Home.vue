@@ -1,47 +1,95 @@
 <script lang="ts">
 import axios from 'axios';
+import { UpdateImages } from "@/stores/UpdateImages"
+import { storeToRefs } from 'pinia';
 
 export default {
-    data(){
+    data() {
         return {
             pages: 1,
-            displayData:[]
+            displayData: [],
+        }
+    },
+    setup() {
+        const PostsUpdate = UpdateImages();
+        const PostUpdateStatus = storeToRefs(PostsUpdate);
+
+        return {
+            PostsUpdate, PostUpdateStatus
         }
     },
     methods: {
         BackToTop() {
             document.body.scrollTop = document.documentElement.scrollTop = 0;
         },
-        displayIamges(){
-            axios.get('/resources/posts/' + this.pages,{
-            }).then((response) =>{
+        displayIamges() {
+            this.pages = 1
+            axios.get('/resources/posts/' + this.pages, {
+            }).then((response) => {
                 const TextOfDisplayData = response.request.response;
                 const DisplayDataToJSON = JSON.parse(TextOfDisplayData);
                 console.log(DisplayDataToJSON);
                 this.displayData = DisplayDataToJSON;
             })
-        }
+        },
+        lazyLoading() {
+            let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            let clientHeight = document.documentElement.clientHeight;
+            let scrollHeight = document.documentElement.scrollHeight;
+            if (scrollTop + clientHeight >= scrollHeight) {
+                console.log("到底了");
+                this.fetchData();
+            }
+        },
+        async fetchData() {
+            this.pages = this.pages + 1
+            const response = await axios.get('/resources/posts/' + this.pages)
+            const newData = JSON.parse(response.request.response)
+            if (newData[0] == null) {
+                this.pages = this.pages - 1;
+            } else {
+                for (let i = 0; i < newData.length; i++) {
+                    this.displayData.push(newData[i])
+                }
+            }
+            // console.log(this.displayData);
+        },
+        // test() {
+        //     console.log(this.pages)
+        // }
     },
-    mounted(){
-        this.displayIamges()
+    created() {
+        window.addEventListener('scroll', this.lazyLoading);
+    },
+    mounted() {
+        this.displayIamges();
+    },
+    unmounted() {
+        window.removeEventListener('scroll', this.lazyLoading);
+    },
+    watch: {
+        'PostsUpdate.update'(newValue, oldValue) {
+            this.displayData = []
+            this.displayIamges()
+        }
     }
 }
 </script>
 
 <template>
     <div class="Container">
-        <div class="Card" v-for="items of displayData" >
-            <img class="displayImage"
-                :src="items.cover_url"
-                alt="" />
+        <div class="Card" v-for="items of displayData" :id="items.post_uuid">
+            <img class="displayImage" :src="items.cover_url" alt="" />
             <h2 class="ImageTitle">{{ items.post_title }}</h2>
             <p class="ImageDescription">{{ items.description }}</p>
-            <!-- <button @click="displayIamges">Get</button> -->
+            <p class="ImageDescription">{{ items.user_name }}</p>
+            <p class="ImageDescription">{{ items.date }}</p>
         </div>
     </div>
     <div class="BackToTop">
         <button @click="BackToTop" class="TopButton">Top</button>
     </div>
+    <!-- <button @click="test">test</button> -->
 </template>
 
 <style>
@@ -57,6 +105,18 @@ export default {
     }
 }
 
+@keyframes FlashIn {
+    from {
+        scale: 0.5;
+        transform: translateY(90%);
+    }
+
+    to {
+        scale: 1;
+        transform: translateY(0%);
+    }
+}
+
 
 .Container {
     width: 100%;
@@ -65,8 +125,9 @@ export default {
     /* Test ScrollTop */
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-start;
     flex-direction: row;
+    flex-wrap: wrap;
     animation: FadeIn 1s;
 }
 
@@ -74,9 +135,10 @@ export default {
     width: 450px;
     height: 500px;
     border-radius: 10px;
-    margin: 10px 0;
+    margin: 10px auto;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     transition: 0.5s ease-in-out;
+    animation: FlashIn 1.5s;
 }
 
 .ImageTitle {
