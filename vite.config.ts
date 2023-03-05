@@ -22,7 +22,7 @@ export default defineConfig({
       '/user/token': {
         target: 'http://127.0.0.1:8000',
       },
-      '/post/create': {
+      '/posts/create': {
         target: 'http://127.0.0.1:8000',
       },
       '/resources/posts/': {
