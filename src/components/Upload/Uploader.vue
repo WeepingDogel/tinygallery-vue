@@ -72,6 +72,7 @@ export default {
                     if(response.data.status="success"){
                         this.$emit('update:modelValue', false);
                         UpdateImages().Update(1);
+                        this.$router.push("/");
                     }
                 }).catch((error) => {
                     console.error(error);
