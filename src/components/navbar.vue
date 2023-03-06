@@ -1,7 +1,7 @@
 <!-- @/components/navbar.vue -->
 <script lang="ts">
-import Uploader from "@/components/Upload/Uploader.vue"
-import { RouterLink } from 'vue-router'
+import Uploader from "@/components/Upload/Uploader.vue";
+import { RouterLink } from 'vue-router';
 import { Authentication } from '@/stores/Authentication';
 import { storeToRefs } from 'pinia';
 
