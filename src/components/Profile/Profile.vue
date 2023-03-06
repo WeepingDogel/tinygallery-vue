@@ -8,6 +8,7 @@ export default {
     data(){
         return {
             SettingsON: false,
+            UserName: "UserName"
         }
     },
     methods: {
@@ -28,7 +29,7 @@ export default {
                 <img />
             </div>
             <div class="ProfileUserNameContainerBox">
-                <h2 class="ProfileUserName">UserName</h2>
+                <h2 class="ProfileUserName">{{ UserName }}</h2>
             </div>
             <button @click="openSettings" class="ProfileEditButton">Edit</button>
         </div>
@@ -42,7 +43,7 @@ export default {
 <style>
 .ProfileContainer {
     width: 100%;
-    height: 100vh;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -117,7 +118,7 @@ export default {
 
 .ProfileArtWorks {
     width: 80%;
-    height: 50vh;
+    height: 500px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     animation: FadeIn 0.5s;
     margin: 5px auto;

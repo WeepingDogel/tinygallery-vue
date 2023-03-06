@@ -3,18 +3,18 @@ export default {
     props: {
         modelValue: Boolean
     },
-    emits:['update:modelValue'],
-    data(){
+    emits: ['update:modelValue'],
+    data() {
         return {
 
         }
     },
     methods: {
-        CloseAndSaveSettings(){
+        CloseAndSaveSettings() {
             // This function will close the Settings Panel and save the profile.
             this.$emit('update:modelValue', false);
         },
-        DiscardSettings(){
+        DiscardSettings() {
             // This function will not save any information when user clicked and close the Settings Panel.
             this.$emit('update:modelValue', false);
         }
@@ -25,26 +25,154 @@ export default {
 
 
 <template>
-<div v-if="modelValue" class="ProfileSettings">
-    <button @click="CloseAndSaveSettings" class="ProfileFinishButton"> Apply </button>
-    <button @click="DiscardSettings" class="ProfileFinishButton">Discard</button>
-</div>
+    <div v-if="modelValue" class="ProfileSettings">
+
+        <div class="SettingsBox">
+            <h2 class="ProfileSettingsTitle">General Information</h2>
+            <p class="ProfileText">
+                Change UserName:
+                <input class="ProfileTextInputer" type="text" placeholder="New UserName?" />
+            </p>
+            <p class="ProfileText">
+                Avatar:
+                <input class="ProfileTextFile" placeholder="ChangeAvatar" type="file">
+            </p>
+            <p class="ProfileText">
+                Background:
+                <input class="ProfileTextFile" placeholder="ChangeBackground" type="file">
+            </p>
+        </div>
+        <div class="SettingsBox">
+            <h2 class="ProfileSettingsTitle">Time Zone</h2>
+            <p class="ProfileText">
+                Select your timezone:
+                <select>
+                    <option value="-11">-11</option>
+                    <option value="-10">-10</option>
+                    <option value="-9">-9</option>
+                    <option value="-8">-8</option>
+                    <option value="-7">-7</option>
+                    <option value="-6">-6</option>
+                    <option value="-5">-5</option>
+                    <option value="-4">-4</option>
+                    <option value="-3">-3</option>
+                    <option value="-2">-2</option>
+                    <option value="-1">-1</option>
+                    <option value="0">0</option>
+                    <option value="1">+1</option>
+                    <option value="2">+2</option>
+                    <option value="3">+3</option>
+                    <option value="4">+4</option>
+                    <option value="5">+5</option>
+                    <option value="6">+6</option>
+                    <option value="7">+7</option>
+                    <option value="8">+8</option>
+                    <option value="9">+9</option>
+                    <option value="10">+10</option>
+                    <option value="11">+11</option>
+                    <option value="12">12</option>
+                </select>
+
+            </p>
+        </div>
+        <button @click="CloseAndSaveSettings" class="ProfileFinishButton"> Apply </button>
+        <button @click="DiscardSettings" class="ProfileFinishButton">Discard</button>
+    </div>
 </template>
 
 <style>
-
-@keyframes SlideIn{
+@keyframes SlideIn {
     from {
         transform: translateY(-80%);
     }
+
     to {
         transform: translateY(0%);
     }
 }
 
-.ProfileSettings{
+.SettingsBox {
+    display: flex;
+    width: 100%;
+    height: auto;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 25px;
+}
+
+
+.ProfileText {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 18px;
+    padding: 10px;
+    color: #212121;
+    text-align: justify;
+}
+
+.ProfileTextFile {
+    width: 300px;
+    color: #212121;
+    border: none;
+    outline: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 18px;
+    padding: 10px;
+}
+
+.ProfileTextFile::file-selector-button {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    background-color: #7C4DFF;
+    color: #FFFFFF;
+    padding: 5px;
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.ProfileTextFile::file-selector-button:hover {
+    background-color: #303F9F;
+    color: #C5CAE9;
+    border: none;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.5s ease;
+}
+
+.ProfileTextInputer {
+    width: 300px;
+    color: #212121;
+    border: none;
+    border-bottom: solid 1px #BDBDBD;
+    outline: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 18px;
+    padding: 10px;
+}
+
+.ProfileTextInputer::placeholder {
+    color: #757575;
+}
+
+.ProfileTextInputer:focus {
+    border-bottom: solid 1px #212121;
+}
+
+.ProfileSettingsTitle {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    line-height: 50px;
+    padding: 10px;
+}
+
+.ProfileSettings {
     width: 80%;
-    height: 50vh;
+    height: auto;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     background-color: #FFFFFF;
     animation: FadeIn 0.5s;
@@ -59,7 +187,8 @@ export default {
     outline: none;
     border: none;
     background-color: #7C4DFF;
-    padding: 13px;
+    padding: 12px;
+    margin: 12px;
     color: #FFFFFF;
     letter-spacing: 2px;
     border-radius: 8px;
