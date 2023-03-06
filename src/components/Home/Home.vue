@@ -82,8 +82,13 @@ export default {
             <img class="displayImage" :src="items.cover_url" alt="" />
             <h2 class="ImageTitle">{{ items.post_title }}</h2>
             <p class="ImageDescription">{{ items.description }}</p>
-            <p class="ImageDescription">{{ items.user_name }}</p>
-            <p class="ImageDescription">{{ items.date }}</p>
+
+            <div class="UserInfoBar">
+                <img class="UserAvatar" src="" />
+                <p class="ImageUserName">{{ items.user_name }}</p>
+                <p class="ImageDate">{{ items.date }}</p>
+            </div>
+            
         </div>
     </div>
     <div class="BackToTop">
@@ -201,5 +206,43 @@ export default {
     background-color: #303F9F;
     color: #C5CAE9;
     transition: background-color 0.5s ease;
+}
+
+
+.ImageUserName {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #212121;
+    padding: 10px;
+    line-height: 40px;
+}
+
+
+.ImageDate {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #757575;
+    padding: 10px;
+    line-height: 40px;
+    margin-left: auto;
+}
+
+.UserAvatar {
+    width: 40px;
+    height: 40px;
+    border: solid 1px #BDBDBD;
+    border-radius: 100%;
+    margin: 5px;
+}
+
+.UserInfoBar{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    bottom: -60px;
 }
 </style>
