@@ -9,36 +9,57 @@ export default {
     data() {
         return {
             newUserName: "",
-            background_image: null,
-            avatar_file: null,
+            backgroundImage: null,
+            avatarFile: null,
             Timezone: "",
         }
     },
     methods: {
         loadAvatar(event: any) {
-            this.avatar_file = event.target.files[0];
-            console.log(this.avatar_file);
+            this.avatarFile = event.target.files[0];
+            console.log(this.avatarFile);
         },
         loadBackground(event: any) {
-            this.background_image = event.target.files[0];
-            console.log(this.background_image);
+            this.backgroundImage = event.target.files[0];
+            console.log(this.backgroundImage);
         },
         CloseAndSaveSettings() {
             // This function will close the Settings Panel and save the profile.
             if (this.newUserName != "") {
 
-            } else if (this.avatar_file != null) {
-
-            } else if (this.background_image != null) {
-
+            } else if (this.avatarFile != null) {
+                const token = localStorage.getItem('Token')
+                const BodyFormData = new FormData()
+                const config = {
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                    }
+                }
+                BodyFormData.append('avatar', this.avatarFile)
+                axios.put('/userdata/set/avatar', BodyFormData, config).then((response) => {
+                    console.log(response.data.status)
+                })
+            } 
+            if (this.backgroundImage != null) {
+                const token = localStorage.getItem("Token");
+                const BodyFormData = new FormData();
+                const config = {
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                    }
+                }
+                BodyFormData.append('background', this.backgroundImage)
+                axios.put('/userdata/set/background', BodyFormData, config)
+                    .then((response) => {
+                        console.log(response.data.status)
+                    })
             } else if (this.Timezone != "") {
                 console.log(this.Timezone);
             }
-            axios.put('/userdata/set/avatar/')
-            this.$emit('update:modelValue', false);
             this.newUserName = "";
-            this.avatar_file = null;
-            this.background_image = null;
+            this.avatarFile = null;
+            this.backgroundImage = null;
+            this.$emit('update:modelValue', false);
         },
         DiscardSettings() {
             // This function will not save any information when user clicked and close the Settings Panel.
