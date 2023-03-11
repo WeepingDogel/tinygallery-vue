@@ -79,7 +79,10 @@ export default {
                 })
                 
             }
-            
+            this.post_title = ""
+            this.description = ""
+            this.is_nsfw = ""
+            this.CustomCover = false
         }
     }
 }
