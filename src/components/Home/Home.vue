@@ -33,22 +33,31 @@ export default {
             })
         },
         lazyLoading() {
+            // Lazy loading
+            // Get the scroll loacation
             let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            // Get the client height 
             let clientHeight = document.documentElement.clientHeight;
+            // Get the whole scroll height
             let scrollHeight = document.documentElement.scrollHeight;
+            // If scroll top and client height is more than scroll height, then update more post datas.
             if (scrollTop + clientHeight >= scrollHeight) {
                 console.log("到底了");
                 this.fetchData();
             }
         },
         async fetchData() {
-            this.pages = this.pages + 1
-            const response = await axios.get('/resources/posts/' + this.pages)
-            const newData = JSON.parse(response.request.response)
-            if (newData[0] == null) {
-                this.pages = this.pages - 1;
-            } else {
-                for (let i = 0; i < newData.length; i++) {
+            // Fetch new data.
+            // Add the page.
+            this.pages = this.pages + 1;
+            // Sent the get request to the server.
+            const response = await axios.get('/resources/posts/' + this.pages);
+            // Deal with the data.
+            const newData = JSON.parse(response.request.response);
+            if (newData[0] == null) { // If the first file is null,
+                this.pages = this.pages - 1; // then decrease the page.
+            } else { // if it's not null
+                for (let i = 0; i < newData.length; i++) { // then add new posts to the display Data.
                     this.displayData.push(newData[i])
                 }
             }
@@ -59,15 +68,19 @@ export default {
         // }
     },
     created() {
+        // Create the event listener to obersve the scroling event to load more datas.
         window.addEventListener('scroll', this.lazyLoading);
     },
     mounted() {
+        // When the componets mounted, update the datas.
         this.displayIamges();
     },
     unmounted() {
+        // Remove the event listener.
         window.removeEventListener('scroll', this.lazyLoading);
     },
     watch: {
+        // Watch the original varaible to check if new posts appeared.
         'PostsUpdate.update'(newValue, oldValue) {
             this.displayData = []
             this.displayIamges()
