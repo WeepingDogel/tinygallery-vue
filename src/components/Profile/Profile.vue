@@ -1,5 +1,6 @@
 <script lang="ts">
 import SettingsPanel from "@/components/Profile/SettingsPanel.vue"
+import axios from "axios";
 
 export default {
     components: {
@@ -8,13 +9,36 @@ export default {
     data(){
         return {
             SettingsON: false,
-            UserName: "UserName"
+            UserName: ""
         }
     },
     methods: {
         openSettings(){
             this.SettingsON = true;
+        },
+        getUserName() {
+            const token = localStorage.getItem('Token')
+            // GetUserName
+            axios.put('/userdata/get/username', {},{
+                headers:{
+                    "Authorization": "Bearer " + token
+                }
+            })
+            .then((response) => {
+                const username = response.data.username;
+                this.UserName = username
+                // console.log(username)
+            })
+        },
+        getUserAvatar(){
+
+        },
+        getUserBackground(){
+            
         }
+    },
+    mounted(){
+        this.getUserName()
     }
 }
 </script>
