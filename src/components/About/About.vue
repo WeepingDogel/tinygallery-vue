@@ -25,21 +25,28 @@ export default {
             <p class="AboutPara">
                 <img src="https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&amp;logo=vuedotjs&amp;logoColor=%234FC08D"
                     alt="Vue.js">
-                <img src="https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&amp;logo=vuetify&amp;logoColor=AEDDFF"
-                    alt="Vuetify">
                 <img src="https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&amp;logo=vite&amp;logoColor=white"
                     alt="Vite">
+                <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&amp;logo=typescript&amp;logoColor=white"
+                    alt="TypeScript">
                 <img src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&amp;logo=fastapi" alt="FastAPI">
-                <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&amp;logo=python&amp;logoColor=ffdd54" alt="Python">
+                <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&amp;logo=python&amp;logoColor=ffdd54"
+                    alt="Python">
+                <img src="https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&amp;logo=sqlite&amp;logoColor=white"
+                    alt="SQLite">
             </p>
             <h1 class="AboutTitle">Source Code</h1>
             <p class="AboutPara">
                 Vue Front End: <br />
-                <a href="https://github.com/WeepingDogel/tinygallery-vue"><img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&amp;logo=github&amp;logoColor=white" alt="GitHub"></a>
+                <a href="https://github.com/WeepingDogel/tinygallery-vue"><img
+                        src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&amp;logo=github&amp;logoColor=white"
+                        alt="GitHub"></a>
             </p>
             <p class="AboutPara">
                 Backend: <br />
-                <a href="https://github.com/WeepingDogel/tinygallery-backend"><img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&amp;logo=github&amp;logoColor=white" alt="GitHub"></a>
+                <a href="https://github.com/WeepingDogel/tinygallery-backend"><img
+                        src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&amp;logo=github&amp;logoColor=white"
+                        alt="GitHub"></a>
             </p>
         </div>
     </div>
@@ -87,5 +94,9 @@ export default {
     padding: 20px;
     text-align: justify;
     line-height: 25px;
+}
+
+.AboutPara img {
+    margin: 5px;
 }
 </style>
