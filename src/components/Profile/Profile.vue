@@ -6,39 +6,60 @@ export default {
     components: {
         SettingsPanel
     },
-    data(){
+    data() {
         return {
             SettingsON: false,
-            UserName: ""
+            UserName: "",
+            AvatarLink: "",
+            BackgroundImageLink: "",
         }
     },
     methods: {
-        openSettings(){
+        openSettings() {
             this.SettingsON = true;
         },
-        getUserName() {
+        async getUserInfo() {
             const token = localStorage.getItem('Token')
             // GetUserName
-            axios.put('/userdata/get/username', {},{
-                headers:{
+            axios.put('/userdata/get/username', {}, {
+                headers: {
                     "Authorization": "Bearer " + token
                 }
             })
-            .then((response) => {
-                const username = response.data.username;
-                this.UserName = username
-                // console.log(username)
-            })
+                .then((response) => {
+                    const username = response.data.username;
+                    if (username == false) {
+                        this.UserName = "Please relogin.";
+                    } else {
+                        this.UserName = username;
+                        axios.get('/resources/avatar/' + username, {})
+                            .then((response) => {
+                                console.log(response.data);
+                                this.AvatarLink = response.data.avatar_200px;
+                            })
+                        axios.get('/resources/profile/background/' + username, {})
+                            .then((response) => {
+                                console.log(response.data)
+                                this.BackgroundImageLink = response.data.background
+                            })
+                    }
+                    console.log(username)
+                })
         },
-        getUserAvatar(){
+        // getUserAvatar(){
 
-        },
-        getUserBackground(){
-            
-        }
+        // },
     },
-    mounted(){
-        this.getUserName()
+    mounted() {
+        this.getUserInfo()
+        // this.getUserAvatar()
+    },
+    watch: {
+        SettingsON(newValue,oldValue){
+            for (let index = 0; index <= 5; index++) {
+                this.getUserInfo()
+            }
+        }
     }
 }
 </script>
@@ -47,17 +68,17 @@ export default {
     <div class="ProfileContainer">
         <div class="ProfileCard">
             <div class="UserCover">
-                <img src="" />
+                <img :src="BackgroundImageLink" />
             </div>
             <div class="ProfileAvatar">
-                <img />
+                <img :src="AvatarLink" />
             </div>
             <div class="ProfileUserNameContainerBox">
                 <h2 class="ProfileUserName">{{ UserName }}</h2>
             </div>
             <button @click="openSettings" class="ProfileEditButton">Edit</button>
         </div>
-        <SettingsPanel v-model="SettingsON"/>
+        <SettingsPanel v-model="SettingsON" />
         <div class="ProfileArtWorks">
 
         </div>
@@ -93,6 +114,14 @@ export default {
     border-top-right-radius: 10px;
 }
 
+.UserCover img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
 .ProfileAvatar {
     width: 200px;
     height: 200px;
@@ -102,6 +131,12 @@ export default {
     margin: 0 50px;
     top: -10%;
     background-color: #FFFFFF;
+}
+
+.ProfileAvatar img {
+    width: 200px;
+    height: auto;
+    border-radius: 10px;
 }
 
 .ProfileUserName {
