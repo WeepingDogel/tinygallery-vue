@@ -1,4 +1,6 @@
 <script lang="ts">
+import axios from 'axios';
+
 export default {
     props: {
         modelValue: Boolean
@@ -6,18 +8,43 @@ export default {
     emits: ['update:modelValue'],
     data() {
         return {
-
+            newUserName: "",
+            background_image: null,
+            avatar_file: null,
+            Timezone: "",
         }
     },
     methods: {
+        loadAvatar(event: any) {
+            this.avatar_file = event.target.files[0];
+            console.log(this.avatar_file);
+        },
+        loadBackground(event: any) {
+            this.background_image = event.target.files[0];
+            console.log(this.background_image);
+        },
         CloseAndSaveSettings() {
             // This function will close the Settings Panel and save the profile.
+            if (this.newUserName != "") {
+
+            } else if (this.avatar_file != null) {
+
+            } else if (this.background_image != null) {
+
+            } else if (this.Timezone != "") {
+                console.log(this.Timezone);
+            }
+            axios.put('/userdata/set/avatar/')
             this.$emit('update:modelValue', false);
+            this.newUserName = "";
+            this.avatar_file = null;
+            this.background_image = null;
         },
         DiscardSettings() {
             // This function will not save any information when user clicked and close the Settings Panel.
             this.$emit('update:modelValue', false);
         }
+
     }
 }
 
@@ -25,28 +52,28 @@ export default {
 
 
 <template>
+    <!-- <button @click="test">test</button> -->
     <div v-if="modelValue" class="ProfileSettings">
-
         <div class="SettingsBox">
             <h2 class="ProfileSettingsTitle">General Information</h2>
             <p class="ProfileText">
                 Change UserName:
-                <input class="ProfileTextInputer" type="text" placeholder="New UserName?" />
+                <input v-model="newUserName" class="ProfileTextInputer" type="text" placeholder="New UserName?" />
             </p>
             <p class="ProfileText">
                 Avatar:
-                <input class="ProfileTextFile" placeholder="ChangeAvatar" type="file">
+                <input @change="loadAvatar" class="ProfileTextFile" placeholder="ChangeAvatar" type="file">
             </p>
             <p class="ProfileText">
                 Background:
-                <input class="ProfileTextFile" placeholder="ChangeBackground" type="file">
+                <input @change="loadBackground" class="ProfileTextFile" placeholder="ChangeBackground" type="file">
             </p>
         </div>
         <div class="SettingsBox">
             <h2 class="ProfileSettingsTitle">Time Zone</h2>
             <p class="ProfileText">
                 Select your timezone:
-                <select>
+                <select v-model="Timezone">
                     <option value="-11">-11</option>
                     <option value="-10">-10</option>
                     <option value="-9">-9</option>
@@ -72,7 +99,6 @@ export default {
                     <option value="11">+11</option>
                     <option value="12">12</option>
                 </select>
-
             </p>
         </div>
         <button @click="CloseAndSaveSettings" class="ProfileFinishButton"> Apply </button>
@@ -108,6 +134,16 @@ export default {
     font-size: 18px;
     padding: 10px;
     color: #212121;
+    text-align: justify;
+}
+
+
+.NoteText {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 18px;
+    padding: 10px;
+    color: #ff0000;
     text-align: justify;
 }
 
