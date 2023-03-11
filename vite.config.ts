@@ -27,7 +27,10 @@ export default defineConfig({
       },
       '/resources/posts/': {
         target: 'http://127.0.0.1:8000',
-      }
+      },
+      '/userdata':{
+        target: 'http://127.0.0.1:8000',
+      },
     },
   },
 })
