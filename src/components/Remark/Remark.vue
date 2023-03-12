@@ -1,10 +1,15 @@
 <script lang="ts">
-export default {
+import RemarkPanel from './RemarkPanel.vue';
 
+export default {
+    components: {
+        RemarkPanel
+    }
 }
 </script>
 
 <template>
+    <!-- <RemarkPanel /> -->
     <div class="RemarkContainer">
         <div class="RemarkBox">
             <div class="ImageDisplayArea">
