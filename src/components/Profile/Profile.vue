@@ -25,26 +25,25 @@ export default {
                 headers: {
                     "Authorization": "Bearer " + token
                 }
+            }).then((response) => {
+                const username = response.data.username;
+                if (username == false) {
+                    this.UserName = "Please relogin.";
+                } else {
+                    this.UserName = username;
+                    axios.get('/resources/avatar/' + username, {})
+                        .then((response) => {
+                            console.log(response.data);
+                            this.AvatarLink = response.data.avatar_200px;
+                        })
+                    axios.get('/resources/profile/background/' + username, {})
+                        .then((response) => {
+                            console.log(response.data)
+                            this.BackgroundImageLink = response.data.background
+                        })
+                }
+                console.log(username)
             })
-                .then((response) => {
-                    const username = response.data.username;
-                    if (username == false) {
-                        this.UserName = "Please relogin.";
-                    } else {
-                        this.UserName = username;
-                        axios.get('/resources/avatar/' + username, {})
-                            .then((response) => {
-                                console.log(response.data);
-                                this.AvatarLink = response.data.avatar_200px;
-                            })
-                        axios.get('/resources/profile/background/' + username, {})
-                            .then((response) => {
-                                console.log(response.data)
-                                this.BackgroundImageLink = response.data.background
-                            })
-                    }
-                    console.log(username)
-                })
         },
         // getUserAvatar(){
 
@@ -55,7 +54,7 @@ export default {
         // this.getUserAvatar()
     },
     watch: {
-        SettingsON(newValue,oldValue){
+        SettingsON(newValue, oldValue) {
             for (let index = 0; index <= 5; index++) {
                 this.getUserInfo()
             }
