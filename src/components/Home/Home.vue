@@ -63,6 +63,10 @@ export default {
             }
             // console.log(this.displayData);
         },
+        OpenRemarkBySingleUUID(post_uuid: any){
+
+            this.$router.push("/remark/"+post_uuid)
+        }
         // test() {
         //     console.log(this.pages)
         // }
@@ -91,17 +95,15 @@ export default {
 
 <template>
     <div class="Container">
-        <div class="Card" v-for="items of displayData" :id="items.post_uuid">
-            <img class="displayImage" :src="items.cover_url" alt="" />
+        <div class="Card" v-for="items of displayData" >
+            <img @click="OpenRemarkBySingleUUID(items.post_uuid)" class="displayImage" :src="items.cover_url" :alt="items.post_uuid"/>
             <h2 class="ImageTitle">{{ items.post_title }}</h2>
             <p class="ImageDescription">{{ items.description }}</p>
-
             <div class="UserInfoBar">
-                <img class="UserAvatar" src="" />
+                <img class="UserAvatar" :src="items.avatar" />
                 <p class="ImageUserName">{{ items.user_name }}</p>
                 <p class="ImageDate">{{ items.date }}</p>
             </div>
-            
         </div>
     </div>
     <div class="BackToTop">
@@ -159,6 +161,10 @@ export default {
     animation: FlashIn 1.5s;
 }
 
+.Card:hover {
+    scale: 0.9;
+}
+
 .ImageTitle {
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bolder;
@@ -170,7 +176,6 @@ export default {
     top: -40px;
     text-overflow: ellipsis;
     overflow: hidden;
-    cursor: pointer;
 }
 
 .displayImage {
@@ -180,6 +185,7 @@ export default {
     border-top-right-radius: 10px;
     object-fit: cover;
     text-overflow: ellipsis;
+    cursor: pointer;
 }
 
 .ImageDescription {
