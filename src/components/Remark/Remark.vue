@@ -1,34 +1,64 @@
 <script lang="ts">
 import RemarkPanel from './RemarkPanel.vue';
+import axios from 'axios';
 
 export default {
+    data(){
+        return {
+            ThePost: Object
+        }
+    },
     components: {
         RemarkPanel
+    },
+    methods: {
+        // test(){
+        //     console.log(this.$route.params.post_uuid)
+        // }
+        GetTheSingleImageByPostUUID(post_uuid: any){
+            axios.get("/resources/posts/single"+ "/" + post_uuid)
+            .then(
+                (response) => {
+                    console.log(response.data);
+                    this.ThePost = response.data;
+                }
+            )
+        },
+        OpenImage(link: any){
+            window.open(link)
+        }
+    },
+    beforeMount(){
+        this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid);
     }
 }
 </script>
 
 <template>
+    <!-- <button @click="test">test</button> -->
     <!-- <RemarkPanel /> -->
     <div class="RemarkContainer">
         <div class="RemarkBox">
             <div class="ImageDisplayArea">
-                <img class="DisplayedImage" src="" />
+                <img @click="OpenImage(ThePost.files_url.original_cover_url)" v-if="ThePost.files_url.image_files_url.length > 1" class="DisplayedImage" :src="ThePost.files_url.original_cover_url"/>
+                <div v-for="items in ThePost.files_url.image_files_url">
+                    <img @click="OpenImage(items)" class="DisplayedImage" :src="items" />
+                </div>
             </div>
             <div class="RemarksArea">
                 <div class="InfoBox">
-                    <h1 class="InfoTitlte">Picture Title</h1>
-                    <p class="InfoDescription">Description</p>
+                    <h1 class="InfoTitlte">{{ ThePost.post_title }}</h1>
+                    <p class="InfoDescription">{{ ThePost.description }}</p>
                     <button class="CommentButton" @click="">Comment</button>
-                    <p class="PublishDate">2023-01-01 13:04</p>
+                    <p class="PublishDate">{{ ThePost.date }}</p>
                 </div>
-                <div class="CommentBox">
+                <!-- <div class="CommentBox">
                     <img class="UserAvatar" />
                     <h1 class="CommentUserName">UserName</h1>
                     <p class="CommentText">Comment Content Text. Once lost thing will never be able to come back.</p>
                     <button class="ReplyButton">Reply</button>
                     <span class="CommentTime">2023-01-01 13:04</span>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -106,11 +136,12 @@ export default {
 
 .ImageDisplayArea {
     width: 80%;
-    height: auto;
+    height: 100%;
     min-height: 90vh;
-    background-color: #3F51B5;
+    /* background-color: #3F51B5; */
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
+    cursor: pointer;
 }
 
 .DisplayedImage {
@@ -118,6 +149,7 @@ export default {
     height: auto;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
+    cursor: pointer;
 }
 
 .RemarksArea {
