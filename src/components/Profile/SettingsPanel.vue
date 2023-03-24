@@ -39,7 +39,7 @@ export default {
                 axios.put('/userdata/set/avatar', BodyFormData, config).then((response) => {
                     console.log(response.data.status)
                 })
-            } 
+            }
             if (this.backgroundImage != null) {
                 const token = localStorage.getItem("Token");
                 const BodyFormData = new FormData();
