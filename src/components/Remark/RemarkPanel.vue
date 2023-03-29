@@ -6,17 +6,15 @@ export default {
 
 <template>
     <div class="Mask">
-
+        
     </div>
 </template>
 
-<style>
+<style scoped>
 .Mask {
     margin-top: 50px;
     width: 100%;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.3);
 }
-
-
 </style>
