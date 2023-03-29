@@ -63,9 +63,9 @@ export default {
             }
             // console.log(this.displayData);
         },
-        OpenRemarkBySingleUUID(post_uuid: any){
+        OpenRemarkBySingleUUID(post_uuid: any) {
 
-            this.$router.push("/remark/"+post_uuid)
+            this.$router.push("/remark/" + post_uuid)
         }
         // test() {
         //     console.log(this.pages)
@@ -95,8 +95,9 @@ export default {
 
 <template>
     <div class="Container">
-        <div class="Card" v-for="items of displayData" >
-            <img @click="OpenRemarkBySingleUUID(items.post_uuid)" class="displayImage" :src="items.cover_url" :alt="items.post_uuid"/>
+        <div class="Card" v-for="items of displayData">
+            <img @click="OpenRemarkBySingleUUID(items.post_uuid)" class="displayImage" :src="items.cover_url"
+                :alt="items.post_uuid" />
             <h2 class="ImageTitle">{{ items.post_title }}</h2>
             <p class="ImageDescription">{{ items.description }}</p>
             <div class="UserInfoBar">
@@ -112,7 +113,7 @@ export default {
     <!-- <button @click="test">test</button> -->
 </template>
 
-<style>
+<style scoped>
 @keyframes FadeIn {
     from {
         opacity: 0;
@@ -197,7 +198,7 @@ export default {
     top: -15px;
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space: pre-line;
+    white-space: nowrap;
     padding: 15px;
 }
 
@@ -256,7 +257,7 @@ export default {
     margin: 5px;
 }
 
-.UserInfoBar{
+.UserInfoBar {
     width: 100%;
     display: flex;
     flex-direction: row;
