@@ -127,7 +127,7 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
 @keyframes SlideIn {
     from {
         transform: translateY(-80%);
