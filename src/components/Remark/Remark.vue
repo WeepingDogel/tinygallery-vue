@@ -3,7 +3,7 @@ import RemarkPanel from './RemarkPanel.vue';
 import axios from 'axios';
 
 export default {
-    data(){
+    data() {
         return {
             ThePost: Object
         }
@@ -15,20 +15,20 @@ export default {
         // test(){
         //     console.log(this.$route.params.post_uuid)
         // }
-        GetTheSingleImageByPostUUID(post_uuid: any){
-            axios.get("/resources/posts/single"+ "/" + post_uuid)
-            .then(
-                (response) => {
-                    console.log(response.data);
-                    this.ThePost = response.data;
-                }
-            )
+        GetTheSingleImageByPostUUID(post_uuid: any) {
+            axios.get("/resources/posts/single" + "/" + post_uuid)
+                .then(
+                    (response) => {
+                        console.log(response.data);
+                        this.ThePost = response.data;
+                    }
+                )
         },
-        OpenImage(link: any){
+        OpenImage(link: any) {
             window.open(link)
         }
     },
-    beforeMount(){
+    beforeMount() {
         this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid);
     }
 }
@@ -40,7 +40,9 @@ export default {
     <div class="RemarkContainer">
         <div class="RemarkBox">
             <div class="ImageDisplayArea">
-                <img @click="OpenImage(ThePost.files_url.original_cover_url)" v-if="ThePost.files_url.image_files_url.length > 1" class="DisplayedImage" :src="ThePost.files_url.original_cover_url"/>
+                <img @click="OpenImage(ThePost.files_url.original_cover_url)"
+                    v-if="ThePost.files_url.image_files_url.length > 1" class="DisplayedImage"
+                    :src="ThePost.files_url.original_cover_url" />
                 <div v-for="items of ThePost.files_url.image_files_url">
                     <img @click="OpenImage(items)" class="DisplayedImage" :src="items" />
                 </div>
@@ -48,23 +50,32 @@ export default {
             <div class="RemarksArea">
                 <div class="InfoBox">
                     <h1 class="InfoTitlte">{{ ThePost.post_title }}</h1>
-                    <p class="InfoDescription">{{ ThePost.description }}</p>
-                    <button class="CommentButton" @click="">Comment</button>
-                    <p class="PublishDate">{{ ThePost.date }}</p>
+                    <p class="InfoDescription">
+                        Author: <b style="color: #7C4DFF;">{{ ThePost.user_name }}</b>
+                        <br />
+                        {{ ThePost.description }}
+                        <br />
+                        <b style="color: #7C4DFF;">Likes: {{ ThePost.dots }}</b>
+                    </p>
+                    <div class="InfoBoxFoot">
+                        <p class="PublishDate">{{ ThePost.date }}</p>
+                        <button class="LikeButton">Like</button>
+                        <button class="CommentButton" @click="">Comment</button>
+                    </div>
                 </div>
-                <!-- <div class="CommentBox">
+                <div class="CommentBox">
                     <img class="UserAvatar" />
                     <h1 class="CommentUserName">UserName</h1>
                     <p class="CommentText">Comment Content Text. Once lost thing will never be able to come back.</p>
                     <button class="ReplyButton">Reply</button>
                     <span class="CommentTime">2023-01-01 13:04</span>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>
 </template>
 
-<style>
+<style scoped>
 @keyframes FadeIn {
     from {
         opacity: 0;
@@ -89,6 +100,28 @@ export default {
     }
 }
 
+.LikeButton {
+    width: 50px;
+    height: 50px;
+    background-color: #FFFFFF;
+    color: #ffaab8;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    border: solid 1px #ffaab8;
+    outline: none;
+    border-radius: 10px;
+    margin-left: auto;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+}
+
+.LikeButton:hover {
+    background-color: #ffaab8;
+    color: #FFFFFF;
+    transition: background-color 0.5s ease;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
 .CommentButton {
     width: 100px;
     height: 50px;
@@ -98,17 +131,18 @@ export default {
     font-weight: lighter;
     border: none;
     outline: none;
-    float: right;
-    position: relative;
-    right: 10px;
-    top: 50px;
     border-radius: 10px;
+    margin-left: auto;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
 }
 
 .CommentButton:hover {
     background-color: #303F9F;
     color: #C5CAE9;
     transition: background-color 0.5s ease;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
 .RemarkContainer {
@@ -167,6 +201,8 @@ export default {
     height: auto;
     min-height: 200px;
     border-bottom: solid 1px #BDBDBD;
+    display: flex;
+    flex-direction: column;
 }
 
 .InfoTitlte {
@@ -178,7 +214,7 @@ export default {
 }
 
 .InfoDescription {
-    line-height: 5px;
+    line-height: 20px;
     padding: 20px;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: lighter;
@@ -186,15 +222,24 @@ export default {
     color: #757575;
 }
 
+.InfoBoxFoot {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin-top: auto;
+    margin-bottom: 10px;
+}
+
 .PublishDate {
-    position: relative;
-    bottom: -80px;
-    display: inline;
-    padding: 20px;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: lighter;
     font-size: 16px;
     color: #757575;
+    margin-left: 20px;
+    margin-right: auto;
 }
 
 .CommentBox {
