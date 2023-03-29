@@ -52,7 +52,19 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
+@keyframes FadeIn {
+    from {
+        opacity: 0;
+        top: 10px;
+    }
+
+    to {
+        opacity: 1;
+        top: 0px;
+    }
+}
+
 .AboutContainer {
     width: 100%;
     height: auto;
