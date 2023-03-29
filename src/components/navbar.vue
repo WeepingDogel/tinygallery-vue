@@ -80,7 +80,7 @@ export default {
     <Uploader v-model="UploaderON" />
 </template>
 
-<style>
+<style scoped>
 .uploadButton {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 36px;
