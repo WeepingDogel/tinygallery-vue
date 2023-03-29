@@ -41,7 +41,7 @@ export default {
         <div class="RemarkBox">
             <div class="ImageDisplayArea">
                 <img @click="OpenImage(ThePost.files_url.original_cover_url)" v-if="ThePost.files_url.image_files_url.length > 1" class="DisplayedImage" :src="ThePost.files_url.original_cover_url"/>
-                <div v-for="items in ThePost.files_url.image_files_url">
+                <div v-for="items of ThePost.files_url.image_files_url">
                     <img @click="OpenImage(items)" class="DisplayedImage" :src="items" />
                 </div>
             </div>
