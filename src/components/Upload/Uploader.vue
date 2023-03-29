@@ -1,6 +1,5 @@
 <!-- @/components/Upload/Uploader.vue -->
 <script lang="ts">
-import { Authentication } from '@/stores/Authentication';
 import { UpdateImages } from '@/stores/UpdateImages'
 import axios from 'axios';
 
@@ -118,12 +117,14 @@ export default {
 @keyframes FadeIn {
     from {
         opacity: 0;
-        top: 10px;
+        scale: 0.8;
+        margin-top: 200px;
     }
 
     to {
         opacity: 1;
-        top: 0px;
+        scale: 1;
+        margin-top: 0px;
     }
 }
 
@@ -283,15 +284,15 @@ export default {
 
 
 .Mask {
-    top: -70px;
-    position: absolute;
+    position: fixed;
     width: 100%;
-    height: 110vh;
-    background-color: rgba(0, 0, 0, 0.2);
+    height: 120vh;
+    background-color: rgba(0, 0, 0, 0.3);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 2;
+    top: -100px;
 }
 
 .UploaderPanel {
