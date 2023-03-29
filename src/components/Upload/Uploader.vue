@@ -2,83 +2,83 @@
 <script lang="ts">
 import { Authentication } from '@/stores/Authentication';
 import { UpdateImages } from '@/stores/UpdateImages'
-import axios  from 'axios';
+import axios from 'axios';
 
 export default {
-    props:{
-        modelValue:Boolean
+    props: {
+        modelValue: Boolean
     },
-    emits:['update:modelValue'],
-    data(){
+    emits: ['update:modelValue'],
+    data() {
         return {
             CustomCover: false,
             is_nsfw: "",
             uploadImagesFile: FileList,
             coverFile: null,
             post_title: "",
-            description:""
+            description: ""
         }
     },
     methods: {
-        closeUploader(){
+        closeUploader() {
             this.$emit('update:modelValue', false)
         },
-        test(){
+        test() {
             console.log(this.is_nsfw)
         },
-        loadFile(event:any){
+        loadFile(event: any) {
             this.uploadImagesFile = event.target.files;
             console.log(this.uploadImagesFile)
         },
-        loadCoverFile(event:any){
+        loadCoverFile(event: any) {
             this.coverFile = event.target.files[0];
             console.log(this.coverFile)
         },
-        uploadPost(){
-            if(this.post_title == "" || this.description == ""){
+        uploadPost() {
+            if (this.post_title == "" || this.description == "") {
                 console.log("Title and Dercription can't be empty!");
             }
             else {
                 const token = localStorage.getItem('Token');
                 const config = {
                     headers: {
-                        "Authorization": "Bearer "+ token,
+                        "Authorization": "Bearer " + token,
                         "Content-type": "multipart/form-data"
                     },
                 };
                 let is_nsfw;
                 let bodyFormData = new FormData();
-                if(this.is_nsfw) {
+                if (this.is_nsfw) {
                     is_nsfw = "true"
-                }else {
+                } else {
                     is_nsfw = "false"
                 }
                 bodyFormData.append('is_nsfw', is_nsfw);
-                bodyFormData.append('post_title',this.post_title);
-                bodyFormData.append('description',this.description);
-                if(this.CustomCover){
+                bodyFormData.append('post_title', this.post_title);
+                bodyFormData.append('description', this.description);
+                if (this.CustomCover) {
                     bodyFormData.append('cover', this.coverFile);
-                }else{
+                } else {
                     bodyFormData.append('cover', "")
                 }
-                for(let i = 0; i < this.uploadImagesFile.length; i++){
+                for (let i = 0; i < this.uploadImagesFile.length; i++) {
                     console.log(this.uploadImagesFile[i])
                     bodyFormData.append('uploaded_file', this.uploadImagesFile[i])
                 }
                 console.log(bodyFormData)
                 axios.post('posts/create', bodyFormData, config)
-                .then((response) =>{
-                    console.log(response);
-                    if(response.data.status="success"){
-                        this.$emit('update:modelValue', false);
-                        UpdateImages().Update(1);
-                        this.$router.push("/");
-                    }
-                }).catch((error) => {
-                    console.error(error);
-                    alert(error.response.data.detail);
-                })
-                
+                    .then((response) => {
+                        console.log(response);
+                        if (response.data.status = "success") {
+                            this.$emit('update:modelValue', false);
+                            UpdateImages().Update(1);
+                            this.$router.push("/");
+                        }
+                    }).catch((error) => {
+                        console.error(error);
+                        alert(error.response.data.detail);
+                    })
+
             }
             this.post_title = ""
             this.description = ""
@@ -90,7 +90,7 @@ export default {
 </script>
 
 <template>
-    <div class="Mask" v-if="modelValue" >
+    <div class="Mask" v-if="modelValue">
         <div class="UploaderPanel">
             <!-- <button @click="test">test</button> -->
             <h1 class="UploaderTitle">Upload Your Creativity</h1>
@@ -98,32 +98,43 @@ export default {
             <input v-model="post_title" class="TitleInputer" placeholder="Type Your Title of your artwork." />
             <textarea v-model="description" class="DescriptionText" placeholder="Description"></textarea>
             <div class="FileSelectionContainer">
-                <input @change="loadFile" class="UploaderFile" type="file" multiple/>
-                <input type="checkbox" v-model="is_nsfw" id="isNSFW" >
+                <input @change="loadFile" class="UploaderFile" type="file" multiple />
+                <input type="checkbox" v-model="is_nsfw" id="isNSFW">
                 <label class="NSFW" for="isNSFW">NSFW</label>
-                <input type="checkbox" v-model="CustomCover" id="CustomCover" >
+                <input type="checkbox" v-model="CustomCover" id="CustomCover">
                 <label class="NSFW" for="CustomCover">CustomCover</label>
             </div>
             <div class="FileSelectionContainer">
-                <input v-if="CustomCover" @change="loadCoverFile" class="UploaderFile" type="file"/>
+                <input v-if="CustomCover" @change="loadCoverFile" class="UploaderFile" type="file" />
             </div>
             <div class="UploaderButtonContainer">
-                <button @click="uploadPost" class="UploaderFunctionButton" >Upload</button>
+                <button @click="uploadPost" class="UploaderFunctionButton">Upload</button>
             </div>
         </div>
     </div>
 </template>
 
-<style>
+<style scoped>
+@keyframes FadeIn {
+    from {
+        opacity: 0;
+        top: 10px;
+    }
 
-.NSFW{
+    to {
+        opacity: 1;
+        top: 0px;
+    }
+}
+
+.NSFW {
     font-family: Arial, Helvetica, sans-serif;
     font-weight: lighter;
     font-size: 18px;
     margin: 10px;
 }
 
-.FileSelectionContainer{
+.FileSelectionContainer {
     width: 100%;
     height: 100px;
     display: flex;
