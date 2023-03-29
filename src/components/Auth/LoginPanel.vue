@@ -142,7 +142,7 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
 @keyframes ContainerLoadIn {
     from {
         opacity: 0;
@@ -182,7 +182,7 @@ export default {
 
 .root {
     width: 100%;
-    height: 100vh;
+    height: 90vh;
     display: flex;
     justify-content: center;
     align-items: center;
