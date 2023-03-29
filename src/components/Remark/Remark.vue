@@ -5,7 +5,8 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            ThePost: Object
+            ThePost: Object,
+            RemarkPanelON: false
         }
     },
     components: {
@@ -26,6 +27,9 @@ export default {
         },
         OpenImage(link: any) {
             window.open(link)
+        },
+        OpenRemarkPanel(){
+            this.RemarkPanelON = true;
         }
     },
     beforeMount() {
@@ -36,8 +40,9 @@ export default {
 
 <template>
     <!-- <button @click="test">test</button> -->
-    <!-- <RemarkPanel /> -->
+    <RemarkPanel v-model="RemarkPanelON"/>
     <div class="RemarkContainer">
+
         <div class="RemarkBox">
             <div class="ImageDisplayArea">
                 <img @click="OpenImage(ThePost.files_url.original_cover_url)"
@@ -60,7 +65,7 @@ export default {
                     <div class="InfoBoxFoot">
                         <p class="PublishDate">{{ ThePost.date }}</p>
                         <button class="LikeButton">Like</button>
-                        <button class="CommentButton" @click="">Comment</button>
+                        <button class="CommentButton" @click="OpenRemarkPanel">Comment</button>
                     </div>
                 </div>
                 <div class="CommentBox">
@@ -306,6 +311,7 @@ export default {
     left: 15px;
     bottom: 10px;
     padding: 10px;
+    cursor: pointer;
 }
 
 .ReplyButton:hover {
