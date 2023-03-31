@@ -6,7 +6,10 @@ export default {
     data() {
         return {
             ThePost: Object,
-            RemarkPanelON: false
+            Remarks: Object,
+            RemarkPanelON: false,
+            ReplyTo: '',
+            RemarkPage: 1
         }
     },
     components: {
@@ -17,7 +20,7 @@ export default {
         //     console.log(this.$route.params.post_uuid)
         // }
         GetTheSingleImageByPostUUID(post_uuid: any) {
-            axios.get("/resources/posts/single" + "/" + post_uuid)
+            axios.get("/resources/posts/single/" + post_uuid)
                 .then(
                     (response) => {
                         console.log(response.data);
@@ -25,22 +28,37 @@ export default {
                     }
                 )
         },
+        GetTheRmarksOfThePost(post_uuid: any) {
+            axios.get("/remark/get/inpost/" + post_uuid + '/' + this.RemarkPage)
+                .then(
+                    (response) => {
+                        console.log(response.data);
+                        this.Remarks = response.data;
+                    }
+                )
+        },
+        GetTheRepliesOfTheRemark(remark_uuid: any) {
+            axios.get('/')
+                .then()
+        },
         OpenImage(link: any) {
             window.open(link)
         },
-        OpenRemarkPanel(){
+        OpenRemarkPanel(ReplyTo: any) {
             this.RemarkPanelON = true;
+            // this.ReplyTo = ReplyTo
         }
     },
     beforeMount() {
         this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid);
+        this.GetTheRmarksOfThePost(this.$route.params.post_uuid);
     }
 }
 </script>
 
 <template>
     <!-- <button @click="test">test</button> -->
-    <RemarkPanel v-model="RemarkPanelON"/>
+    <RemarkPanel :ReplyUUID="ReplyTo" v-model="RemarkPanelON" />
     <div class="RemarkContainer">
 
         <div class="RemarkBox">
@@ -65,15 +83,16 @@ export default {
                     <div class="InfoBoxFoot">
                         <p class="PublishDate">{{ ThePost.date }}</p>
                         <button class="LikeButton">Like</button>
+
                         <button class="CommentButton" @click="OpenRemarkPanel">Comment</button>
                     </div>
                 </div>
-                <div class="CommentBox">
-                    <img class="UserAvatar" />
-                    <h1 class="CommentUserName">UserName</h1>
-                    <p class="CommentText">Comment Content Text. Once lost thing will never be able to come back.</p>
+                <div class="CommentBox" v-for="items in Remarks">
+                    <img class="UserAvatar" :src="items.avatar" />
+                    <h1 class="CommentUserName">{{ items.user_name }}</h1>
+                    <p class="CommentText">{{ items.content }}</p>
                     <button class="ReplyButton">Reply</button>
-                    <span class="CommentTime">2023-01-01 13:04</span>
+                    <span class="CommentTime">{{ items.date }}</span>
                 </div>
             </div>
         </div>
