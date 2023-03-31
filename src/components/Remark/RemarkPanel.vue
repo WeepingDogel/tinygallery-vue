@@ -1,7 +1,8 @@
 <script lang="ts">
 export default {
     props: {
-        modelValue: Boolean
+        modelValue: Boolean,
+        ReplyUUID: String
     },
     emits: ['update:modelValue'],
     data() {
@@ -24,7 +25,7 @@ export default {
                 <button @click="CloseRemarkPanel" class="CloseButton">X</button>
             </div>
             <div class="MidControl">
-                <input class="ReplyTo" readonly placeholder="Reply To: Optional / AutoFill" />
+                <input class="ReplyTo" readonly placeholder="Reply To: Optional / AutoFill" :value="ReplyUUID" />
                 <textarea class="CommentArea" placeholder="Leave your comment."></textarea>
             </div>
             <div class="FootControl">
