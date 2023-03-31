@@ -31,6 +31,12 @@ export default defineConfig({
       '/userdata':{
         target: 'http://127.0.0.1:8000',
       },
+      '/remark/get': {
+        target: 'http://127.0.0.1:8000'
+      },
+      '/remark/create':{
+        target: 'http://127.0.0.1:8000'
+      }
     },
   },
 })
