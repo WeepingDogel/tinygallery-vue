@@ -72,7 +72,7 @@ export default {
         // }
     },
     created() {
-        // Create the event listener to obersve the scroling event to load more datas.
+        // Createred the event listener to obersve the scroling event to load more datas.
         window.addEventListener('scroll', this.lazyLoading);
     },
     mounted() {
@@ -159,7 +159,7 @@ export default {
     margin: 10px auto;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     transition: 0.5s ease-in-out;
-    animation: FlashIn 1.5s;
+    animation: FlashIn 1s;
 }
 
 .Card:hover {
