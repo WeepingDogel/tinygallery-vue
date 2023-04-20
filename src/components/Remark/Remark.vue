@@ -1,15 +1,23 @@
 <script lang="ts">
 import RemarkPanel from './RemarkPanel.vue';
+import { UpdateRemarks } from '@/stores/UpdateRemarks';
 import axios from 'axios';
 
 export default {
     data() {
         return {
             ThePost: Object,
-            Remarks: Object,
+            Remarks: [],
             RemarkPanelON: false,
             ReplyTo: '',
             RemarkPage: 1
+        }
+    },
+    setup(){
+        const RemarkUpdate = UpdateRemarks();
+
+        return {
+            RemarkUpdate
         }
     },
     components: {
@@ -52,13 +60,20 @@ export default {
     beforeMount() {
         this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid);
         this.GetTheRmarksOfThePost(this.$route.params.post_uuid);
+    },
+    watch: {
+        // Watch the original varaible to check if new comments appeared.
+        'RemarkUpdate.update'(newValue, oldValue) {
+            this.Remarks = [];
+            this.GetTheRmarksOfThePost(this.$route.params.post_uuid);
+        }
     }
 }
 </script>
 
 <template>
     <!-- <button @click="test">test</button> -->
-    <RemarkPanel :ReplyUUID="ReplyTo" v-model="RemarkPanelON" />
+    <RemarkPanel :PostUUID="ThePost.post_uuid" :ReplyUUID="ReplyTo" v-model="RemarkPanelON" />
     <div class="RemarkContainer">
 
         <div class="RemarkBox">
