@@ -46,15 +46,15 @@ export default {
 }
 
 .TopControl{
-
+    display: flex;
 }
 
 .MidControl {
-
+    display: flex;
 }
 
 .FootControl {
-
+    display: flex;
 }
 
 
