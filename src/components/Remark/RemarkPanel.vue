@@ -1,18 +1,60 @@
 <script lang="ts">
+import axios from 'axios';
+import { UpdateRemarks } from '@/stores/UpdateRemarks'
+
+
 export default {
     props: {
         modelValue: Boolean,
-        ReplyUUID: String
+        ReplyUUID: String,
+        PostUUID: String
     },
     emits: ['update:modelValue'],
     data() {
         return {
-
+            comment: ""
         }
     },
     methods: {
-        CloseRemarkPanel(){
+        CloseRemarkPanel() {
             this.$emit('update:modelValue', false);
+        },
+        SendRemark() {
+            const commentToSent = this.comment;
+            const post_uuid = this.PostUUID;
+            const token = localStorage.getItem('Token')
+            const config = {
+                headers: {
+                    "Authorization": "Bearer " + token,
+                }
+            }
+            if (this.comment == "" || this.comment == " ") {
+                alert("Empty content is invalid.");
+            }
+            else {
+                axios.post(
+                    '/remark/create/inpost',
+                    {
+                        post_uuid: post_uuid,
+                        content: commentToSent
+                    },
+                    config
+                ).then(
+                    (response) => {
+                        console.log(post_uuid)
+                        console.log(response.data);
+                        UpdateRemarks().Update(1);
+                        this.CloseRemarkPanel();
+                        this.comment = "";
+                    }
+                ).catch(
+                    (error) => {
+                        console.log(error.detail)
+                    }
+                )
+            }
+            // console.log(post_uuid)
+
         }
     }
 }
@@ -26,10 +68,10 @@ export default {
             </div>
             <div class="MidControl">
                 <input class="ReplyTo" readonly placeholder="Reply To: Optional / AutoFill" :value="ReplyUUID" />
-                <textarea class="CommentArea" placeholder="Leave your comment."></textarea>
+                <textarea class="CommentArea" placeholder="Leave your comment." v-model="comment"></textarea>
             </div>
             <div class="FootControl">
-                <button class="SentButton">Comment</button>
+                <button class="SentButton" @click="SendRemark">Comment</button>
             </div>
         </div>
     </div>
