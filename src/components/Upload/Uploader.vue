@@ -65,7 +65,7 @@ export default {
                     bodyFormData.append('uploaded_file', this.uploadImagesFile[i])
                 }
                 console.log(bodyFormData)
-                axios.post('posts/create', bodyFormData, config)
+                axios.post('/posts/create', bodyFormData, config)
                     .then((response) => {
                         console.log(response);
                         if (response.data.status = "success") {
@@ -77,7 +77,6 @@ export default {
                         console.error(error);
                         alert(error.response.data.detail);
                     })
-
             }
             this.post_title = ""
             this.description = ""
