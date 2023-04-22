@@ -1,5 +1,6 @@
 <script lang="ts">
 import RemarkPanel from './RemarkPanel.vue';
+import ReplyPanel from './ReplyPanel.vue';
 import { UpdateRemarks } from '@/stores/UpdateRemarks';
 import axios from 'axios';
 
@@ -9,7 +10,8 @@ export default {
             ThePost: Object,
             Remarks: [],
             RemarkPanelON: false,
-            ReplyTo: '',
+            ReplyPanelON: false,
+            ReplyToUUID: "",
             RemarkPage: 1
         }
     },
@@ -21,7 +23,8 @@ export default {
         }
     },
     components: {
-        RemarkPanel
+        RemarkPanel,
+        ReplyPanel
     },
     methods: {
         // test(){
@@ -55,6 +58,11 @@ export default {
         OpenRemarkPanel(ReplyTo: any) {
             this.RemarkPanelON = true;
             // this.ReplyTo = ReplyTo
+        },
+        ReplyAComment(CommentUUID: any){
+            this.ReplyToUUID = CommentUUID;
+            this.ReplyPanelON = true;
+
         }
     },
     beforeMount() {
@@ -73,7 +81,8 @@ export default {
 
 <template>
     <!-- <button @click="test">test</button> -->
-    <RemarkPanel :PostUUID="ThePost.post_uuid" :ReplyUUID="ReplyTo" v-model="RemarkPanelON" />
+    <RemarkPanel :PostUUID="ThePost.post_uuid" v-model="RemarkPanelON" />
+    <ReplyPanel :RemarkUUID="ReplyToUUID" v-model="ReplyPanelON"/>
     <div class="RemarkContainer">
 
         <div class="RemarkBox">
@@ -106,7 +115,7 @@ export default {
                     <img class="UserAvatar" :src="items.avatar" />
                     <h1 class="CommentUserName">{{ items.user_name }}</h1>
                     <p class="CommentText">{{ items.content }}</p>
-                    <button class="ReplyButton">Reply</button>
+                    <button class="ReplyButton" @click="ReplyAComment(items.remark_uuid)">Reply</button>
                     <span class="CommentTime">{{ items.date }}</span>
                 </div>
             </div>
