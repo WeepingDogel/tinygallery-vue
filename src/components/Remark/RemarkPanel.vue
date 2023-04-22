@@ -6,7 +6,6 @@ import { UpdateRemarks } from '@/stores/UpdateRemarks'
 export default {
     props: {
         modelValue: Boolean,
-        ReplyUUID: String,
         PostUUID: String
     },
     emits: ['update:modelValue'],
@@ -67,7 +66,6 @@ export default {
                 <button @click="CloseRemarkPanel" class="CloseButton">X</button>
             </div>
             <div class="MidControl">
-                <input class="ReplyTo" readonly placeholder="Reply To: Optional / AutoFill" :value="ReplyUUID" />
                 <textarea class="CommentArea" placeholder="Leave your comment." v-model="comment"></textarea>
             </div>
             <div class="FootControl">
