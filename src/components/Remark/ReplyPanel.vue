@@ -2,25 +2,26 @@
 import axios from 'axios';
 
 export default {
-    data(){
+    data() {
         return {
             ReplyComment: "",
-            UserAvatar: String
+            UserAvatar: String,
+            OriginalRemark: Object
         }
     },
-    props:{
+    props: {
         modelValue: Boolean,
         RemarkUUID: String,
     },
-    emits:['update:modelValue'],
-    methods:{
-        closeReplyPanel(){
+    emits: ['update:modelValue'],
+    methods: {
+        closeReplyPanel() {
             this.$emit('update:modelValue', false)
         },
         GetTheUserAvatar() {
             const Token = localStorage.getItem('Token');
             if (Token) {
-                axios.put('/userdata/get/username',{},{
+                axios.put('/userdata/get/username', {}, {
                     headers: {
                         "Authorization": "Bearer " + Token
                     }
@@ -28,20 +29,30 @@ export default {
                     (response) => {
                         const username = response.data.username;
                         axios.get('/resources/avatar/' + username, {})
-                        .then(
-                            (response) => {
-                                console.log(response.data);
-                                this.UserAvatar = response.data.avatar_40px;
-                            }
-                        )
+                            .then(
+                                (response) => {
+                                    console.log(response.data);
+                                    this.UserAvatar = response.data.avatar_40px;
+                                }
+                            )
                     }
                 )
             }
+        },
+        GetTheOriginalRemark() {
+            axios.get('/remark/get/in_remark/single/' + this.RemarkUUID)
+                .then(
+                    (response) => {
+                        console.log(response.data);
+                        this.OriginalRemark = response.data;
+                    }
+                )
         }
     },
     mounted() {
         this.GetTheUserAvatar();
-    }
+        this.GetTheOriginalRemark()
+    },
 }
 </script>
 
@@ -53,11 +64,13 @@ export default {
             </div>
             <div class="MidControl">
                 <div class="OriginalRemarkDisplay" :id="RemarkUUID">
-                    <img class="UserAvatarOfRemarkSender" />
+                    <img :src="OriginalRemark.avatar" class="UserAvatarOfRemarkSender" />
                     <div class="CommentText">
-                        <h2 class="UserNameOfRemarkSender">UserName</h2>
-                        <p class="OriginalRemarkContent">Remark Content</p>
+                        <h2 class="UserNameOfRemarkSender">{{ OriginalRemark.user_name }}</h2>
+                        <p class="OriginalRemarkContent">{{ OriginalRemark.content }}</p>
+                        <p class="RemarkDate">{{ OriginalRemark.date }}</p>
                     </div>
+
                 </div>
                 <div class="ReplyDisplay">
 
@@ -67,7 +80,7 @@ export default {
                 <div class="ReplySender">
                     <img :src="UserAvatar" class="AvatarOfReplier" />
                     <input class="ReplyInput" placeholder="ReplyTo" />
-                    <button class="ReplyButton" >Reply</button>
+                    <button class="ReplyButton">Reply</button>
                 </div>
             </div>
         </div>
@@ -75,20 +88,20 @@ export default {
 </template>
 
 <style scoped>
-
 @keyframes FadeIn {
     from {
         opacity: 0;
         top: 10px;
     }
-    to{
+
+    to {
         opacity: 1;
         top: 0px;
     }
 }
 
 
-.Mask{
+.Mask {
     top: 0px;
     width: 100%;
     height: 100vh;
@@ -99,10 +112,10 @@ export default {
     align-items: center;
     flex-direction: column;
     z-index: 1;
-    animation: FadeIn 1s;
+    animation: FadeIn 0.5s;
 }
 
-.ReplyPanel{
+.ReplyPanel {
     width: 800px;
     height: 600px;
     background-color: #FFFFFF;
@@ -110,7 +123,7 @@ export default {
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
-.TopControl{
+.TopControl {
     width: 100%;
     height: 50px;
     display: flex;
@@ -159,7 +172,7 @@ export default {
 .UserAvatarOfRemarkSender {
     width: 60px;
     height: 60px;
-    margin-left: 40px;
+    margin-left: 60px;
     border: solid 1px #BDBDBD;
     border-radius: 8px;
 }
@@ -177,16 +190,32 @@ export default {
     font-size: 18px;
     color: #212121;
     margin-top: auto;
+    margin-top: 5px;
     margin-bottom: 2px;
 }
 
 .OriginalRemarkContent {
+    width: 600px;
+    height: auto;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: lighter;
-    font-size: 16px;
+    font-size: 18px;
     color: #757575;
     margin-top: 2px;
     margin-bottom: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word
+}
+
+.RemarkDate {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 14px;
+    color: #757575;
+    /* margin-top: auto; */
+    margin-left: auto;
+    /* margin-right: 40px; */
+    /* line-height: 40px; */
 }
 
 .ReplyDisplay {
