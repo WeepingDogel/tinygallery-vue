@@ -111,7 +111,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    animation: FadeIn 1s;
+    animation: FadeIn 0.5s;
 }
 
 .TopControl {
