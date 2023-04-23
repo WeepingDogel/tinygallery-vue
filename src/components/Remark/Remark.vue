@@ -81,8 +81,8 @@ export default {
 
 <template>
     <!-- <button @click="test">test</button> -->
-    <RemarkPanel :PostUUID="ThePost.post_uuid" v-model="RemarkPanelON" />
-    <ReplyPanel :RemarkUUID="ReplyToUUID" v-model="ReplyPanelON"/>
+    <RemarkPanel :PostUUID="ThePost.post_uuid" v-model="RemarkPanelON" v-if="RemarkPanelON"/>
+    <ReplyPanel :RemarkUUID="ReplyToUUID" v-model="ReplyPanelON" v-if="ReplyPanelON"/>
     <div class="RemarkContainer">
 
         <div class="RemarkBox">
