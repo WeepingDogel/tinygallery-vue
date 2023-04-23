@@ -299,7 +299,7 @@ export default {
     height: 800px;
     border-radius: 8px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    animation: FadeIn 1s;
+    animation: FadeIn 0.5s;
     background-color: #FFFFFF;
     display: flex;
     flex-direction: column;
