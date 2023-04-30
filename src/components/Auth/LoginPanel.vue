@@ -196,7 +196,7 @@ export default {
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
     position: relative;
     animation: FadeIn 0.5s;
-    animation: ContainerLoadIn 1s;
+    animation: ContainerLoadIn 0.5s;
 }
 
 .form-box {
@@ -213,7 +213,7 @@ export default {
     align-items: center;
     z-index: 2;
     transition: 0.5s ease-in-out;
-    animation: formBoxLoadIn 1s;
+    animation: formBoxLoadIn 0.5s;
 }
 
 .register-box,
@@ -222,7 +222,7 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    animation: FadeIn 1s;
+    animation: FadeIn 0.5s;
 }
 
 
