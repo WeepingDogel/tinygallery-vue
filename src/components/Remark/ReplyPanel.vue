@@ -145,7 +145,7 @@ export default {
 
 .ReplyPanel {
     width: 800px;
-    height: 600px;
+    height: auto;
     background-color: #FFFFFF;
     border-radius: 10px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
