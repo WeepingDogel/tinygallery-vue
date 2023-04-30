@@ -15,7 +15,7 @@ export default {
             RemarkPage: 1
         }
     },
-    setup(){
+    setup() {
         const RemarkUpdate = UpdateRemarks();
 
         return {
@@ -59,7 +59,7 @@ export default {
             this.RemarkPanelON = true;
             // this.ReplyTo = ReplyTo
         },
-        ReplyAComment(CommentUUID: any){
+        ReplyAComment(CommentUUID: any) {
             this.ReplyToUUID = CommentUUID;
             this.ReplyPanelON = true;
 
@@ -81,8 +81,8 @@ export default {
 
 <template>
     <!-- <button @click="test">test</button> -->
-    <RemarkPanel :PostUUID="ThePost.post_uuid" v-model="RemarkPanelON" v-if="RemarkPanelON"/>
-    <ReplyPanel :RemarkUUID="ReplyToUUID" v-model="ReplyPanelON" v-if="ReplyPanelON"/>
+    <RemarkPanel :PostUUID="ThePost.post_uuid" v-model="RemarkPanelON" v-if="RemarkPanelON" />
+    <ReplyPanel :RemarkUUID="ReplyToUUID" v-model="ReplyPanelON" v-if="ReplyPanelON" />
     <div class="RemarkContainer">
 
         <div class="RemarkBox">
@@ -199,7 +199,7 @@ export default {
     min-height: 90vh;
     display: flex;
     justify-content: center;
-    animation: FadeIn 1s;
+    animation: FadeIn 0.5s;
 }
 
 .RemarkBox {
@@ -294,7 +294,7 @@ export default {
     width: 100%;
     min-height: 80px;
     border-bottom: solid 1px #BDBDBD;
-    animation: CommentLoader 1s;
+    animation: CommentLoader 0.5s;
 }
 
 .UserAvatar {
