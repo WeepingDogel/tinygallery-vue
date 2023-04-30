@@ -149,7 +149,7 @@ export default {
     justify-content: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
-    animation: FadeIn 1s;
+    animation: FadeIn 0.5s;
 }
 
 .Card {
@@ -159,7 +159,7 @@ export default {
     margin: 10px auto;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     transition: 0.5s ease-in-out;
-    animation: FlashIn 1s;
+    animation: FlashIn 0.5s;
 }
 
 .Card:hover {
