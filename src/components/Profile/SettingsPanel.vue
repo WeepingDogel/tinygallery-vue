@@ -233,7 +233,7 @@ export default {
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     background-color: #FFFFFF;
     animation: FadeIn 0.5s;
-    animation: SlideIn 1s;
+    animation: SlideIn 0.5s;
     margin: 5px auto;
     border-radius: 10px;
     transition: 0.5s ease-in-out;
