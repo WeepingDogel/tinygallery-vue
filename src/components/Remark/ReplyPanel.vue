@@ -47,6 +47,22 @@ export default {
                         this.OriginalRemark = response.data;
                     }
                 )
+        },
+        GetAllReplies() {
+            axios.get('/')
+                .then(
+                    (response) => {
+
+                    }
+                )
+                .catch(
+                    (erorr) => {
+
+                    }
+                )
+        },
+        SendAReply() {
+
         }
     },
     mounted() {
@@ -70,10 +86,22 @@ export default {
                         <p class="OriginalRemarkContent">{{ OriginalRemark.content }}</p>
                         <p class="RemarkDate">{{ OriginalRemark.date }}</p>
                     </div>
-
                 </div>
                 <div class="ReplyDisplay">
-
+                    <div class="RepliesBox">
+                        <img class="ReplierAvatar" />
+                        <div class="ReplyTextDisplay">
+                            <h1 class="ReplierUserName">
+                                UserName
+                            </h1>
+                            <p class="ReplyContent">
+                                Comment Text.
+                            </p>
+                        </div>
+                        <p class="RepliesDate">
+                            2023-4-30
+                        </p>
+                    </div>
                 </div>
             </div>
             <div class="FootControl">
@@ -204,7 +232,7 @@ export default {
     margin-top: 2px;
     margin-bottom: auto;
     white-space: pre-wrap;
-    word-wrap: break-word
+    word-wrap: break-word;
 }
 
 .RemarkDate {
@@ -224,7 +252,6 @@ export default {
     height: 400px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     overflow-y: scroll;
     border-bottom: solid 1px #BDBDBD;
 }
@@ -305,5 +332,60 @@ export default {
     margin-bottom: auto;
     border-radius: 8px;
     border: solid 1px #BDBDBD;
+}
+
+
+.RepliesBox {
+    width: 100%;
+    min-height: 80px;
+    height: auto;
+    border-bottom: solid 1px #BDBDBD;
+    display: flex;
+    flex-direction: row;
+}
+
+
+.ReplierAvatar {
+    width: 50px;
+    height: 50px;
+    margin-left: 140px;
+    margin-top: auto;
+    margin-bottom: auto;
+    outline: none;
+    border: solid 1px #BDBDBD;
+    border-radius: 8px;
+}
+
+.ReplyTextDisplay {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 20px;
+    margin-right: auto;
+}
+
+.ReplierUserName {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 18px;
+    color: #212121;
+}
+
+.ReplyContent {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 16px;
+    color: #757575;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.RepliesDate {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 14px;
+    color: #757575;
+    margin-top: auto;
+    margin-bottom: 20px;
+    margin-right: 140px;
 }
 </style>
