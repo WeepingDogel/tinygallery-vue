@@ -260,6 +260,7 @@ export default {
     margin-top: auto;
     width: 100%;
     height: 50px;
+    padding-bottom: 5px;
     flex-direction: column;
     justify-content: center;
     display: flex;
