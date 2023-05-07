@@ -1,118 +1,154 @@
 <!-- @/components/Upload/Uploader.vue -->
+<!-- 
+    The code you provided is a TypeScript file that exports a Vue.js component. 
+    The component is responsible for displaying an uploader panel allowing users to upload images and create a post.
+
+    Let's go through the code to understand how the component works:
+
+        import statements are used to bring in functionality from other modules that the component depends on.
+
+        The props option defines the properties that can be passed to this component from its parent component. 
+        In this case, there is only one prop called modelValue of type Boolean.
+        
+        The emits option defines the events emitted by this component. 
+        In this case, only one event called 'update:modelValue' is defined.
+        
+        The data function initializes the component's data properties. 
+        In this case, it sets the initial values for 
+        CustomCover, is_nsfw, uploadImagesFile, coverFile, post_title, and description.
+        
+        The methods object defines the functions that can be called from the template or within the component. 
+        In this case, the component has four methods: 
+        closeUploader(), test(), loadFile(event:any), loadCoverFile(event:any), and uploadPost().
+        
+        The template section defines the HTML structure and the dynamic bindings of the component.
+
+    Overall, the component allows users to select image files to upload, specify a title and description for their post, and optionally mark it as NSFW (not safe for work). When the user clicks the "Upload" button, the component sends a POST request to the /posts/create endpoint with the selected files and fields as form data. If the server responds with a success status, the uploaded images are displayed on the website and the user is redirected to the homepage.
+
+ -->
 <script lang="ts">
-import { UpdateImages } from '@/stores/UpdateImages'
-import axios from 'axios';
+import { UpdateImages } from '@/stores/UpdateImages' // Import a module called 'UpdateImages' from a local file in the project.
+import axios from 'axios'; // Import the Axios library for making HTTP requests.
 
 export default {
     props: {
-        modelValue: Boolean
+        modelValue: Boolean // Define a prop called 'modelValue' of type Boolean. This allows data to be passed into the component from its parent component.
     },
-    emits: ['update:modelValue'],
+    emits: ['update:modelValue'], // Define an event called 'update:modelValue', which can be emitted by this component.
     data() {
         return {
-            CustomCover: false,
-            is_nsfw: "",
-            uploadImagesFile: FileList,
-            coverFile: null,
-            post_title: "",
-            description: ""
+            CustomCover: false, // Initialize a data property called 'CustomCover' to false.
+            is_nsfw: "", // Initialize a data property called 'is_nsfw' to an empty string.
+            uploadImagesFile: FileList, // Initialize a data property called 'uploadImagesFile' to a variable of type 'FileList'.
+            coverFile: null, // Initialize a data property called 'coverFile' to null.
+            post_title: "", // Initialize a data property called 'post_title' to an empty string.
+            description: "" // Initialize a data property called 'description' to an empty string.
         }
     },
     methods: {
-        closeUploader() {
+        closeUploader() { // Define a method called 'closeUploader' that emits the 'update:modelValue' event with a value of false.
             this.$emit('update:modelValue', false)
         },
-        test() {
+        test() { // Define a method called 'test' that logs the current value of the 'is_nsfw' data property to the console.
             console.log(this.is_nsfw)
         },
-        loadFile(event: any) {
+        loadFile(event: any) { // Define a method called 'loadFile' that sets the 'uploadImagesFile' data property to the files selected by the user.
             this.uploadImagesFile = event.target.files;
             console.log(this.uploadImagesFile)
         },
-        loadCoverFile(event: any) {
+        loadCoverFile(event: any) { // Define a method called 'loadCoverFile' that sets the 'coverFile' data property to the file selected by the user for the post cover.
             this.coverFile = event.target.files[0];
             console.log(this.coverFile)
         },
-        uploadPost() {
-            if (this.post_title == "" || this.description == "") {
+        uploadPost() { // Define a method called 'uploadPost' that sends a POST request to the server with the form data entered by the user.
+            if (this.post_title == "" || this.description == "") { // If the 'post_title' or 'description' data properties are empty, log an error message to the console.
                 console.log("Title and Dercription can't be empty!");
-            }
-            else {
-                const token = localStorage.getItem('Token');
-                const config = {
+            } else {
+                const token = localStorage.getItem('Token'); // Get the JWT token from local storage and store it in a variable called 'token'.
+                const config = { // Define an object called 'config' with headers that include the JWT token and set the content type to 'multipart/form-data'.
                     headers: {
                         "Authorization": "Bearer " + token,
                         "Content-type": "multipart/form-data"
-                    },
+                    }
                 };
-                let is_nsfw;
-                let bodyFormData = new FormData();
-                if (this.is_nsfw) {
+                let is_nsfw; // Declare a variable called 'is_nsfw'.
+                let bodyFormData = new FormData(); // Create a new instance of the FormData class and store it in a variable called 'bodyFormData'.
+                if (this.is_nsfw) { // Check whether the 'is_nsfw' data property is true. If so, set 'is_nsfw' to "true"; otherwise, set it to "false".
                     is_nsfw = "true"
                 } else {
                     is_nsfw = "false"
                 }
-                bodyFormData.append('is_nsfw', is_nsfw);
-                bodyFormData.append('post_title', this.post_title);
-                bodyFormData.append('description', this.description);
-                if (this.CustomCover) {
+                bodyFormData.append('is_nsfw', is_nsfw); // Append the 'is_nsfw' value to the form data object.
+                bodyFormData.append('post_title', this.post_title); // Append the 'post_title' value to the form data object.
+                bodyFormData.append('description', this.description); // Append the 'description' value to the form data object.
+                if (this.CustomCover) { // If the 'CustomCover' data property is true, append the cover file selected by the user to the form data object; otherwise, append an empty string.
                     bodyFormData.append('cover', this.coverFile);
                 } else {
                     bodyFormData.append('cover', "")
                 }
-                for (let i = 0; i < this.uploadImagesFile.length; i++) {
+                for (let i = 0; i < this.uploadImagesFile.length; i++) { // Loop through the array of uploaded images and append each one to the form data object.
                     console.log(this.uploadImagesFile[i])
                     bodyFormData.append('uploaded_file', this.uploadImagesFile[i])
                 }
-                console.log(bodyFormData)
-                axios.post('/posts/create', bodyFormData, config)
-                    .then((response) => {
-                        console.log(response);
-                        if (response.data.status = "success") {
-                            this.$emit('update:modelValue', false);
-                            UpdateImages().Update(1);
-                            this.$router.push("/");
+                console.log(bodyFormData) // Log the final form data object to the console.
+                axios.post('/posts/create', bodyFormData, config) // Send a POST request to the '/posts/create' endpoint with the form data as the payload.
+                    .then((response) => { // If the request is successful...
+                        console.log(response); // Log the response to the console for debugging purposes.
+                        if (response.data.status = "success") { // Check if the server responded with a success status.
+                            this.$emit('update:modelValue', false); // Emit the 'update:modelValue' event with a value of false to close the uploader panel.
+                            UpdateImages().Update(1); // Call the 'UpdateImages' function to update the images displayed on the website.
+                            this.$router.push("/"); // Redirect the user to the homepage.
                         }
-                    }).catch((error) => {
-                        console.error(error);
-                        alert(error.response.data.detail);
+                    }).catch((error) => { // If there was an error...
+                        console.error(error); // Log the error to the console for debugging purposes.
+                        alert(error.response.data.detail); // Display an alert with details about the error.
                     })
             }
-            this.post_title = ""
-            this.description = ""
-            this.is_nsfw = ""
-            this.CustomCover = false
+            this.post_title = "" // Reset the 'post_title' data property to an empty string.
+            this.description = "" // Reset the 'description' data property to an empty string.
+            this.is_nsfw = "" // Reset the 'is_nsfw' data property to an empty string.
+            this.CustomCover = false // Reset the 'CustomCover' data property to false.
         }
     }
 }
 </script>
 
 <template>
-    <div class="Mask" v-if="modelValue">
+    <div class="Mask" v-if="modelValue"> <!-- Display the uploader panel only if the 'modelValue' prop is true -->
         <div class="UploaderPanel">
             <!-- <button @click="test">test</button> -->
-            <h1 class="UploaderTitle">Upload Your Creativity</h1>
+            <h1 class="UploaderTitle">Upload Your Creativity</h1> <!-- Display a title for the uploader panel -->
             <button @click="closeUploader" class="closeButton">X</button>
+            <!-- Display a close button to hide the uploader panel -->
             <input v-model="post_title" class="TitleInputer" placeholder="Type Your Title of your artwork." />
+            <!-- Display an input field for the user to enter the post title -->
             <textarea v-model="description" class="DescriptionText" placeholder="Description"></textarea>
+            <!-- Display a text area for the user to enter the post description -->
             <div class="FileSelectionContainer">
                 <input @change="loadFile" class="UploaderFile" type="file" multiple />
+                <!-- Display a file input field for the user to select images to upload -->
                 <input type="checkbox" v-model="is_nsfw" id="isNSFW">
                 <label class="NSFW" for="isNSFW">NSFW</label>
+                <!-- Display a checkbox for the user to mark the post as NSFW (not safe for work) -->
                 <input type="checkbox" v-model="CustomCover" id="CustomCover">
                 <label class="NSFW" for="CustomCover">CustomCover</label>
+                <!-- Display a checkbox for the user to choose whether to use a custom cover image for the post -->
             </div>
             <div class="FileSelectionContainer">
                 <input v-if="CustomCover" @change="loadCoverFile" class="UploaderFile" type="file" />
+                <!-- If the 'CustomCover' data property is true, display a file input field for the user to select a cover image for the post -->
             </div>
             <div class="UploaderButtonContainer">
                 <button @click="uploadPost" class="UploaderFunctionButton">Upload</button>
+                <!-- Display a button that triggers the 'uploadPost' method when clicked -->
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+/* CSS styling for the component */
+
 @keyframes FadeIn {
     from {
         opacity: 0;
@@ -313,5 +349,4 @@ export default {
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-}
-</style>
+}</style>
