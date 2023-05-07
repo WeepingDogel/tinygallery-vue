@@ -1,39 +1,58 @@
 <!-- @/view/AuthView.vue -->
+<!-- 
+    v-if="displayStatus": This directive displays the content of the div if the displayStatus variable is set to true. 
+    In this case, it displays the login form.
+
+    v-else: This directive displays the content of the div if the displayStatus variable is set to false. 
+    In this case, it displays the registration form.
+    
+    ref="register_box", ref="login_box" and ref="form_box": 
+    These attributes add a reference to each box element so that the selectToRegister() and selectToLogin() methods 
+    can access them and change their position on the screen.
+
+    @click="LoginAccount": This attribute binds the LoginAccount() method to the click event of the login button, 
+    so that when the user clicks the button, the method is called.
+
+    @click="RegisterAccount": This attribute binds the RegisterAccount() method to the click event of the register button, 
+    so that when the user clicks the button, the method is called.
+
+    {{ Result }}: This expression displays the value of the Result variable in the template. 
+    The Result variable is updated by the methods depending on the success or failure of the HTTP requests.
+    Overall, this component provides a basic implementation for user authentication and registration using Vue.js and Axios.
+-->
 <script lang="ts">
-import axios from 'axios';
-import { Authentication } from '@/stores/Authentication';
+import axios from 'axios'; // Import the Axios library
+import { Authentication } from '@/stores/Authentication'; // Import the `Authentication` store
 
 export default {
     data() {
         return {
-            displayStatus: true,
-            logUserName: '', // The username to login.
-            logPassWord: '', // The password to login.
-            regUserName: '', // The username gonna be created
+            displayStatus: true, // A boolean value indicating whether the login or registration form is displayed
+            logUserName: '', // The username to login
+            logPassWord: '', // The password to login
+            regUserName: '', // The username to register
             regPassWord: '', // The password to register
-            regConfirmPassword: '', // To confirm the password.
-            regEmail: '', // The Email to change password and contact with the users.
-            Result: '',  // The result of response from the backend.
+            regConfirmPassword: '', // Confirm the password
+            regEmail: '', // The email address used for password recovery and user contact
+            Result: '', // The response result from backend
         }
-
     },
     methods: { // The Methods to deal with the user actions.
-        // Click button to register a account.
+        // Switch to the registration form
         selectToRegister() {
             this.$refs.form_box.style.transform = 'translateX(80%)';
             this.displayStatus = false;
             this.Result = "";
-
         },
-        // Click button to login a account.
+        // Switch to the login form
         selectToLogin() {
             this.$refs.form_box.style.transform = 'translateX(0%)';
             this.displayStatus = true;
             this.Result = "";
         },
-        // Register Action
+        // Action to register a new account
         RegisterAccount() {
-            if (this.regPassWord == this.regConfirmPassword) { // Check if two passwords are the same.
+            if (this.regPassWord == this.regConfirmPassword) { // Check if two passwords are the same
                 axios.post(
                     '/user/register',
                     {
@@ -60,15 +79,16 @@ export default {
             this.regConfirmPassword = "";
             this.regEmail = "";
         },
-        // Login Action 
+        // Action to login an existing account
         LoginAccount() {
-            if (this.logUserName == "" || this.logPassWord == "") {
+            if (this.logUserName == "" || this.logPassWord == "") { // Check if username and password are empty
                 this.Result = "Username or password can't be empty!"
                 console.log("Username or password can't be empty!")
             } else {
                 let bodyFormData = new FormData();
                 bodyFormData.append('username', this.logUserName);
                 bodyFormData.append('password', this.logPassWord);
+
                 axios({
                     method: "post",
                     url: "/user/token",
@@ -101,27 +121,40 @@ export default {
     }
 }
 </script>
+
 <template>
     <div class="root">
         <div class="container">
-            <div ref="form_box" id="form_box" class="form-box">
+            <div ref="form_box" id="form_box" class="form-box"> <!-- The form box contains the login and register boxes -->
                 <!-- Login Box -->
                 <div v-if="displayStatus" ref="login_box" id="login_box" class="login-box">
+                    <!-- If the 'displayStatus' data property is true, display the login box -->
                     <h1>Login</h1>
                     <input v-model="logUserName" type="text" placeholder="Username" />
+                    <!-- Display an input field for the user to enter their username -->
                     <input v-model="logPassWord" type="password" placeholder="Password" />
+                    <!-- Display an input field for the user to enter their password -->
                     <button @click="LoginAccount" type="button">Login</button>
+                    <!-- Display a button that triggers the 'LoginAccount' method when clicked -->
                     <span class="StatusMessage">{{ Result }}</span>
+                    <!-- Display the result message from the server, if any -->
                 </div>
                 <!-- Register Box -->
                 <div v-else ref="register_box" id="register_box" class="register-box hidden">
+                    <!-- If the 'displayStatus' data property is false, display the register box -->
                     <h1>Register</h1>
                     <input v-model="regUserName" type="text" placeholder="Username" />
+                    <!-- Display an input field for the user to enter their desired username -->
                     <input v-model="regPassWord" type="password" placeholder="Password" />
-                    <input v-model="regConfirmPassword" type="password" placeholder="Confirm passowrd" />
+                    <!-- Display an input field for the user to enter their desired password -->
+                    <input v-model="regConfirmPassword" type="password" placeholder="Confirm password" />
+                    <!-- Display an input field for the user to confirm their password -->
                     <input v-model="regEmail" type="email" placeholder="Email" />
+                    <!-- Display an input field for the user to enter their email address -->
                     <button @click="RegisterAccount" type="button">Register</button>
+                    <!-- Display a button that triggers the 'RegisterAccount' method when clicked -->
                     <span class="StatusMessage">{{ Result }}</span>
+                    <!-- Display the result message from the server, if any -->
                 </div>
             </div>
             <div class="con-box left">
@@ -130,6 +163,7 @@ export default {
                 <img src="@/assets/TinyGallery_Logo.png" />
                 <p>Had an account already?</p>
                 <button @click="selectToLogin" type="button">Go to login!</button>
+                <!-- Display a button that sets the 'displayStatus' data property to true, showing the login box -->
             </div>
             <div class="con-box right">
                 <h2>Welcome to <span>TinyGallery</span></h2>
@@ -137,13 +171,18 @@ export default {
                 <img src="@/assets/TinyGallery_Logo.png" />
                 <p>Don't have an account?</p>
                 <button @click="selectToRegister" type="button">Go to register!</button>
+                <!-- Display a button that sets the 'displayStatus' data property to false, showing the register box -->
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+/* CSS styling for the component */
+
 @keyframes ContainerLoadIn {
+
+    /* Define a keyframe animation called 'ContainerLoadIn' */
     from {
         opacity: 0;
         transform: translateX(90%);
@@ -156,6 +195,8 @@ export default {
 }
 
 @keyframes formBoxLoadIn {
+
+    /* Define a keyframe animation called 'formBoxLoadIn' */
     from {
         opacity: 0;
         transform: translateY(-90%);
@@ -168,6 +209,8 @@ export default {
 }
 
 @keyframes FadeIn {
+
+    /* Define a keyframe animation called 'FadeIn' */
     from {
         opacity: 0;
         top: 10px;
@@ -196,7 +239,9 @@ export default {
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
     position: relative;
     animation: FadeIn 0.5s;
+    /* Apply the 'FadeIn' animation when the component is loaded */
     animation: ContainerLoadIn 0.5s;
+    /* Apply the 'ContainerLoadIn' animation when the component is loaded */
 }
 
 .form-box {
@@ -214,6 +259,7 @@ export default {
     z-index: 2;
     transition: 0.5s ease-in-out;
     animation: formBoxLoadIn 0.5s;
+    /* Apply the 'formBoxLoadIn' animation when the component is loaded */
 }
 
 .register-box,
@@ -223,6 +269,7 @@ export default {
     align-items: center;
     width: 100%;
     animation: FadeIn 0.5s;
+    /* Apply the 'FadeIn' animation when the component is loaded */
 }
 
 
@@ -364,5 +411,4 @@ span.StatusMessage {
 .con-box button:hover {
     background-color: #7C4DFF;
     color: #fff;
-}
-</style>
+}</style>
