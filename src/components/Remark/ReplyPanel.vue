@@ -62,7 +62,7 @@ export default {
                 )
         },
         SendAReply() {
-
+            
         }
     },
     mounted() {
@@ -116,6 +116,7 @@ export default {
 </template>
 
 <style scoped>
+/* CSS styling for the component */
 @keyframes FadeIn {
     from {
         opacity: 0;
