@@ -1,34 +1,79 @@
-<!-- @/components/navbar.vue -->
+<!-- navbar.vue -->
+<!-- 
+    In the script section:
+
+        import Uploader from "@/components/Upload/Uploader.vue";: Import the "Uploader" component.
+        import { RouterLink } from 'vue-router';: Import the "RouterLink" component from Vue Router.
+        import { Authentication } from '@/stores/Authentication';: Import the "Authentication" store.
+        import { storeToRefs } from 'pinia';: Import the "storeToRefs" function from Pinia.
+
+    The component has the following properties:
+
+        DisplayLink: A string representing the link to be displayed in the navbar.
+        DisplayTitle: A string representing the title to be displayed in the navbar.
+        functionDisplay: A boolean indicating whether the logout and uploader buttons should be displayed.
+        UploaderON: A boolean indicating whether the uploader component should be displayed.
+
+        In the setup() method, a reference to the Authentication store is created and 
+        converted to refs using the storeToRefs function from Pinia. 
+        This allows the component to reactively update when the isLogged property of the store changes.
+
+        The watch option watches for changes to the isLogged property in the store 
+        and calls the changeURL() and displayLogout() methods when the value changes.
+
+        The changeURL() method updates the DisplayLink and DisplayTitle properties based on whether the user is logged in or not.
+
+        The displayLogout() method sets the functionDisplay property to true if the user is authenticated and false otherwise.
+
+        The logout() method logs the user out by removing the token from local storage and 
+        updating the isLogged property in the Authentication store. 
+        It then redirects the user to the home page.
+
+        The OpenUploader() method opens the uploader component by setting the UploaderON property to true.
+
+    In the template section:
+
+        The component renders a navigation bar with links to different pages, 
+        depending on the user's authentication status. 
+        
+        The RouterLink component is used to render the links provided by Vue Router. 
+
+        The v-if directive is used to conditionally display the logout and uploader buttons 
+        based on the functionDisplay property.
+
+        The Uploader component is rendered and bound to the UploaderON property using v-model.
+ -->
 <script lang="ts">
-import Uploader from "@/components/Upload/Uploader.vue";
-import { RouterLink } from 'vue-router';
-import { Authentication } from '@/stores/Authentication';
-import { storeToRefs } from 'pinia';
+import Uploader from "@/components/Upload/Uploader.vue"; // Import the "Uploader" component
+import { RouterLink } from 'vue-router'; // Import the "RouterLink" component from Vue Router
+import { Authentication } from '@/stores/Authentication'; // Import the "Authentication" store
+import { storeToRefs } from 'pinia'; // Import the "storeToRefs" function from Pinia
 
 export default {
     data() {
         return {
-            DisplayLink: "/login",
-            DisplayTitle: "Login",
-            functionDisplay: false,
-            UploaderON: false
+            DisplayLink: "/login", // Initialize the login link
+            DisplayTitle: "Login", // Initialize the title to be "Login"
+            functionDisplay: false, // Initialize the function display to be false
+            UploaderON: false // Initialize the state of the uploader to be closed
         }
     },
     setup() {
-        const logStatus = Authentication();
-        const UpdateStatus = storeToRefs(logStatus)
+        const logStatus = Authentication(); // Create a reference to the "Authentication" store
+        const UpdateStatus = storeToRefs(logStatus) // Convert the store to refs to make it reactive
+
         return {
             UpdateStatus, logStatus
         }
     },
     watch: {
-        "logStatus.isLogged"(newValue, oldValue) {
-            this.changeURL()
-            this.displayLogout()
+        "logStatus.isLogged"(newValue, oldValue) { // Watch changes to the "isLogged" property of the store
+            this.changeURL() // Call the changeURL method when the state changes
+            this.displayLogout() // Call the displayLogout method when the state changes
         }
     },
     methods: {
-        changeURL() {
+        changeURL() { // Change the URL and title in the navbar based on whether the user is logged in or not
             if (this.logStatus.isLogged) {
                 this.DisplayLink = "/profile";
                 this.DisplayTitle = "Profile"
@@ -37,29 +82,26 @@ export default {
                 this.DisplayTitle = "Login"
             }
         },
-        // test(){
-        //     console.log(this.logStatus.isLogged)
-        // },
-        displayLogout() {
+        displayLogout() { // Show or hide the logout button based on whether the user is logged in or not
             if (this.logStatus.isLogged) {
                 this.functionDisplay = true;
             } else {
                 this.functionDisplay = false;
             }
         },
-        logout() {
-            localStorage.removeItem("Token");
-            Authentication().setLogStatus(false);
-            this.$router.push("/")
+        logout() { // Log the user out and redirect to the home page
+            localStorage.removeItem("Token"); // Remove the token from local storage
+            Authentication().setLogStatus(false); // Update the store to reflect that the user is logged out
+            this.$router.push("/") // Redirect to the home page
             console.log(this.logStatus.isLogged);
             console.log("logged out");
         },
-        OpenUploader() {
+        OpenUploader() { // Open the uploader component
             this.UploaderON = true;
         }
     },
     components: {
-        Uploader
+        Uploader // Register the "Uploader" component as a child component
     }
 }
 </script>
@@ -70,17 +112,21 @@ export default {
         <div id="linkContainer">
 
             <RouterLink to="/">Home</RouterLink>
+            <!-- Link to the home page -->
             <RouterLink :to="DisplayLink">{{ DisplayTitle }}</RouterLink>
+            <!-- Link to either the login or profile page, depending on the user's authentication status -->
             <button class="functionButton" v-if="functionDisplay" @click="logout">Logout</button>
-            <RouterLink to="/about">About</RouterLink>
+            <!-- Display the logout button if the user is authenticated -->
+            <RouterLink to="/about">About</RouterLink> <!-- Link to the about page -->
             <button @click="OpenUploader" class="uploadButton" v-if="functionDisplay">+</button>
-            <!-- <button @click="test">test</button> -->
+            <!-- Display the uploader button if the user is authenticated -->
         </div>
     </div>
-    <Uploader v-model="UploaderON" />
+    <Uploader v-model="UploaderON" /> <!-- Render the uploader component and bind it to a model -->
 </template>
 
 <style scoped>
+/* CSS styling for the component */
 .uploadButton {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 36px;
