@@ -15,4 +15,4 @@ An open-source project providing the drawing lovers a free and simple gallery se
 
 # Backend
 
-![TinyGallery BackEnd](https://github.com/WeepingDogel/tinygallery-backend)
+[TinyGallery BackEnd](https://github.com/WeepingDogel/tinygallery-backend)
