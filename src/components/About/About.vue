@@ -1,8 +1,10 @@
+<!-- About -->
 <script lang="ts">
 export default {
+    // Define the component's data
     data() {
         return {
-            Version: "1.0.0-Beta",
+            Version: "1.0.0-Beta", // The current version of TinyGallery
         }
     }
 }
@@ -15,8 +17,10 @@ export default {
                 About TinyGallery
             </h1>
             <div class="top-control">
+                <!-- TinyGallery logo -->
                 <img class="Logo" src="@/assets/TinyGallery_Logo.png" />
                 <div class="text-control">
+                    <!-- Introduction section -->
                     <h1 class="AboutParaTitle">Introduction</h1>
                     <p class="AboutPara">
                         TinyGallery is an open-source project providing the drawing lovers a free and simple gallery
@@ -25,8 +29,10 @@ export default {
                     <p class="AboutPara">
                         And this one is made as a vue edition.
                     </p>
+                    <!-- Technology stack section -->
                     <h1 class="AboutParaTitle">Technology Stack</h1>
                     <p class="AboutPara">
+                        <!-- Badges for various technologies used in TinyGallery -->
                         <img src="https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&amp;logo=vuedotjs&amp;logoColor=%234FC08D"
                             alt="Vue.js">
                         <img src="https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&amp;logo=vite&amp;logoColor=white"
@@ -40,6 +46,7 @@ export default {
                         <img src="https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&amp;logo=sqlite&amp;logoColor=white"
                             alt="SQLite">
                     </p>
+                    <!-- Source code section -->
                     <h1 class="AboutParaTitle">Source Code</h1>
                     <p class="AboutPara">
                         Vue Front End:
@@ -56,9 +63,6 @@ export default {
                                 alt="GitHub">
                         </a>
                     </p>
-                    <p class="AboutPara">
-
-                    </p>
                 </div>
             </div>
         </div>
@@ -66,6 +70,8 @@ export default {
 </template>
 
 <style scoped>
+/* CSS styling for the component */
+
 @keyframes FadeIn {
     from {
         opacity: 0;
