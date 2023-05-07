@@ -1,8 +1,20 @@
-*{
+/*
+These CSS styles are used to normalize default browser behaviors. 
+
+The first style sets the margin and padding of all HTML elements to zero to eliminate any potential inconsistencies that 
+may be caused by different browser defaults. 
+
+The second style sets the scrolling behavior of the page to "smooth," 
+which creates a smooth animation when navigating to different sections of the page using anchor tags.
+*/
+
+/* Set margin and padding to 0 for all elements */
+* {
     padding: 0;
     margin: 0;
 }
 
-body{
+/* Set scrolling behavior of body to smooth */
+body {
     scroll-behavior: smooth;
 }
