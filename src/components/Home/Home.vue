@@ -1,93 +1,80 @@
+<!-- Home -->
+<!-- 
+    This is a Vue.js component that displays a set of images on a page and allows the user to lazy load more images, 
+    scroll back to the top of the page, and open a specific image as a "Remark" component.
+ -->
 <script lang="ts">
-import axios from 'axios';
-import { UpdateImages } from "@/stores/UpdateImages"
-import { storeToRefs } from 'pinia';
+import axios from 'axios'; // Import axios for making HTTP requests
+import { UpdateImages } from "@/stores/UpdateImages"; // Import the Pinia store
+import { storeToRefs } from 'pinia'; // Import the `storeToRefs` function from Pinia
 
 export default {
     data() {
         return {
-            pages: 1,
-            displayData: [],
+            pages: 1, // The current page number
+            displayData: [], // An array to store the displayed images
         }
     },
+    // Setup hook for Pinia store
     setup() {
-        const PostsUpdate = UpdateImages();
-        const PostUpdateStatus = storeToRefs(PostsUpdate);
+        const PostsUpdate = UpdateImages(); // Get the UpdateImages Pinia store
+        const PostUpdateStatus = storeToRefs(PostsUpdate); // Convert the store to refs
 
         return {
-            PostsUpdate, PostUpdateStatus
+            PostsUpdate, PostUpdateStatus // Return the store and its refs
         }
     },
     methods: {
-        BackToTop() {
+        BackToTop() { // Scroll to the top of the page
             document.body.scrollTop = document.documentElement.scrollTop = 0;
         },
-        displayIamges() {
-            this.pages = 1
-            axios.get('/resources/posts/' + this.pages, {
-            }).then((response) => {
-                const TextOfDisplayData = response.request.response;
-                const DisplayDataToJSON = JSON.parse(TextOfDisplayData);
-                console.log(DisplayDataToJSON);
-                this.displayData = DisplayDataToJSON;
+        displayIamges() { // Display images on the page
+            this.pages = 1; // Reset the current page number to 1
+            axios.get('/resources/posts/' + this.pages).then((response) => { // Make a GET request to the server API
+                const TextOfDisplayData = response.request.response; // Get the response text
+                const DisplayDataToJSON = JSON.parse(TextOfDisplayData); // Parse the response text to JSON format
+                console.log(DisplayDataToJSON); // Log the response data
+                this.displayData = DisplayDataToJSON; // Set the display data to the response data
             })
         },
-        lazyLoading() {
-            // Lazy loading
-            // Get the scroll loacation
-            let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            // Get the client height 
-            let clientHeight = document.documentElement.clientHeight;
-            // Get the whole scroll height
-            let scrollHeight = document.documentElement.scrollHeight;
-            // If scroll top and client height is more than scroll height, then update more post datas.
-            if (scrollTop + clientHeight >= scrollHeight) {
-                console.log("到底了");
-                this.fetchData();
+        lazyLoading() { // Lazy load more images when the user scrolls to the bottom of the page
+            let scrollTop = document.documentElement.scrollTop || document.body.scrollTop; // Get the current scroll location
+            let clientHeight = document.documentElement.clientHeight; // Get the client height of the window
+            let scrollHeight = document.documentElement.scrollHeight; // Get the total scroll height of the page
+            if (scrollTop + clientHeight >= scrollHeight) { // If the user has scrolled to the bottom of the page
+                console.log("到底了"); // Log a message for testing purposes
+                this.fetchData(); // Load more images
             }
         },
-        async fetchData() {
-            // Fetch new data.
-            // Add the page.
-            this.pages = this.pages + 1;
-            // Sent the get request to the server.
-            const response = await axios.get('/resources/posts/' + this.pages);
-            // Deal with the data.
-            const newData = JSON.parse(response.request.response);
-            if (newData[0] == null) { // If the first file is null,
-                this.pages = this.pages - 1; // then decrease the page.
-            } else { // if it's not null
-                for (let i = 0; i < newData.length; i++) { // then add new posts to the display Data.
+        async fetchData() { // Fetch more image data from the server
+            this.pages = this.pages + 1; // Increment the current page number
+            const response = await axios.get('/resources/posts/' + this.pages); // Make a GET request to the server API
+            const newData = JSON.parse(response.request.response); // Parse the response text to JSON format
+            if (newData[0] == null) { // If there is no new data
+                this.pages = this.pages - 1; // Decrement the current page number
+            } else { // Otherwise
+                for (let i = 0; i < newData.length; i++) { // Loop over the new data and add it to the display data array
                     this.displayData.push(newData[i])
                 }
             }
-            // console.log(this.displayData);
         },
-        OpenRemarkBySingleUUID(post_uuid: any) {
-
-            this.$router.push("/remark/" + post_uuid)
+        OpenRemarkBySingleUUID(post_uuid: any) { // Open a specific post by UUID in the "Remark" component
+            this.$router.push("/remark/" + post_uuid) // Navigate to the "Remark" component with the specified UUID
         }
-        // test() {
-        //     console.log(this.pages)
-        // }
     },
-    created() {
-        // Createred the event listener to obersve the scroling event to load more datas.
-        window.addEventListener('scroll', this.lazyLoading);
+    created() { // Called when the component is created
+        window.addEventListener('scroll', this.lazyLoading); // Add a listener for scrolling events to trigger lazy loading
     },
-    mounted() {
-        // When the componets mounted, update the datas.
-        this.displayIamges();
+    mounted() { // Called after the component is mounted and ready to use
+        this.displayIamges(); // Display the initial set of images
     },
-    unmounted() {
-        // Remove the event listener.
-        window.removeEventListener('scroll', this.lazyLoading);
+    unmounted() { // Called before the component is unmounted
+        window.removeEventListener('scroll', this.lazyLoading); // Remove the scroll listener to prevent memory leaks
     },
-    watch: {
-        // Watch the original varaible to check if new posts appeared.
+    watch: { // Watch the Pinia store for updates and re-fetch data as necessary
         'PostsUpdate.update'(newValue, oldValue) {
-            this.displayData = []
-            this.displayIamges()
+            this.displayData = [] // Clear the display data array
+            this.displayIamges() // Refetch the image data from the server
         }
     }
 }
@@ -95,6 +82,7 @@ export default {
 
 <template>
     <div class="Container">
+        <!-- Loop over displayData and render each image as a "Card" on the page -->
         <div class="Card" v-for="items of displayData">
             <img @click="OpenRemarkBySingleUUID(items.post_uuid)" class="displayImage" :src="items.cover_url"
                 :alt="items.post_uuid" />
@@ -107,13 +95,15 @@ export default {
             </div>
         </div>
     </div>
+    <!-- Button to scroll back to the top of the page -->
     <div class="BackToTop">
         <button @click="BackToTop" class="TopButton">Top</button>
     </div>
-    <!-- <button @click="test">test</button> -->
 </template>
 
 <style scoped>
+/* CSS styling for the component */
+
 @keyframes FadeIn {
     from {
         opacity: 0;
