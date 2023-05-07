@@ -1,102 +1,194 @@
+<!-- Remark.vue -->
+<!-- 
+    The first two lines are import statements for two child components 
+    - RemarkPanel and ReplyPanel - which are used in the current component.
+
+    The third line imports a function called UpdateRemarks from a file located at '@/stores/UpdateRemarks'. 
+    This is likely a Vuex store action or mutation that updates the state of the 'Remarks' array 
+    when a new remark is added to the post.
+
+    The fourth line imports a library called axios, which is an HTTP client that helps make requests to an API.
+
+    The component definition begins on line 6 with the 'export default' statement. 
+    This is where we define the properties, methods, and other logic of the component.
+
+    Starting on line 7, we define the data property of the component using a function that returns an object 
+    with several properties:
+
+        ThePost: 
+        This is an empty object that will eventually hold the details of a single post.
+
+        Remarks: 
+        This is an empty array that will eventually hold all the remarks on the post.
+
+        RemarkPanelON:  
+        This boolean value represents whether the RemarkPanel component is open or closed. 
+        It is initially set to false.
+
+        ReplyPanelON: 
+        This boolean value represents whether the ReplyPanel component is open or closed. It is initially set to false.
+
+        ReplyToUUID: 
+        This variable is an empty string that will be used to store the UUID of the comment being replied to.
+
+        RemarkPage: 
+        This variable is set to 1 and represents the page number of remarks to be shown on the screen.
+
+    On line 14, we define the setup function of the component, which returns an object containing the constant RemarkUpdate. 
+    This function is used to set up any reactive variables that need to be watched by Vue.
+    
+    RemarkUpdate is a constant that calls the imported UpdateRemarks function. 
+    We can use this constant to reference the function in other parts of the component.
+
+    On line 20, we register the child components used in the current component - RemarkPanel and ReplyPanel.
+
+    Starting on line 24, we define several methods that will be used in the component:
+
+        GetTheSingleImageByPostUUID: 
+        This method takes a post UUID as an argument and makes a GET request to fetch the details of a single post 
+        from the API using axios. 
+        The response data is then stored in the ThePost object.
+
+        GetTheRmarksOfThePost: 
+        This method takes a post UUID as an argument and makes a GET request to fetch all the remarks for the post 
+        from the API using axios. 
+        The response data is then stored in the Remarks array.
+
+        GetTheRepliesOfTheRemark: 
+        This method takes a remark UUID as an argument and makes a GET request to fetch all the replies for the remark 
+        from the API using axios. T
+        his method is currently empty and needs to be implemented further to work correctly.
+
+        OpenImage: 
+        This method takes an image link as an argument and opens the link in a new window when called.
+
+        OpenRemarkPanel: 
+        This method takes a ReplyTo argument (which is likely a comment UUID) 
+        and sets the RemarkPanelON boolean value to true to open the RemarkPanel component. 
+        This method is currently commented out, so it doesn't actually do anything yet.
+
+        ReplyAComment: 
+        This method takes a CommentUUID argument (which is likely a comment UUID) 
+        and sets the ReplyToUUID variable to the UUID of the comment being replied to. 
+        It also sets the ReplyPanelON boolean value to true to open the ReplyPanel component.
+
+    The beforeMount lifecycle hook on line 51 is called just before the component is mounted. 
+    
+    Here, we call two methods - GetTheSingleImageByPostUUID and GetTheRmarksOfThePost - 
+    to fetch the post details and remarks from the API.
+
+    The watch object on line 56 is used to listen for changes in the RemarkUpdate property of the component. 
+    If this property changes, which occurs when a new remark is added to the post, 
+    we clear the Remarks array and call the GetTheRmarksOfThePost method again to refresh the remarks shown on the screen.
+
+That's a high-level explanation of what's going on in this Vue component! Let me know if you have any questions.
+ -->
 <script lang="ts">
-import RemarkPanel from './RemarkPanel.vue';
-import ReplyPanel from './ReplyPanel.vue';
-import { UpdateRemarks } from '@/stores/UpdateRemarks';
-import axios from 'axios';
+import RemarkPanel from './RemarkPanel.vue'; // Importing the component 'RemarkPanel' from its file path.
+import ReplyPanel from './ReplyPanel.vue'; // Importing the component 'ReplyPanel' from its file path.
+import { UpdateRemarks } from '@/stores/UpdateRemarks'; // Importing the function 'UpdateRemarks' from its file path in the stores folder.
+import axios from 'axios'; // Importing the HTTP client library 'axios'.
 
 export default {
-    data() {
+    data() { // Defining the data property of the component.
         return {
-            ThePost: Object,
-            Remarks: [],
-            RemarkPanelON: false,
-            ReplyPanelON: false,
-            ReplyToUUID: "",
-            RemarkPage: 1
+            ThePost: Object, // Initializing an empty object to hold a single post.
+            Remarks: [], // Initializing an empty array to hold all the remarks on a post.
+            RemarkPanelON: false, // Setting the initial state of the 'RemarkPanel' component as closed.
+            ReplyPanelON: false, // Setting the initial state of the 'ReplyPanel' component as closed.
+            ReplyToUUID: "", // Initializing an empty string to hold the UUID of the comment being replied to.
+            RemarkPage: 1 // Initializing the page number of remarks to be shown on the screen.
         }
     },
-    setup() {
-        const RemarkUpdate = UpdateRemarks();
+    setup() { // Defining the setup function of the component.
+        const RemarkUpdate = UpdateRemarks(); // Calling the imported 'UpdateRemarks' function and storing it in a constant.
 
         return {
-            RemarkUpdate
+            RemarkUpdate // Returning the constant 'RemarkUpdate' to use it later in the component.
         }
     },
-    components: {
+    components: { // Registering the child components used in the current component.
         RemarkPanel,
         ReplyPanel
     },
-    methods: {
-        // test(){
-        //     console.log(this.$route.params.post_uuid)
-        // }
-        GetTheSingleImageByPostUUID(post_uuid: any) {
-            axios.get("/resources/posts/single/" + post_uuid)
+    methods: { // Defining the methods used in the component.
+        GetTheSingleImageByPostUUID(post_uuid: any) { // A method that fetches a single post by UUID.
+            axios.get("/resources/posts/single/" + post_uuid) // Making a GET request to the server endpoint that returns a single post.
                 .then(
-                    (response) => {
-                        console.log(response.data);
-                        this.ThePost = response.data;
+                    (response) => { // Handling the server response.
+                        console.log(response.data); // Logging the received data in the console.
+                        this.ThePost = response.data; // Updating the 'ThePost' object with the received post data.
                     }
                 )
         },
-        GetTheRmarksOfThePost(post_uuid: any) {
-            axios.get("/remark/get/inpost/" + post_uuid + '/' + this.RemarkPage)
+        GetTheRmarksOfThePost(post_uuid: any) { // A method that fetches all the remarks of a post by UUID.
+            axios.get("/remark/get/inpost/" + post_uuid + '/' + this.RemarkPage) // Making a GET request to the server endpoint that returns all the remarks of a post.
                 .then(
-                    (response) => {
-                        console.log(response.data);
-                        this.Remarks = response.data;
+                    (response) => { // Handling the server response.
+                        console.log(response.data); // Logging the received data in the console.
+                        this.Remarks = response.data; // Updating the 'Remarks' array with the received remark data.
                     }
                 )
         },
-        GetTheRepliesOfTheRemark(remark_uuid: any) {
-            axios.get('/')
+        GetTheRepliesOfTheRemark(remark_uuid: any) { // A method that fetches all the replies of a remark by UUID.
+            axios.get('/') // Making a GET request to the server endpoint that returns all the replies of a remark.
                 .then()
         },
-        OpenImage(link: any) {
+        OpenImage(link: any) { // A method that opens an image link in a new window.
             window.open(link)
         },
-        OpenRemarkPanel(ReplyTo: any) {
-            this.RemarkPanelON = true;
+        OpenRemarkPanel(ReplyTo: any) { // A method that opens the 'RemarkPanel' component and passes the UUID of the comment being replied to.
+            this.RemarkPanelON = true; // Setting the state of 'RemarkPanel' component as open.
             // this.ReplyTo = ReplyTo
         },
-        ReplyAComment(CommentUUID: any) {
-            this.ReplyToUUID = CommentUUID;
-            this.ReplyPanelON = true;
+        ReplyAComment(CommentUUID: any) { // A method that opens the 'ReplyPanel' component and passes the UUID of the comment being replied to.
+            this.ReplyToUUID = CommentUUID; // Updating the 'ReplyToUUID' string with the passed UUID.
+            this.ReplyPanelON = true; // Setting the state of 'ReplyPanel' component as open.
 
         }
     },
-    beforeMount() {
-        this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid);
-        this.GetTheRmarksOfThePost(this.$route.params.post_uuid);
+    beforeMount() { // A lifecycle hook that runs before the component is mounted.
+        this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid); // Calling the 'GetTheSingleImageByPostUUID' method to fetch a single post by UUID.
+        this.GetTheRmarksOfThePost(this.$route.params.post_uuid); // Calling the 'GetTheRmarksOfThePost' method to fetch all the remarks of a post by UUID.
     },
-    watch: {
-        // Watch the original varaible to check if new comments appeared.
-        'RemarkUpdate.update'(newValue, oldValue) {
-            this.Remarks = [];
-            this.GetTheRmarksOfThePost(this.$route.params.post_uuid);
+    watch: { // Defining watchers to listen for changes in data properties of the component.
+        'RemarkUpdate.update'(newValue, oldValue) { // Listening to any change in the 'update' property of 'RemarkUpdate'.
+            this.Remarks = []; // Clearing the 'Remarks' array.
+            this.GetTheRmarksOfThePost(this.$route.params.post_uuid); // Calling the 'GetTheRmarksOfThePost' method to fetch all the remarks of a post by UUID.
         }
     }
 }
 </script>
 
 <template>
+    <!-- Comment #1: This is a Vue template that contains a RemarkPanel component, a ReplyPanel component, and a container for displaying remarks -->
     <!-- <button @click="test">test</button> -->
+    <!-- Comment #2: This button was commented out, so it won't be displayed on the page -->
     <RemarkPanel :PostUUID="ThePost.post_uuid" v-model="RemarkPanelON" v-if="RemarkPanelON" />
+    <!-- Comment #3: The RemarkPanel component is used to display a panel for submitting a new remark -->
     <ReplyPanel :RemarkUUID="ReplyToUUID" v-model="ReplyPanelON" v-if="ReplyPanelON" />
+    <!-- Comment #4: The ReplyPanel component is used to display a panel for submitting a reply to an existing remark -->
     <div class="RemarkContainer">
-
+        <!-- Comment #5: This div is used as a container for displaying all the remarks -->
         <div class="RemarkBox">
+            <!-- Comment #6: This div contains the post information and the list of remarks -->
             <div class="ImageDisplayArea">
+                <!-- Comment #7: This div contains the cover image and any additional images uploaded for the post -->
                 <img @click="OpenImage(ThePost.files_url.original_cover_url)"
                     v-if="ThePost.files_url.image_files_url.length > 1" class="DisplayedImage"
                     :src="ThePost.files_url.original_cover_url" />
+                <!-- Comment #8: This is the cover image for the post, which will be displayed if there is only one image in the post -->
                 <div v-for="items of ThePost.files_url.image_files_url">
                     <img @click="OpenImage(items)" class="DisplayedImage" :src="items" />
                 </div>
+                <!-- Comment #9: This loop is used to display any additional images uploaded for the post -->
             </div>
             <div class="RemarksArea">
+                <!-- Comment #10: This div contains the post information and the list of remarks -->
                 <div class="InfoBox">
+                    <!-- Comment #11: This div contains the post information, such as the post title, author name, description, and number of likes -->
                     <h1 class="InfoTitlte">{{ ThePost.post_title }}</h1>
+                    <!-- Comment #12: This is the title of the post -->
                     <p class="InfoDescription">
                         Author: <b style="color: #7C4DFF;">{{ ThePost.user_name }}</b>
                         <br />
@@ -104,26 +196,37 @@ export default {
                         <br />
                         <b style="color: #7C4DFF;">Likes: {{ ThePost.dots }}</b>
                     </p>
+                    <!-- Comment #13: This is the description of the post, which includes the author name and number of likes -->
                     <div class="InfoBoxFoot">
                         <p class="PublishDate">{{ ThePost.date }}</p>
                         <button class="LikeButton">Like</button>
-
+                        <!-- Comment #14: This button is used to like the post -->
                         <button class="CommentButton" @click="OpenRemarkPanel">Comment</button>
+                        <!-- Comment #15: This button is used to open the RemarkPanel component for submitting a new remark -->
                     </div>
                 </div>
                 <div class="CommentBox" v-for="items in Remarks">
+                    <!-- Comment #16: This div is used to display all the remarks, which are represented by the items in the Remarks array -->
                     <img class="UserAvatar" :src="items.avatar" />
+                    <!-- Comment #17: This is the avatar of the user who submitted the remark -->
                     <h1 class="CommentUserName">{{ items.user_name }}</h1>
+                    <!-- Comment #18: This is the username of the user who submitted the remark -->
                     <p class="CommentText">{{ items.content }}</p>
+                    <!-- Comment #19: This is the content of the remark -->
                     <button class="ReplyButton" @click="ReplyAComment(items.remark_uuid)">Reply</button>
+                    <!-- Comment #20: This button is used to open the ReplyPanel component for submitting a reply to an existing remark -->
                     <span class="CommentTime">{{ items.date }}</span>
+                    <!-- Comment #21: This is the date on which the remark was submitted -->
                 </div>
             </div>
         </div>
     </div>
 </template>
 
+
 <style scoped>
+/* CSS styling for the component */
+
 @keyframes FadeIn {
     from {
         opacity: 0;
