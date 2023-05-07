@@ -1,3 +1,6 @@
+<!-- 
+    Profile.vue
+ -->
 <script lang="ts">
 import SettingsPanel from "@/components/Profile/SettingsPanel.vue"
 import axios from "axios";
