@@ -1,6 +1,6 @@
 <script lang="ts">
 import axios from 'axios';
-import { UpdateRemarks } from '@/stores/UpdateRemarks'
+import { UpdateRemarks } from '@/stores/UpdateRemarks';
 
 
 export default {

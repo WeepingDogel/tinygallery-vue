@@ -138,7 +138,31 @@ export default {
             window.open(link)
         },
         OpenRemarkPanel(ReplyTo: any) { // A method that opens the 'RemarkPanel' component and passes the UUID of the comment being replied to.
-            this.RemarkPanelON = true; // Setting the state of 'RemarkPanel' component as open.
+            const token = localStorage.getItem('Token');
+            axios.put(
+                '/userdata/get/username',{},
+                {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                })
+                .then(
+                    (response) => {
+                        const username = response.data.username;
+                        if (username){
+                            this.RemarkPanelON = true; // Setting the state of 'RemarkPanel' component as open.
+                        }else if(username == false){
+                            alert("Unauthorized!\nPlease login to comment!");
+                        }
+                    }
+                )
+                .catch(
+                    (error) => {
+                        console.log(error.detail)
+                        alert("Error! \n" + error.detail);
+                    }
+                )
+            
             // this.ReplyTo = ReplyTo
         },
         ReplyAComment(CommentUUID: any) { // A method that opens the 'ReplyPanel' component and passes the UUID of the comment being replied to.
@@ -205,18 +229,20 @@ export default {
                         <!-- Comment #15: This button is used to open the RemarkPanel component for submitting a new remark -->
                     </div>
                 </div>
-                <div class="CommentBox" v-for="items in Remarks">
-                    <!-- Comment #16: This div is used to display all the remarks, which are represented by the items in the Remarks array -->
-                    <img class="UserAvatar" :src="items.avatar" />
-                    <!-- Comment #17: This is the avatar of the user who submitted the remark -->
-                    <h1 class="CommentUserName">{{ items.user_name }}</h1>
-                    <!-- Comment #18: This is the username of the user who submitted the remark -->
-                    <p class="CommentText">{{ items.content }}</p>
-                    <!-- Comment #19: This is the content of the remark -->
-                    <button class="ReplyButton" @click="ReplyAComment(items.remark_uuid)">Reply</button>
-                    <!-- Comment #20: This button is used to open the ReplyPanel component for submitting a reply to an existing remark -->
-                    <span class="CommentTime">{{ items.date }}</span>
-                    <!-- Comment #21: This is the date on which the remark was submitted -->
+                <div class="CommentDisplayArea">
+                    <div class="CommentBox" v-for="items in Remarks">
+                        <!-- Comment #16: This div is used to display all the remarks, which are represented by the items in the Remarks array -->
+                        <img class="UserAvatar" :src="items.avatar" />
+                        <!-- Comment #17: This is the avatar of the user who submitted the remark -->
+                        <h1 class="CommentUserName">{{ items.user_name }}</h1>
+                        <!-- Comment #18: This is the username of the user who submitted the remark -->
+                        <p class="CommentText">{{ items.content }}</p>
+                        <!-- Comment #19: This is the content of the remark -->
+                        <button class="ReplyButton" @click="ReplyAComment(items.remark_uuid)">Reply</button>
+                        <!-- Comment #20: This button is used to open the ReplyPanel component for submitting a reply to an existing remark -->
+                        <span class="CommentTime">{{ items.date }}</span>
+                        <!-- Comment #21: This is the date on which the remark was submitted -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -287,13 +313,13 @@ export default {
     margin-right: 10px;
     cursor: pointer;
     transition: background-color 0.5s ease;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
 .CommentButton:hover {
     background-color: #303F9F;
     color: #C5CAE9;
     transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
 .RemarkContainer {
@@ -446,6 +472,13 @@ export default {
     color: #757575;
 }
 
+.CommentDisplayArea {
+    width: 100%;
+    height: 700px;
+    overflow-y: scroll;
+}
+
+
 .ReplyButton {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #7C4DFF;
@@ -458,6 +491,7 @@ export default {
     bottom: 10px;
     padding: 10px;
     cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
 .ReplyButton:hover {
