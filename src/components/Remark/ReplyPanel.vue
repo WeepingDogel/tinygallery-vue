@@ -22,7 +22,7 @@ export default {
             Page: 1
         }
     },
-    setup(){
+    setup() {
         const RepliesUpdate = UpdateReplies();
 
         return {
@@ -75,36 +75,43 @@ export default {
                 )
         },
         GetAllReplies() { // Retrieves all replies to the original remark
-            axios.get('/remark/get/reply/' + this.RemarkUUID + '/' + this.Page) // Sends a GET request to retrieve all replies
+            axios.get('/remark/get/reply/' + this.RemarkUUID + '/' + this.Page) // Sends a GET request to retrieve all replies 
                 .then(
                     (response) => {
-                        console.log(response.data);
-                        this.AllReplies = response.data;
-                        console.log("Success!");
+                        console.log(response.data); // logs the response data received from the server
+                        this.AllReplies = response.data; // assigns the response data to AllReplies array
+                        console.log("Success!"); // logs Success! message when API call is successful
                     }
                 )
                 .catch(
                     (error) => {
-                        console.log(error.detail);
+                        console.log(error.detail); // logs the error details if any error occurs during API call
                     }
                 )
         },
         SendAReply() {
-            // Sends a reply to the original remark
+            // Retrieve token from local storage
             const Token = localStorage.getItem('Token');
+
+            // Setup headers for HTTP request
             const headers = {
                 headers: {
                     "Authorization": "Bearer " + Token
                 }
             }
+
+            // Check if reply comment is empty
             if (this.ReplyComment == "") {
                 alert("The content of comment can not be empty!");
             } else {
+                // Send a PUT request to retrieve the username associated with the given token
                 axios.put('/userdata/get/username', {}, headers)
                     .then(
                         (response) => {
+                            // The username is retrieved successfully
                             const username = response.data.username;
                             if (username != false) {
+                                // Send a POST request to create a new remark reply using the provided parameters
                                 axios.post('/remark/create/reply',
                                     {
                                         reply_to_remark_uuid: this.RemarkUUID,
@@ -115,22 +122,26 @@ export default {
                                     (response) => {
                                         console.log(response.data.status);
                                         if (response.data.status == "success") {
+                                            // If the reply is successfully created, update the list of replies and set the ReplyComment field to an empty string
                                             UpdateReplies().Update(1);
                                             this.ReplyComment = "";
                                         }
                                     }
                                 ).catch(
                                     (error) => {
+                                        // Log any errors during the HTTP request to console
                                         console.log(error);
                                     }
                                 )
                             } else {
+                                // Display an alert message indicating that the user needs to login to reply
                                 alert("Not authorized! You have to login your account to send a reply!");
                             }
                         }
                     )
                     .catch(
                         (error) => {
+                            // Log any errors during the HTTP request to console
                             console.log(error);
                         }
                     )
@@ -142,7 +153,7 @@ export default {
         this.GetTheOriginalRemark(); // Retrieves the original remark being replied to when the component is mounted
         this.GetAllReplies();
     },
-    watch:{
+    watch: {
         'RepliesUpdate.update'(newValue, oldValue) {
             this.AllReplies = [];
             this.GetAllReplies();
@@ -215,7 +226,7 @@ export default {
         scale: 0.5;
     }
 
-    to{
+    to {
         opacity: 1;
         margin-top: 0%;
         scale: 1;
@@ -467,7 +478,7 @@ export default {
     flex-direction: column;
     text-align: justify;
     width: 430px;
-    
+
 }
 
 .ReplierUserName {
