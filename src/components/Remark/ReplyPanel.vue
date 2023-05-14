@@ -233,7 +233,6 @@ export default {
     }
 }
 
-
 .Mask {
     top: 0px;
     width: 100%;
