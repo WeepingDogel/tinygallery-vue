@@ -91,6 +91,7 @@ export default {
             <div class="UserInfoBar">
                 <img class="UserAvatar" :src="items.avatar" />
                 <p class="ImageUserName">{{ items.user_name }}</p>
+                <p class="LikesDisplay">{{ items.dots }} likes</p>
                 <p class="ImageDate">{{ items.date }}</p>
             </div>
         </div>
@@ -146,10 +147,13 @@ export default {
     width: 450px;
     height: 500px;
     border-radius: 10px;
-    margin: 10px auto;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     transition: 0.5s ease-in-out;
     animation: FlashIn 0.5s;
+    background-color: #FFFFFF;
 }
 
 .Card:hover {
@@ -228,6 +232,13 @@ export default {
     line-height: 40px;
 }
 
+.LikesDisplay{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    color: #7C4DFF;
+    padding: 10px;
+    line-height: 40px;
+}
 
 .ImageDate {
     font-family: Arial, Helvetica, sans-serif;

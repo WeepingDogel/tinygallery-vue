@@ -97,7 +97,8 @@ export default {
             RemarkPanelON: false, // Setting the initial state of the 'RemarkPanel' component as closed.
             ReplyPanelON: false, // Setting the initial state of the 'ReplyPanel' component as closed.
             ReplyToUUID: "", // Initializing an empty string to hold the UUID of the comment being replied to.
-            RemarkPage: 1 // Initializing the page number of remarks to be shown on the screen.
+            RemarkPage: 1 , // Initializing the page number of remarks to be shown on the screen.
+            LikesData: Object
         }
     },
     setup() { // Defining the setup function of the component.
@@ -169,11 +170,63 @@ export default {
             this.ReplyToUUID = CommentUUID; // Updating the 'ReplyToUUID' string with the passed UUID.
             this.ReplyPanelON = true; // Setting the state of 'ReplyPanel' component as open.
 
+        },
+        CheckIfLiked(){ // A method that check if the user has already liked it.
+            const token = localStorage.getItem('Token');
+            axios.get("/likes/get/like_status", {
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                params: {
+                    post_uuid: this.$route.params.post_uuid
+                }
+            })
+            .then(
+                (response) => {
+                    console.log(response.data);
+                    this.LikesData = response.data;
+                }
+            )
+            .catch(
+                (error) => {
+                    console.log(error.detail);
+                }
+            )
+        },
+        SentLikeRequest(){ // A method that send Like request to the backend.
+            const token = localStorage.getItem('Token');
+            if (token == null || token == "") {
+                alert("Please login to like it!");
+            }
+            axios.post(
+                '/likes/send/like',{},
+                {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    },
+                    params: {
+                        post_uuid: this.$route.params.post_uuid
+                    }
+                }
+            ).then(
+                (response) => {
+                    console.log(response.data);
+                    this.CheckIfLiked();
+                    this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid)
+                }
+            ).catch(
+                (error) => {
+                    console.log(error.detail)
+                }
+            )
         }
     },
     beforeMount() { // A lifecycle hook that runs before the component is mounted.
         this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid); // Calling the 'GetTheSingleImageByPostUUID' method to fetch a single post by UUID.
         this.GetTheRmarksOfThePost(this.$route.params.post_uuid); // Calling the 'GetTheRmarksOfThePost' method to fetch all the remarks of a post by UUID.
+    },
+    mounted(){
+        this.CheckIfLiked();
     },
     watch: { // Defining watchers to listen for changes in data properties of the component.
         'RemarkUpdate.update'(newValue, oldValue) { // Listening to any change in the 'update' property of 'RemarkUpdate'.
@@ -218,12 +271,13 @@ export default {
                         <br />
                         {{ ThePost.description }}
                         <br />
-                        <b style="color: #7C4DFF;">Likes: {{ ThePost.dots }}</b>
+                        <b style="color: #7C4DFF;">{{ ThePost.dots }} likes in total</b>
                     </p>
                     <!-- Comment #13: This is the description of the post, which includes the author name and number of likes -->
                     <div class="InfoBoxFoot">
                         <p class="PublishDate">{{ ThePost.date }}</p>
-                        <button class="LikeButton">Like</button>
+                        <button class="LikeButton" @click="SentLikeRequest" v-if="LikesData == false || LikesData.liked == false">Like</button>
+                        <button class="LikedButton" @click="SentLikeRequest" v-else>Liked!</button>
                         <!-- Comment #14: This button is used to like the post -->
                         <button class="CommentButton" @click="OpenRemarkPanel">Comment</button>
                         <!-- Comment #15: This button is used to open the RemarkPanel component for submitting a new remark -->
@@ -290,11 +344,35 @@ export default {
     margin-left: auto;
     cursor: pointer;
     transition: background-color 0.5s ease;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
 .LikeButton:hover {
     background-color: #ffaab8;
     color: #FFFFFF;
+    transition: background-color 0.5s ease;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.LikedButton {
+    width: 50px;
+    height: 50px;
+    background-color: #ffaab8;
+    color: #FFFFFF;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    border: solid 1px #ffaab8;
+    outline: none;
+    border-radius: 10px;
+    margin-left: auto;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.LikedButton:hover {
+    background-color: #FFFFFF;
+    color: #ffaab8;
     transition: background-color 0.5s ease;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
@@ -343,6 +421,7 @@ export default {
     justify-content: center;
     align-items: flex-start;
     transition: 1s ease-in-out;
+    background-color: #FFFFFF;
 }
 
 .ImageDisplayArea {
