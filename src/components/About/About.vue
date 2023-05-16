@@ -102,6 +102,7 @@ export default {
     margin: 10px auto;
     border-radius: 10px;
     animation: FadeIn 0.5s;
+    background-color: #FFFFFF;
 }
 
 .Logo {

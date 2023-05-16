@@ -118,6 +118,7 @@ export default {
     margin: 10px auto;
     border-radius: 10px;
     transition: 0.5s ease-in-out;
+    background-color: #FFFFFF;
 }
 
 .UserCover {
@@ -197,5 +198,6 @@ export default {
     margin: 5px auto;
     border-radius: 10px;
     transition: 0.5s ease-in-out;
+    background-color: #FFFFFF;
 }
 </style>

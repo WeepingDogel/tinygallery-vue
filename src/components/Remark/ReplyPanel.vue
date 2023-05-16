@@ -305,7 +305,7 @@ export default {
     width: 60px;
     height: 60px;
     margin-left: 60px;
-    border: solid 1px #BDBDBD;
+    border: solid 1px #DBDBDB;
     border-radius: 8px;
 }
 
