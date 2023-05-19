@@ -40,13 +40,13 @@ export default {
     methods: { // The Methods to deal with the user actions.
         // Switch to the registration form
         selectToRegister() {
-            this.$refs.form_box.style.transform = 'translateX(80%)';
+            (this.$refs as any).form_box.style.transform = 'translateX(80%)';
             this.displayStatus = false;
             this.Result = "";
         },
         // Switch to the login form
         selectToLogin() {
-            this.$refs.form_box.style.transform = 'translateX(0%)';
+            (this.$refs as any).form_box.style.transform = 'translateX(0%)';
             this.displayStatus = true;
             this.Result = "";
         },

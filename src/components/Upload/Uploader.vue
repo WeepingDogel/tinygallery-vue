@@ -39,7 +39,7 @@ export default {
         return {
             CustomCover: false, // Initialize a data property called 'CustomCover' to false.
             is_nsfw: "", // Initialize a data property called 'is_nsfw' to an empty string.
-            uploadImagesFile: FileList, // Initialize a data property called 'uploadImagesFile' to a variable of type 'FileList'.
+            uploadImagesFile: [], // Initialize a data property called 'uploadImagesFile' to a variable of type 'FileList'.
             coverFile: null, // Initialize a data property called 'coverFile' to null.
             post_title: "", // Initialize a data property called 'post_title' to an empty string.
             description: "" // Initialize a data property called 'description' to an empty string.
@@ -82,7 +82,7 @@ export default {
                 bodyFormData.append('post_title', this.post_title); // Append the 'post_title' value to the form data object.
                 bodyFormData.append('description', this.description); // Append the 'description' value to the form data object.
                 if (this.CustomCover) { // If the 'CustomCover' data property is true, append the cover file selected by the user to the form data object; otherwise, append an empty string.
-                    bodyFormData.append('cover', this.coverFile);
+                    bodyFormData.append('cover', (this.coverFile as any));
                 } else {
                     bodyFormData.append('cover', "")
                 }
@@ -127,7 +127,7 @@ export default {
             <div class="FileSelectionContainer">
                 <input @change="loadFile" class="UploaderFile" type="file" multiple />
                 <!-- Display a file input field for the user to select images to upload -->
-                <input type="checkbox" v-model="is_nsfw" id="isNSFW">
+                <input type="checkbox" v-model="(is_nsfw as any)" id="isNSFW">
                 <label class="NSFW" for="isNSFW">NSFW</label>
                 <!-- Display a checkbox for the user to mark the post as NSFW (not safe for work) -->
                 <input type="checkbox" v-model="CustomCover" id="CustomCover">

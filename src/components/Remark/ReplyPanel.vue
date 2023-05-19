@@ -170,26 +170,26 @@ export default {
             </div>
             <div class="MidControl">
                 <div class="OriginalRemarkDisplay" :id="RemarkUUID">
-                    <img :src="OriginalRemark.avatar" class="UserAvatarOfRemarkSender" />
+                    <img :src="(OriginalRemark as any).avatar" class="UserAvatarOfRemarkSender" />
                     <div class="CommentText">
-                        <h2 class="UserNameOfRemarkSender">{{ OriginalRemark.user_name }}</h2>
-                        <p class="OriginalRemarkContent">{{ OriginalRemark.content }}</p>
-                        <p class="RemarkDate">{{ OriginalRemark.date }}</p>
+                        <h2 class="UserNameOfRemarkSender">{{ (OriginalRemark as any).user_name }}</h2>
+                        <p class="OriginalRemarkContent">{{ (OriginalRemark as any).content }}</p>
+                        <p class="RemarkDate">{{ (OriginalRemark as any).date }}</p>
                     </div>
                 </div>
                 <div class="ReplyDisplay">
                     <div class="RepliesBox" v-for="items of AllReplies">
-                        <img class="ReplierAvatar" :src="items.avatar" />
+                        <img class="ReplierAvatar" :src="(items as any).avatar" />
                         <div class="ReplyTextDisplay">
                             <h1 class="ReplierUserName">
-                                {{ items.user_name }}
+                                {{ (items as any).user_name }}
                             </h1>
                             <p class="ReplyContent">
-                                {{ items.content }}
+                                {{ (items as any).content }}
                             </p>
                         </div>
                         <p class="RepliesDate">
-                            {{ items.date }}
+                            {{ (items as any).date }}
                         </p>
                     </div>
                 </div>

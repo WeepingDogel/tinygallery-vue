@@ -241,7 +241,7 @@ export default {
     <!-- Comment #1: This is a Vue template that contains a RemarkPanel component, a ReplyPanel component, and a container for displaying remarks -->
     <!-- <button @click="test">test</button> -->
     <!-- Comment #2: This button was commented out, so it won't be displayed on the page -->
-    <RemarkPanel :PostUUID="ThePost.post_uuid" v-model="RemarkPanelON" v-if="RemarkPanelON" />
+    <RemarkPanel :PostUUID="(ThePost as any).post_uuid" v-model="RemarkPanelON" v-if="RemarkPanelON" />
     <!-- Comment #3: The RemarkPanel component is used to display a panel for submitting a new remark -->
     <ReplyPanel :RemarkUUID="ReplyToUUID" v-model="ReplyPanelON" v-if="ReplyPanelON" />
     <!-- Comment #4: The ReplyPanel component is used to display a panel for submitting a reply to an existing remark -->
@@ -251,11 +251,11 @@ export default {
             <!-- Comment #6: This div contains the post information and the list of remarks -->
             <div class="ImageDisplayArea">
                 <!-- Comment #7: This div contains the cover image and any additional images uploaded for the post -->
-                <img @click="OpenImage(ThePost.files_url.original_cover_url)"
-                    v-if="ThePost.files_url.image_files_url.length > 1" class="DisplayedImage"
-                    :src="ThePost.files_url.original_cover_url" />
+                <img @click="OpenImage((ThePost as any).files_url.original_cover_url)"
+                    v-if="(ThePost as any).files_url.image_files_url.length > 1" class="DisplayedImage"
+                    :src="(ThePost as any).files_url.original_cover_url" />
                 <!-- Comment #8: This is the cover image for the post, which will be displayed if there is only one image in the post -->
-                <div v-for="items of ThePost.files_url.image_files_url">
+                <div v-for="items of (ThePost as any).files_url.image_files_url">
                     <img @click="OpenImage(items)" class="DisplayedImage" :src="items" />
                 </div>
                 <!-- Comment #9: This loop is used to display any additional images uploaded for the post -->
@@ -264,19 +264,19 @@ export default {
                 <!-- Comment #10: This div contains the post information and the list of remarks -->
                 <div class="InfoBox">
                     <!-- Comment #11: This div contains the post information, such as the post title, author name, description, and number of likes -->
-                    <h1 class="InfoTitlte">{{ ThePost.post_title }}</h1>
+                    <h1 class="InfoTitlte">{{ (ThePost as any).post_title }}</h1>
                     <!-- Comment #12: This is the title of the post -->
                     <p class="InfoDescription">
-                        Author: <b style="color: #7C4DFF;">{{ ThePost.user_name }}</b>
+                        Author: <b style="color: #7C4DFF;">{{ (ThePost as any).user_name }}</b>
                         <br />
-                        {{ ThePost.description }}
+                        {{ (ThePost as any).description }}
                         <br />
-                        <b style="color: #7C4DFF;">{{ ThePost.dots }} likes in total</b>
+                        <b style="color: #7C4DFF;">{{ (ThePost as any).dots }} likes in total</b>
                     </p>
                     <!-- Comment #13: This is the description of the post, which includes the author name and number of likes -->
                     <div class="InfoBoxFoot">
-                        <p class="PublishDate">{{ ThePost.date }}</p>
-                        <button class="LikeButton" @click="SentLikeRequest" v-if="LikesData == false || LikesData.liked == false">Like</button>
+                        <p class="PublishDate">{{ (ThePost as any).date }}</p>
+                        <button class="LikeButton" @click="SentLikeRequest" v-if="(LikesData as any) == false || (LikesData as any).liked == false">Like</button>
                         <button class="LikedButton" @click="SentLikeRequest" v-else>Liked!</button>
                         <!-- Comment #14: This button is used to like the post -->
                         <button class="CommentButton" @click="OpenRemarkPanel">Comment</button>
@@ -286,15 +286,15 @@ export default {
                 <div class="CommentDisplayArea">
                     <div class="CommentBox" v-for="items in Remarks">
                         <!-- Comment #16: This div is used to display all the remarks, which are represented by the items in the Remarks array -->
-                        <img class="UserAvatar" :src="items.avatar" />
+                        <img class="UserAvatar" :src="(items as any).avatar" />
                         <!-- Comment #17: This is the avatar of the user who submitted the remark -->
-                        <h1 class="CommentUserName">{{ items.user_name }}</h1>
+                        <h1 class="CommentUserName">{{ (items as any).user_name }}</h1>
                         <!-- Comment #18: This is the username of the user who submitted the remark -->
-                        <p class="CommentText">{{ items.content }}</p>
+                        <p class="CommentText">{{ (items as any).content }}</p>
                         <!-- Comment #19: This is the content of the remark -->
-                        <button class="ReplyButton" @click="ReplyAComment(items.remark_uuid)">Reply</button>
+                        <button class="ReplyButton" @click="ReplyAComment((items as any).remark_uuid)">Reply</button>
                         <!-- Comment #20: This button is used to open the ReplyPanel component for submitting a reply to an existing remark -->
-                        <span class="CommentTime">{{ items.date }}</span>
+                        <span class="CommentTime">{{ (items as any).date }}</span>
                         <!-- Comment #21: This is the date on which the remark was submitted -->
                     </div>
                 </div>

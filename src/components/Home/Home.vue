@@ -54,7 +54,7 @@ export default {
                 this.pages = this.pages - 1; // Decrement the current page number
             } else { // Otherwise
                 for (let i = 0; i < newData.length; i++) { // Loop over the new data and add it to the display data array
-                    this.displayData.push(newData[i])
+                    (this.displayData as any).push(newData[i])
                 }
             }
         },
@@ -84,15 +84,15 @@ export default {
     <div class="Container">
         <!-- Loop over displayData and render each image as a "Card" on the page -->
         <div class="Card" v-for="items of displayData">
-            <img @click="OpenRemarkBySingleUUID(items.post_uuid)" class="displayImage" :src="items.cover_url"
-                :alt="items.post_uuid" />
-            <h2 class="ImageTitle">{{ items.post_title }}</h2>
-            <p class="ImageDescription">{{ items.description }}</p>
+            <img @click="OpenRemarkBySingleUUID((items as any).post_uuid)" class="displayImage" :src="(items as any).cover_url"
+                :alt="(items as any).post_uuid" />
+            <h2 class="ImageTitle">{{ (items as any).post_title }}</h2>
+            <p class="ImageDescription">{{ (items as any).description }}</p>
             <div class="UserInfoBar">
-                <img class="UserAvatar" :src="items.avatar" />
-                <p class="ImageUserName">{{ items.user_name }}</p>
-                <p class="LikesDisplay">{{ items.dots }} likes</p>
-                <p class="ImageDate">{{ items.date }}</p>
+                <img class="UserAvatar" :src="(items as any).avatar" />
+                <p class="ImageUserName">{{ (items as any).user_name }}</p>
+                <p class="LikesDisplay">{{ (items as any).dots }} likes</p>
+                <p class="ImageDate">{{ (items as any).date }}</p>
             </div>
         </div>
     </div>
