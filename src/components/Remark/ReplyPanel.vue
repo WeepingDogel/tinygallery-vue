@@ -10,6 +10,7 @@
 <script lang="ts">
 import axios from 'axios';
 import { UpdateReplies } from '@/stores/UpdateReplies';
+import { Timezone } from '@/stores/TimeZone';
 
 export default {
     data() {
@@ -24,9 +25,11 @@ export default {
     },
     setup() {
         const RepliesUpdate = UpdateReplies();
+        const TimeZoneCaculator = Timezone();
 
         return {
-            RepliesUpdate
+            RepliesUpdate,
+            TimeZoneCaculator
         }
     },
     props: {
@@ -152,6 +155,8 @@ export default {
         this.GetTheUserAvatar(); // Retrieves the user's avatar when the component is mounted
         this.GetTheOriginalRemark(); // Retrieves the original remark being replied to when the component is mounted
         this.GetAllReplies();
+        this.TimeZoneCaculator.GetTheLocalTimeZone();
+        this.TimeZoneCaculator.GetTheTimeZoneOfServer();
     },
     watch: {
         'RepliesUpdate.update'(newValue, oldValue) {
@@ -189,7 +194,7 @@ export default {
                             </p>
                         </div>
                         <p class="RepliesDate">
-                            {{ (items as any).date }}
+                            {{ TimeZoneCaculator.CaculateTheCorrectDate((items as any).date) }}
                         </p>
                     </div>
                 </div>

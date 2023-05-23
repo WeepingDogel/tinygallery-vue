@@ -88,6 +88,7 @@ import RemarkPanel from './RemarkPanel.vue'; // Importing the component 'RemarkP
 import ReplyPanel from './ReplyPanel.vue'; // Importing the component 'ReplyPanel' from its file path.
 import { UpdateRemarks } from '@/stores/UpdateRemarks'; // Importing the function 'UpdateRemarks' from its file path in the stores folder.
 import axios from 'axios'; // Importing the HTTP client library 'axios'.
+import { Timezone } from '@/stores/TimeZone';
 
 export default {
     data() { // Defining the data property of the component.
@@ -97,15 +98,17 @@ export default {
             RemarkPanelON: false, // Setting the initial state of the 'RemarkPanel' component as closed.
             ReplyPanelON: false, // Setting the initial state of the 'ReplyPanel' component as closed.
             ReplyToUUID: "", // Initializing an empty string to hold the UUID of the comment being replied to.
-            RemarkPage: 1 , // Initializing the page number of remarks to be shown on the screen.
+            RemarkPage: 1, // Initializing the page number of remarks to be shown on the screen.
             LikesData: Object
         }
     },
     setup() { // Defining the setup function of the component.
         const RemarkUpdate = UpdateRemarks(); // Calling the imported 'UpdateRemarks' function and storing it in a constant.
+        const TimeZoneCaculator = Timezone();
 
         return {
-            RemarkUpdate // Returning the constant 'RemarkUpdate' to use it later in the component.
+            RemarkUpdate, // Returning the constant 'RemarkUpdate' to use it later in the component.
+            TimeZoneCaculator
         }
     },
     components: { // Registering the child components used in the current component.
@@ -141,7 +144,7 @@ export default {
         OpenRemarkPanel(ReplyTo: any) { // A method that opens the 'RemarkPanel' component and passes the UUID of the comment being replied to.
             const token = localStorage.getItem('Token');
             axios.put(
-                '/userdata/get/username',{},
+                '/userdata/get/username', {},
                 {
                     headers: {
                         "Authorization": "Bearer " + token
@@ -150,9 +153,9 @@ export default {
                 .then(
                     (response) => {
                         const username = response.data.username;
-                        if (username){
+                        if (username) {
                             this.RemarkPanelON = true; // Setting the state of 'RemarkPanel' component as open.
-                        }else if(username == false){
+                        } else if (username == false) {
                             alert("Unauthorized!\nPlease login to comment!");
                         }
                     }
@@ -163,7 +166,7 @@ export default {
                         alert("Error! \n" + error.detail);
                     }
                 )
-            
+
             // this.ReplyTo = ReplyTo
         },
         ReplyAComment(CommentUUID: any) { // A method that opens the 'ReplyPanel' component and passes the UUID of the comment being replied to.
@@ -171,7 +174,7 @@ export default {
             this.ReplyPanelON = true; // Setting the state of 'ReplyPanel' component as open.
 
         },
-        CheckIfLiked(){ // A method that check if the user has already liked it.
+        CheckIfLiked() { // A method that check if the user has already liked it.
             const token = localStorage.getItem('Token');
             axios.get("/likes/get/like_status", {
                 headers: {
@@ -181,25 +184,25 @@ export default {
                     post_uuid: this.$route.params.post_uuid
                 }
             })
-            .then(
-                (response) => {
-                    console.log(response.data);
-                    this.LikesData = response.data;
-                }
-            )
-            .catch(
-                (error) => {
-                    console.log(error.detail);
-                }
-            )
+                .then(
+                    (response) => {
+                        console.log(response.data);
+                        this.LikesData = response.data;
+                    }
+                )
+                .catch(
+                    (error) => {
+                        console.log(error.detail);
+                    }
+                )
         },
-        SentLikeRequest(){ // A method that send Like request to the backend.
+        SentLikeRequest() { // A method that send Like request to the backend.
             const token = localStorage.getItem('Token');
             if (token == null || token == "") {
                 alert("Please login to like it!");
             }
             axios.post(
-                '/likes/send/like',{},
+                '/likes/send/like', {},
                 {
                     headers: {
                         "Authorization": "Bearer " + token
@@ -224,9 +227,12 @@ export default {
     beforeMount() { // A lifecycle hook that runs before the component is mounted.
         this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid); // Calling the 'GetTheSingleImageByPostUUID' method to fetch a single post by UUID.
         this.GetTheRmarksOfThePost(this.$route.params.post_uuid); // Calling the 'GetTheRmarksOfThePost' method to fetch all the remarks of a post by UUID.
+        this.TimeZoneCaculator.GetTheLocalTimeZone();
+        this.TimeZoneCaculator.GetTheTimeZoneOfServer();
     },
-    mounted(){
+    mounted() {
         this.CheckIfLiked();
+
     },
     watch: { // Defining watchers to listen for changes in data properties of the component.
         'RemarkUpdate.update'(newValue, oldValue) { // Listening to any change in the 'update' property of 'RemarkUpdate'.
@@ -275,8 +281,9 @@ export default {
                     </p>
                     <!-- Comment #13: This is the description of the post, which includes the author name and number of likes -->
                     <div class="InfoBoxFoot">
-                        <p class="PublishDate">{{ (ThePost as any).date }}</p>
-                        <button class="LikeButton" @click="SentLikeRequest" v-if="(LikesData as any) == false || (LikesData as any).liked == false">Like</button>
+                        <p class="PublishDate">{{ TimeZoneCaculator.CaculateTheCorrectDate((ThePost as any).date) }}</p>
+                        <button class="LikeButton" @click="SentLikeRequest"
+                            v-if="(LikesData as any) == false || (LikesData as any).liked == false">Like</button>
                         <button class="LikedButton" @click="SentLikeRequest" v-else>Liked!</button>
                         <!-- Comment #14: This button is used to like the post -->
                         <button class="CommentButton" @click="OpenRemarkPanel">Comment</button>
@@ -294,7 +301,7 @@ export default {
                         <!-- Comment #19: This is the content of the remark -->
                         <button class="ReplyButton" @click="ReplyAComment((items as any).remark_uuid)">Reply</button>
                         <!-- Comment #20: This button is used to open the ReplyPanel component for submitting a reply to an existing remark -->
-                        <span class="CommentTime">{{ (items as any).date }}</span>
+                        <span class="CommentTime">{{ TimeZoneCaculator.CaculateTheCorrectDate((items as any).date) }}</span>
                         <!-- Comment #21: This is the date on which the remark was submitted -->
                     </div>
                 </div>
