@@ -313,276 +313,556 @@ export default {
 
 <style scoped>
 /* CSS styling for the component */
+@media only screen and (min-width: 768px) {
+    @keyframes FadeIn {
+        from {
+            opacity: 0;
+            top: 10px;
+        }
 
-@keyframes FadeIn {
-    from {
-        opacity: 0;
-        top: 10px;
+        to {
+            opacity: 1;
+            top: 0px;
+        }
     }
 
-    to {
-        opacity: 1;
-        top: 0px;
+    @keyframes CommentLoader {
+        from {
+            opacity: 0;
+            transform: translateY(80%);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0%);
+        }
+    }
+
+    .LikeButton {
+        width: 50px;
+        height: 50px;
+        background-color: #FFFFFF;
+        color: #ffaab8;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        border: solid 1px #ffaab8;
+        outline: none;
+        border-radius: 10px;
+        margin-left: auto;
+        cursor: pointer;
+        transition: background-color 0.5s ease;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .LikeButton:hover {
+        background-color: #ffaab8;
+        color: #FFFFFF;
+        transition: background-color 0.5s ease;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .LikedButton {
+        width: 50px;
+        height: 50px;
+        background-color: #ffaab8;
+        color: #FFFFFF;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        border: solid 1px #ffaab8;
+        outline: none;
+        border-radius: 10px;
+        margin-left: auto;
+        cursor: pointer;
+        transition: background-color 0.5s ease;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .LikedButton:hover {
+        background-color: #FFFFFF;
+        color: #ffaab8;
+        transition: background-color 0.5s ease;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .CommentButton {
+        width: 100px;
+        height: 50px;
+        background-color: #7C4DFF;
+        color: #FFFFFF;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        border: none;
+        outline: none;
+        border-radius: 10px;
+        margin-left: auto;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: background-color 0.5s ease;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .CommentButton:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        transition: background-color 0.5s ease;
+    }
+
+    .RemarkContainer {
+        width: 100%;
+        height: auto;
+        min-height: 90vh;
+        display: flex;
+        justify-content: center;
+        animation: FadeIn 0.5s;
+    }
+
+    .RemarkBox {
+        width: 100%;
+        height: auto;
+        min-height: 90vh;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        margin: 15px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        transition: 1s ease-in-out;
+        background-color: #FFFFFF;
+    }
+
+
+    .ImageDisplayArea {
+        width: 80%;
+        height: auto;
+        min-height: 90vh;
+        /* background-color: #3F51B5; */
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        cursor: pointer;
+    }
+
+
+
+    .DisplayedImage {
+        width: 100%;
+        height: auto;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        cursor: pointer;
+    }
+
+    .RemarksArea {
+        margin-bottom: 15px;
+        width: 20%;
+        height: auto;
+        min-height: 90vh;
+        background-color: #FFFFFF;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+    .InfoBox {
+        width: 100%;
+        height: auto;
+        min-height: 200px;
+        border-bottom: solid 1px #BDBDBD;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .InfoTitlte {
+        text-align: center;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 20px;
+        line-height: 40px;
+    }
+
+    .InfoDescription {
+        line-height: 20px;
+        padding: 20px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        color: #757575;
+    }
+
+    .InfoBoxFoot {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: flex-end;
+        margin-top: auto;
+        margin-bottom: 10px;
+    }
+
+    .PublishDate {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        color: #757575;
+        margin-left: 20px;
+        margin-right: auto;
+    }
+
+    .CommentBox {
+        width: 100%;
+        min-height: 80px;
+        border-bottom: solid 1px #BDBDBD;
+        animation: CommentLoader 0.5s;
+    }
+
+    .UserAvatar {
+        width: 60px;
+        height: 60px;
+        top: 15px;
+        left: 15px;
+        position: relative;
+        border: solid 1px #BDBDBD;
+        border-radius: 8px;
+    }
+
+    .CommentUserName {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        display: inline;
+        position: relative;
+        left: 30px;
+        top: -10px;
+        color: #212121;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .CommentText {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        text-align: justify;
+        line-height: 20px;
+        color: #757575;
+        position: relative;
+        overflow: scroll;
+        white-space: pre-wrap;
+        padding: 20px;
+    }
+
+    .CommentTime {
+        float: right;
+        right: 10px;
+        position: relative;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        color: #757575;
+    }
+
+    .CommentDisplayArea {
+        width: 100%;
+        height: 700px;
+        overflow-y: scroll;
+    }
+
+
+    .ReplyButton {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #7C4DFF;
+        color: #FFFFFF;
+        outline: none;
+        border: none;
+        border-radius: 8px;
+        position: relative;
+        left: 15px;
+        bottom: 10px;
+        padding: 10px;
+        cursor: pointer;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .ReplyButton:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        transition: background-color 0.5s ease;
     }
 }
 
-@keyframes CommentLoader {
-    from {
-        opacity: 0;
-        transform: translateY(80%);
+@media only screen and (max-width: 768px) {
+    @keyframes FadeIn {
+        from {
+            opacity: 0;
+            top: 10px;
+        }
+
+        to {
+            opacity: 1;
+            top: 0px;
+        }
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0%);
+    @keyframes CommentLoader {
+        from {
+            opacity: 0;
+            transform: translateY(80%);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0%);
+        }
     }
-}
 
-.LikeButton {
-    width: 50px;
-    height: 50px;
-    background-color: #FFFFFF;
-    color: #ffaab8;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    border: solid 1px #ffaab8;
-    outline: none;
-    border-radius: 10px;
-    margin-left: auto;
-    cursor: pointer;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
+    .LikeButton {
+        width: 50px;
+        height: 50px;
+        background-color: #FFFFFF;
+        color: #ffaab8;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        border: solid 1px #ffaab8;
+        outline: none;
+        border-radius: 10px;
+        margin-left: auto;
+        cursor: pointer;
+        transition: background-color 0.5s ease;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
 
-.LikeButton:hover {
-    background-color: #ffaab8;
-    color: #FFFFFF;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
+    .LikeButton:hover {
+        background-color: #ffaab8;
+        color: #FFFFFF;
+        transition: background-color 0.5s ease;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
 
-.LikedButton {
-    width: 50px;
-    height: 50px;
-    background-color: #ffaab8;
-    color: #FFFFFF;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    border: solid 1px #ffaab8;
-    outline: none;
-    border-radius: 10px;
-    margin-left: auto;
-    cursor: pointer;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
+    .LikedButton {
+        width: 50px;
+        height: 50px;
+        background-color: #ffaab8;
+        color: #FFFFFF;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        border: solid 1px #ffaab8;
+        outline: none;
+        border-radius: 10px;
+        margin-left: auto;
+        cursor: pointer;
+        transition: background-color 0.5s ease;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
 
-.LikedButton:hover {
-    background-color: #FFFFFF;
-    color: #ffaab8;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
+    .LikedButton:hover {
+        background-color: #FFFFFF;
+        color: #ffaab8;
+        transition: background-color 0.5s ease;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
 
-.CommentButton {
-    width: 100px;
-    height: 50px;
-    background-color: #7C4DFF;
-    color: #FFFFFF;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    border: none;
-    outline: none;
-    border-radius: 10px;
-    margin-left: auto;
-    margin-right: 10px;
-    cursor: pointer;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
+    .CommentButton {
+        width: 100px;
+        height: 50px;
+        background-color: #7C4DFF;
+        color: #FFFFFF;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        border: none;
+        outline: none;
+        border-radius: 10px;
+        margin-left: auto;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: background-color 0.5s ease;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
 
-.CommentButton:hover {
-    background-color: #303F9F;
-    color: #C5CAE9;
-    transition: background-color 0.5s ease;
-}
+    .CommentButton:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        transition: background-color 0.5s ease;
+    }
 
-.RemarkContainer {
-    width: 100%;
-    height: auto;
-    min-height: 90vh;
-    display: flex;
-    justify-content: center;
-    animation: FadeIn 0.5s;
-}
+    .RemarkContainer {
+        width: 100%;
+        height: auto;
+        /* min-height: 90vh; */
+        display: flex;
+        justify-content: center;
+        animation: FadeIn 0.5s;
+    }
 
-.RemarkBox {
-    width: 100%;
-    height: auto;
-    min-height: 90vh;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    margin: 15px;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    transition: 1s ease-in-out;
-    background-color: #FFFFFF;
-}
+    .RemarkBox {
+        width: 100%;
+        height: auto;
+        /* min-height: 90vh; */
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        margin: 5px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        transition: 1s ease-in-out;
+        background-color: #FFFFFF;
+    }
 
-.ImageDisplayArea {
-    width: 80%;
-    height: 100%;
-    min-height: 90vh;
-    /* background-color: #3F51B5; */
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    cursor: pointer;
-}
+    .ImageDisplayArea {
+        width: 100%;
+        height: auto;
+        /* min-height: 90vh; */
+        /* background-color: #3F51B5; */
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        cursor: pointer;
+        position: relative;
+        bottom: 0;
+    }
 
-.DisplayedImage {
-    width: 100%;
-    height: auto;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    cursor: pointer;
-}
+    .DisplayedImage {
+        width: 100%;
+        height: auto;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        cursor: pointer;
+    }
 
-.RemarksArea {
-    margin-bottom: 15px;
-    width: 20%;
-    height: auto;
-    min-height: 90vh;
-    background-color: #FFFFFF;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
+    .RemarksArea {
+        margin-bottom: 15px;
+        width: 100%;
+        height: auto;
+        /* min-height: 90vh; */
+        background-color: #FFFFFF;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
 
-.InfoBox {
-    width: 100%;
-    height: auto;
-    min-height: 200px;
-    border-bottom: solid 1px #BDBDBD;
-    display: flex;
-    flex-direction: column;
-}
+    .InfoBox {
+        width: 100%;
+        height: auto;
+        min-height: 200px;
+        border-bottom: solid 1px #BDBDBD;
+        display: flex;
+        flex-direction: column;
+    }
 
-.InfoTitlte {
-    text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 20px;
-    line-height: 40px;
-}
+    .InfoTitlte {
+        text-align: center;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 20px;
+        line-height: 40px;
+    }
 
-.InfoDescription {
-    line-height: 20px;
-    padding: 20px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    color: #757575;
-}
+    .InfoDescription {
+        line-height: 20px;
+        padding: 20px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        color: #757575;
+    }
 
-.InfoBoxFoot {
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: flex-end;
-    margin-top: auto;
-    margin-bottom: 10px;
-}
+    .InfoBoxFoot {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: flex-end;
+        margin-top: auto;
+        margin-bottom: 10px;
+    }
 
-.PublishDate {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    color: #757575;
-    margin-left: 20px;
-    margin-right: auto;
-}
+    .PublishDate {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        color: #757575;
+        margin-left: 20px;
+        margin-right: auto;
+    }
 
-.CommentBox {
-    width: 100%;
-    min-height: 80px;
-    border-bottom: solid 1px #BDBDBD;
-    animation: CommentLoader 0.5s;
-}
+    .CommentBox {
+        width: 100%;
+        min-height: 80px;
+        border-bottom: solid 1px #BDBDBD;
+        animation: CommentLoader 0.5s;
+    }
 
-.UserAvatar {
-    width: 60px;
-    height: 60px;
-    top: 15px;
-    left: 15px;
-    position: relative;
-    border: solid 1px #BDBDBD;
-    border-radius: 8px;
-}
+    .UserAvatar {
+        width: 60px;
+        height: 60px;
+        top: 15px;
+        left: 15px;
+        position: relative;
+        border: solid 1px #BDBDBD;
+        border-radius: 8px;
+    }
 
-.CommentUserName {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    display: inline;
-    position: relative;
-    left: 30px;
-    top: -10px;
-    color: #212121;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+    .CommentUserName {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        display: inline;
+        position: relative;
+        left: 30px;
+        top: -10px;
+        color: #212121;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-.CommentText {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    text-align: justify;
-    line-height: 20px;
-    color: #757575;
-    position: relative;
-    overflow: scroll;
-    white-space: pre-wrap;
-    padding: 20px;
-}
+    .CommentText {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        text-align: justify;
+        line-height: 20px;
+        color: #757575;
+        position: relative;
+        overflow: scroll;
+        white-space: pre-wrap;
+        padding: 20px;
+    }
 
-.CommentTime {
-    float: right;
-    right: 10px;
-    position: relative;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    color: #757575;
-}
+    .CommentTime {
+        float: right;
+        right: 10px;
+        position: relative;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        color: #757575;
+    }
 
-.CommentDisplayArea {
-    width: 100%;
-    height: 700px;
-    overflow-y: scroll;
-}
+    .CommentDisplayArea {
+        width: 100%;
+        height: auto;
+        overflow-y: scroll;
+    }
 
 
-.ReplyButton {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #7C4DFF;
-    color: #FFFFFF;
-    outline: none;
-    border: none;
-    border-radius: 8px;
-    position: relative;
-    left: 15px;
-    bottom: 10px;
-    padding: 10px;
-    cursor: pointer;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
+    .ReplyButton {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #7C4DFF;
+        color: #FFFFFF;
+        outline: none;
+        border: none;
+        border-radius: 8px;
+        position: relative;
+        left: 15px;
+        bottom: 10px;
+        padding: 10px;
+        cursor: pointer;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
 
-.ReplyButton:hover {
-    background-color: #303F9F;
-    color: #C5CAE9;
-    transition: background-color 0.5s ease;
+    .ReplyButton:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        transition: background-color 0.5s ease;
+    }
 }
 </style>

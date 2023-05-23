@@ -212,302 +212,610 @@ export default {
 
 <style scoped>
 /* CSS styling for the component */
-@keyframes FadeIn {
-    from {
-        opacity: 0;
-        top: 10px;
+
+@media only screen and (min-width: 768px) {
+    @keyframes FadeIn {
+        from {
+            opacity: 0;
+            top: 10px;
+        }
+
+        to {
+            opacity: 1;
+            top: 0px;
+        }
     }
 
-    to {
-        opacity: 1;
+    @keyframes RepliesAnimation {
+        from {
+            opacity: 0;
+            margin-top: 100%;
+            scale: 0.5;
+        }
+
+        to {
+            opacity: 1;
+            margin-top: 0%;
+            scale: 1;
+        }
+    }
+
+    .Mask {
         top: 0px;
+        width: 100%;
+        height: 100vh;
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 1;
+        animation: FadeIn 0.5s;
+    }
+
+    .ReplyPanel {
+        width: 800px;
+        height: auto;
+        background-color: #FFFFFF;
+        border-radius: 10px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .TopControl {
+        width: 100%;
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+
+    .CloseButton {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+        font-weight: lighter;
+        width: 50px;
+        height: 50px;
+        border: none;
+        outline: none;
+        border-top-right-radius: 10px;
+        color: #212121;
+        background-color: #FFFFFF;
+        cursor: pointer;
+        transition: background-color 0.5s ease;
+    }
+
+    .CloseButton:hover {
+        background-color: #7C4DFF;
+        color: #FFFFFF;
+        border: none;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        transition: background-color 0.5s ease;
+    }
+
+    .MidControl {
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        display: flex;
+    }
+
+    .OriginalRemarkDisplay {
+        justify-content: flex-start;
+        flex-direction: row;
+        display: flex;
+        border-bottom: solid 1px #BDBDBD;
+        padding-bottom: 30px;
+    }
+
+    .UserAvatarOfRemarkSender {
+        width: 60px;
+        height: 60px;
+        margin-left: 60px;
+        border: solid 1px #DBDBDB;
+        border-radius: 8px;
+    }
+
+    .CommentText {
+        margin-left: 10px;
+        justify-content: baseline;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .UserNameOfRemarkSender {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        color: #212121;
+        margin-top: auto;
+        margin-top: 5px;
+        margin-bottom: 2px;
+    }
+
+    .OriginalRemarkContent {
+        width: 600px;
+        height: auto;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        color: #757575;
+        margin-top: 2px;
+        margin-bottom: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .RemarkDate {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 14px;
+        color: #757575;
+        /* margin-top: auto; */
+        margin-left: auto;
+        /* margin-right: 40px; */
+        /* line-height: 40px; */
+    }
+
+    .ReplyDisplay {
+        width: 100%;
+        background-color: #f1f1f1;
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+        /* flex-shrink: inherit; */
+        overflow-y: scroll;
+        border-bottom: solid 1px #BDBDBD;
+    }
+
+    .FootControl {
+        margin-top: auto;
+        width: 100%;
+        height: 50px;
+        padding-bottom: 5px;
+        flex-direction: column;
+        justify-content: center;
+        display: flex;
+    }
+
+    .ReplySender {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+        display: flex;
+        flex-direction: row;
+        padding-top: 5px;
+    }
+
+    .ReplyInput {
+        width: 83%;
+        height: 38px;
+        margin-left: auto;
+        margin-top: auto;
+        margin-right: auto;
+        margin-bottom: auto;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        text-indent: 1em;
+        border: solid 1px #BDBDBD;
+        border-radius: 8px;
+        outline: none;
+        color: #212121;
+    }
+
+    .ReplyInput::placeholder {
+        color: #757575;
+    }
+
+    .ReplyButton {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        width: 8%;
+        height: 40px;
+        margin-right: auto;
+        /* margin-left: auto; */
+        margin-top: auto;
+        margin-bottom: auto;
+        background-color: #7C4DFF;
+        color: #FFFFFF;
+        outline: none;
+        border: none;
+        border-radius: 8px;
+        position: relative;
+        cursor: pointer;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .ReplyButton:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        transition: background-color 0.5s ease;
+    }
+
+
+    .AvatarOfReplier {
+        width: 40px;
+        height: 40px;
+        margin-left: auto;
+        /* margin-right: auto; */
+        margin-top: auto;
+        margin-bottom: auto;
+        border-radius: 8px;
+        border: solid 1px #BDBDBD;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 8px;
+        text-align: center;
+    }
+
+    .RepliesBox {
+        width: 100%;
+        height: auto;
+        min-height: 80px;
+        border-bottom: solid 1px #BDBDBD;
+        display: flex;
+        flex-direction: row;
+        overflow-y: scroll;
+        /* margin-top: 80%; */
+        animation: RepliesAnimation 0.5s;
+    }
+
+
+    .ReplierAvatar {
+        width: 50px;
+        height: 50px;
+        margin-left: 60px;
+        margin-top: auto;
+        margin-bottom: auto;
+        outline: none;
+        border: solid 1px #BDBDBD;
+        border-radius: 8px;
+    }
+
+    .ReplyTextDisplay {
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: 20px;
+        margin-right: auto;
+        display: flex;
+        flex-direction: column;
+        text-align: justify;
+        width: 430px;
+
+    }
+
+    .ReplierUserName {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        color: #212121;
+    }
+
+    .ReplyContent {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        color: #757575;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .RepliesDate {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 14px;
+        color: #757575;
+        margin-top: auto;
+        margin-bottom: 20px;
+        margin-right: 60px;
     }
 }
 
-@keyframes RepliesAnimation {
-    from {
-        opacity: 0;
-        margin-top: 100%;
-        scale: 0.5;
+@media only screen and (max-width:768px) {
+    @keyframes FadeIn {
+        from {
+            opacity: 0;
+            margin-top: 1000px;
+        }
+
+        to {
+            opacity: 1;
+            margin-top: 0px;
+        }
     }
 
-    to {
-        opacity: 1;
-        margin-top: 0%;
-        scale: 1;
+    @keyframes RepliesAnimation {
+        from {
+            opacity: 0;
+            margin-top: 100%;
+            scale: 0.5;
+        }
+
+        to {
+            opacity: 1;
+            margin-top: 0%;
+            scale: 1;
+        }
     }
-}
 
-.Mask {
-    top: 0px;
-    width: 100%;
-    height: 100vh;
-    position: fixed;
-    background-color: rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 1;
-    animation: FadeIn 0.5s;
-}
+    .Mask {
+        /* top: 0px; */
+        width: 100%;
+        height: 72vh;
+        position: fixed;
+        /* background-color: rgba(0, 0, 0, 0.3); */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 2;
+        /* animation: FadeIn 0.5s; */
+        bottom: 0px;
+    }
 
-.ReplyPanel {
-    width: 800px;
-    height: auto;
-    background-color: #FFFFFF;
-    border-radius: 10px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
+    .ReplyPanel {
+        width: 100%;
+        height: 100%;
+        background-color: #FFFFFF;
+        border-radius: 10px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        justify-content: center;
+        animation: FadeIn 1s;
+    }
 
-.TopControl {
-    width: 100%;
-    height: 50px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-}
+    .TopControl {
+        width: 100%;
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
 
-.CloseButton {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
-    font-weight: lighter;
-    width: 50px;
-    height: 50px;
-    border: none;
-    outline: none;
-    border-top-right-radius: 10px;
-    color: #212121;
-    background-color: #FFFFFF;
-    cursor: pointer;
-    transition: background-color 0.5s ease;
-}
+    .CloseButton {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+        font-weight: lighter;
+        width: 50px;
+        height: 50px;
+        border: none;
+        outline: none;
+        border-top-right-radius: 10px;
+        color: #212121;
+        background-color: #FFFFFF;
+        cursor: pointer;
+        transition: background-color 0.5s ease;
+    }
 
-.CloseButton:hover {
-    background-color: #7C4DFF;
-    color: #FFFFFF;
-    border: none;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.5s ease;
-}
+    .CloseButton:hover {
+        background-color: #7C4DFF;
+        color: #FFFFFF;
+        border: none;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        transition: background-color 0.5s ease;
+    }
 
-.MidControl {
-    width: 100%;
-    flex-direction: column;
-    justify-content: center;
-    display: flex;
-}
+    .MidControl {
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+    }
 
-.OriginalRemarkDisplay {
-    justify-content: flex-start;
-    flex-direction: row;
-    display: flex;
-    border-bottom: solid 1px #BDBDBD;
-    padding-bottom: 30px;
-}
+    .OriginalRemarkDisplay {
+        justify-content: flex-start;
+        flex-direction: row;
+        display: flex;
+        border-bottom: solid 1px #BDBDBD;
+        padding-bottom: 20px;
+    }
 
-.UserAvatarOfRemarkSender {
-    width: 60px;
-    height: 60px;
-    margin-left: 60px;
-    border: solid 1px #DBDBDB;
-    border-radius: 8px;
-}
+    .UserAvatarOfRemarkSender {
+        width: 60px;
+        height: 60px;
+        margin-left: 30px;
+        border: solid 1px #DBDBDB;
+        border-radius: 8px;
+    }
 
-.CommentText {
-    margin-left: 10px;
-    justify-content: baseline;
-    display: flex;
-    flex-direction: column;
-}
+    .CommentText {
+        margin-left: 20px;
+        justify-content: baseline;
+        display: flex;
+        flex-direction: column;
+    }
 
-.UserNameOfRemarkSender {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    color: #212121;
-    margin-top: auto;
-    margin-top: 5px;
-    margin-bottom: 2px;
-}
+    .UserNameOfRemarkSender {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 24px;
+        color: #212121;
+        margin-top: auto;
+        margin-top: 5px;
+        margin-bottom: 2px;
+    }
 
-.OriginalRemarkContent {
-    width: 600px;
-    height: auto;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    color: #757575;
-    margin-top: 2px;
-    margin-bottom: auto;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
+    .OriginalRemarkContent {
+        width: 600px;
+        height: auto;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        color: #757575;
+        margin-top: 2px;
+        margin-bottom: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
 
-.RemarkDate {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 14px;
-    color: #757575;
-    /* margin-top: auto; */
-    margin-left: auto;
-    /* margin-right: 40px; */
-    /* line-height: 40px; */
-}
+    .RemarkDate {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        color: #757575;
+        /* margin-top: auto; */
+        /* margin-left: 10px; */
+        /* margin-right: 40px; */
+        /* line-height: 40px; */
+    }
 
-.ReplyDisplay {
-    width: 100%;
-    background-color: #f1f1f1;
-    height: 400px;
-    display: flex;
-    flex-direction: column;
-    /* flex-shrink: inherit; */
-    overflow-y: scroll;
-    border-bottom: solid 1px #BDBDBD;
-}
+    .ReplyDisplay {
+        width: 100%;
+        background-color: #f1f1f1;
+        height: 30vh;
+        display: flex;
+        flex-direction: column;
+        /* flex-shrink: inherit; */
+        overflow-y: scroll;
+        border-bottom: solid 1px #BDBDBD;
+    }
 
-.FootControl {
-    margin-top: auto;
-    width: 100%;
-    height: 50px;
-    padding-bottom: 5px;
-    flex-direction: column;
-    justify-content: center;
-    display: flex;
-}
+    .FootControl {
+        margin-top: auto;
+        width: 100%;
+        height: auto;
+        /* padding-bottom: 5px; */
+        flex-direction: column;
+        justify-content: center;
+        display: flex;
+    }
 
-.ReplySender {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: auto;
-    margin-bottom: auto;
-    display: flex;
-    flex-direction: row;
-    padding-top: 5px;
-}
+    .ReplySender {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+        display: flex;
+        flex-direction: row;
+        padding-top: 5px;
+    }
 
-.ReplyInput {
-    width: 83%;
-    height: 38px;
-    margin-left: auto;
-    margin-top: auto;
-    margin-right: auto;
-    margin-bottom: auto;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    text-indent: 1em;
-    border: solid 1px #BDBDBD;
-    border-radius: 8px;
-    outline: none;
-    color: #212121;
-}
+    .ReplyInput {
+        width: 265px;
+        height: 38px;
+        margin-left: auto;
+        margin-top: auto;
+        margin-right: auto;
+        margin-bottom: auto;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        text-indent: 1em;
+        border: solid 1px #BDBDBD;
+        border-radius: 8px;
+        outline: none;
+        color: #212121;
+    }
 
-.ReplyInput::placeholder {
-    color: #757575;
-}
+    .ReplyInput::placeholder {
+        color: #757575;
+    }
 
-.ReplyButton {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    width: 8%;
-    height: 40px;
-    margin-right: auto;
-    /* margin-left: auto; */
-    margin-top: auto;
-    margin-bottom: auto;
-    background-color: #7C4DFF;
-    color: #FFFFFF;
-    outline: none;
-    border: none;
-    border-radius: 8px;
-    position: relative;
-    cursor: pointer;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
+    .ReplyButton {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 14px;
+        width: 70px;
+        height: 40px;
+        margin-right: auto;
+        /* margin-left: auto; */
+        margin-top: auto;
+        margin-bottom: auto;
+        background-color: #7C4DFF;
+        color: #FFFFFF;
+        outline: none;
+        border: none;
+        border-radius: 8px;
+        position: relative;
+        cursor: pointer;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
 
-.ReplyButton:hover {
-    background-color: #303F9F;
-    color: #C5CAE9;
-    transition: background-color 0.5s ease;
-}
-
-
-.AvatarOfReplier {
-    width: 40px;
-    height: 40px;
-    margin-left: auto;
-    /* margin-right: auto; */
-    margin-top: auto;
-    margin-bottom: auto;
-    border-radius: 8px;
-    border: solid 1px #BDBDBD;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 8px;
-    text-align: center;
-}
-
-.RepliesBox {
-    width: 100%;
-    height: auto;
-    min-height: 80px;
-    border-bottom: solid 1px #BDBDBD;
-    display: flex;
-    flex-direction: row;
-    overflow-y: scroll;
-    /* margin-top: 80%; */
-    animation: RepliesAnimation 0.5s;
-}
+    .ReplyButton:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        transition: background-color 0.5s ease;
+    }
 
 
-.ReplierAvatar {
-    width: 50px;
-    height: 50px;
-    margin-left: 60px;
-    margin-top: auto;
-    margin-bottom: auto;
-    outline: none;
-    border: solid 1px #BDBDBD;
-    border-radius: 8px;
-}
+    .AvatarOfReplier {
+        width: 40px;
+        height: 40px;
+        margin-left: auto;
+        /* margin-right: auto; */
+        margin-top: auto;
+        margin-bottom: auto;
+        border-radius: 8px;
+        border: solid 1px #BDBDBD;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 8px;
+        text-align: center;
+    }
 
-.ReplyTextDisplay {
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 20px;
-    margin-right: auto;
-    display: flex;
-    flex-direction: column;
-    text-align: justify;
-    width: 430px;
+    .RepliesBox {
+        width: 100%;
+        height: auto;
+        min-height: 80px;
+        border-bottom: solid 1px #BDBDBD;
+        display: flex;
+        flex-direction: row;
+        overflow-y: scroll;
+        /* margin-top: 80%; */
+        animation: RepliesAnimation 0.5s;
+    }
 
-}
 
-.ReplierUserName {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    color: #212121;
-}
+    .ReplierAvatar {
+        width: 50px;
+        height: 50px;
+        margin-left: 10px;
+        margin-top: auto;
+        margin-bottom: auto;
+        outline: none;
+        border: solid 1px #BDBDBD;
+        border-radius: 8px;
+    }
 
-.ReplyContent {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    color: #757575;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
+    .ReplyTextDisplay {
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: 10px;
+        margin-right: 10px;
+        display: flex;
+        flex-direction: column;
+        text-align: justify;
+        width: 430px;
 
-.RepliesDate {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 14px;
-    color: #757575;
-    margin-top: auto;
-    margin-bottom: 20px;
-    margin-right: 60px;
+    }
+
+    .ReplierUserName {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        color: #212121;
+    }
+
+    .ReplyContent {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        color: #757575;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .RepliesDate {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 14px;
+        color: #757575;
+        margin-top: auto;
+        margin-bottom: 20px;
+        /* margin-right: 60px; */
+    }
 }
 </style>

@@ -55,7 +55,11 @@ export default {
             DisplayLink: "/login", // Initialize the login link
             DisplayTitle: "Login", // Initialize the title to be "Login"
             functionDisplay: false, // Initialize the function display to be false
-            UploaderON: false // Initialize the state of the uploader to be closed
+            UploaderON: false, // Initialize the state of the uploader to be closed
+            MobileScreen: false,
+            DesktopScreen: false,
+            Menu: false,
+            MenuText: 'Menu'
         }
     },
     setup() {
@@ -98,7 +102,35 @@ export default {
         },
         OpenUploader() { // Open the uploader component
             this.UploaderON = true;
+        },
+        checkScreenWidth() {
+            const screenWidth = window.innerWidth;
+            if (screenWidth <= 768) {
+                this.MobileScreen = true;
+                this.DesktopScreen = false;
+            } else if (screenWidth >= 768) {
+                this.MobileScreen = false;
+                this.DesktopScreen = true;
+            } else {
+                this.MobileScreen = false;
+                this.DesktopScreen = false;
+            }
+        },
+        OpenMenu() {
+            this.Menu = !this.Menu;
+            if(this.Menu){
+                this.MenuText = "Close";
+            }else{
+                this.MenuText = "Menu";
+            }
         }
+    },
+    beforeDestroy() {
+        window.removeEventListener("resize", this.checkScreenWidth);
+    },
+    mounted() {
+        this.checkScreenWidth();
+        window.addEventListener('resize', this.checkScreenWidth);
     },
     components: {
         Uploader // Register the "Uploader" component as a child component
@@ -107,9 +139,22 @@ export default {
 </script>
 
 <template>
+    <div class="LinkMenu" v-if="Menu">
+        <button @click="OpenUploader" class="uploadButton" v-if="functionDisplay">+</button>
+        <RouterLink to="/">Home</RouterLink>
+        <!-- Link to the home page -->
+        <RouterLink :to="DisplayLink">{{ DisplayTitle }}</RouterLink>
+        <!-- Link to either the login or profile page, depending on the user's authentication status -->
+        <button class="functionButton" v-if="functionDisplay" @click="logout">Logout</button>
+        <!-- Display the logout button if the user is authenticated -->
+        <RouterLink to="/about">About</RouterLink> <!-- Link to the about page -->
+    </div>
     <div id="bar">
         <h1 id="MainTitle">TinyGallery Vue Beta</h1>
-        <div id="linkContainer">
+        <button @click="OpenMenu" id="MobileMenu" v-if="MobileScreen">
+            {{ MenuText }}
+        </button>
+        <div id="linkContainer" v-if="DesktopScreen">
 
             <RouterLink to="/">Home</RouterLink>
             <!-- Link to the home page -->
@@ -218,5 +263,145 @@ export default {
 .router-link-exact-active {
     transition: 1000ms;
     color: #FFFFFF;
+}
+
+@media only screen and (max-width: 768px) {
+
+    @keyframes MobileMenuLoading {
+        from{
+            opacity: 0;
+            /* margin-bottom: 100%; */
+        }
+        to{
+            opacity: 1;
+            /* margin-bottom: 0px; */
+        }
+    }
+    .uploadButton {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 36px;
+        font-weight: lighter;
+        width: 50px;
+        height: 50px;
+        border: none;
+        outline: none;
+        border-radius: 8px;
+        color: #FFFFFF;
+        background-color: #7C4DFF;
+        margin-left: auto;
+        margin-right: auto;
+        cursor: pointer;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .uploadButton:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        transition: background-color 0.5s ease;
+    }
+
+    .functionButton {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+        font-weight: lighter;
+        transition: 1000ms;
+        width: 80px;
+        height: 70px;
+        border: none;
+        outline: none;
+        /* border-radius: 8px; */
+        color: #C5CAE9;
+        background-color: #3F51B5;
+        margin: auto;
+        cursor: pointer;
+    }
+
+    .functionButton:hover {
+        transition: 1000ms;
+        background-color: #303F9F;
+        color: #FFFFFF;
+        transition: background-color 0.5s ease;
+    }
+
+    #bar {
+        width: 100%;
+        height: 70px;
+        background-color: #3F51B5;
+        border-bottom: solid 1px #BDBDBD;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #MainTitle {
+        line-height: 70px;
+        color: #FFFFFF;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        text-indent: 0.5em;
+    }
+
+    #MobileMenu {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 18px;
+        width: 80px;
+        background-color: #3F51B5;
+        color: #FFFFFF;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        animation: MobileMenuLoading 1s;
+        transition: ease-in-out 500ms;
+    }
+
+    #MobileMenu:hover {
+        background-color: #7C4DFF;
+        transition: ease-in-out 500ms;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    #MobileMenu:active {
+        background-color: #303F9F;
+    }
+
+    .LinkMenu {
+        background-color: #3F51B5;
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 70px;
+        /* right: 10px; */
+        z-index: 2;
+        padding-bottom: 10px;
+        animation: MobileMenuLoading 0.5s;
+        box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .LinkMenu a {
+        text-decoration: none;
+        font-size: 18px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        line-height: 70px;
+        text-align: center;
+        width: 80px;
+        margin: 0 auto;
+        color: #C5CAE9;
+        background-color: #3F51B5;
+        transition: 1000ms;
+    }
+
+    .LinkMenu a:hover {
+        transition: 1000ms;
+        color: #FFFFFF;
+    }
+
+    /* #linkContainer {
+        display: none;   
+    } */
 }
 </style>

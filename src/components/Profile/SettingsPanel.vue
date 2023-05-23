@@ -128,134 +128,269 @@ export default {
 </template>
 
 <style scoped>
-@keyframes SlideIn {
-    from {
-        transform: translateY(-80%);
+@media only screen and (min-width: 768px) {
+    @keyframes SlideIn {
+        from {
+            transform: translateY(-80%);
+        }
+
+        to {
+            transform: translateY(0%);
+        }
     }
 
-    to {
-        transform: translateY(0%);
+    .SettingsBox {
+        display: flex;
+        width: 100%;
+        height: auto;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        flex-direction: column;
+        padding: 25px;
+    }
+
+
+    .ProfileText {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        padding: 10px;
+        color: #212121;
+        text-align: justify;
+    }
+
+
+    .NoteText {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        padding: 10px;
+        color: #ff0000;
+        text-align: justify;
+    }
+
+    .ProfileTextFile {
+        width: 300px;
+        color: #212121;
+        border: none;
+        outline: none;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    .ProfileTextFile::file-selector-button {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+        background-color: #7C4DFF;
+        color: #FFFFFF;
+        padding: 5px;
+        outline: none;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .ProfileTextFile::file-selector-button:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        border: none;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        transition: background-color 0.5s ease;
+    }
+
+    .ProfileTextInputer {
+        width: 300px;
+        color: #212121;
+        border: none;
+        border-bottom: solid 1px #BDBDBD;
+        outline: none;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    .ProfileTextInputer::placeholder {
+        color: #757575;
+    }
+
+    .ProfileTextInputer:focus {
+        border-bottom: solid 1px #212121;
+    }
+
+    .ProfileSettingsTitle {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 24px;
+        line-height: 50px;
+        padding: 10px;
+    }
+
+    .ProfileSettings {
+        width: 70%;
+        height: auto;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        background-color: #FFFFFF;
+        animation: FadeIn 0.5s;
+        animation: SlideIn 0.5s;
+        margin: 5px auto;
+        border-radius: 10px;
+        transition: 0.5s ease-in-out;
+    }
+
+    .ProfileFinishButton {
+        font-family: Arial, Helvetica, sans-serif;
+        outline: none;
+        border: none;
+        background-color: #7C4DFF;
+        padding: 12px;
+        margin: 12px;
+        color: #FFFFFF;
+        letter-spacing: 2px;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .ProfileFinishButton:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        transition: background-color 0.5s ease;
     }
 }
 
-.SettingsBox {
-    display: flex;
-    width: 100%;
-    height: auto;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    flex-direction: column;
-    padding: 25px;
-}
+@media only screen and (max-width: 768px){
+    @keyframes SlideIn {
+        from {
+            transform: translateY(-80%);
+        }
+
+        to {
+            transform: translateY(0%);
+        }
+    }
+
+    .SettingsBox {
+        display: flex;
+        width: 100%;
+        height: auto;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        flex-direction: column;
+        /* padding: 25px; */
+    }
 
 
-.ProfileText {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    padding: 10px;
-    color: #212121;
-    text-align: justify;
-}
+    .ProfileText {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        padding: 10px;
+        color: #212121;
+        /* text-align: justify; */
+    }
 
 
-.NoteText {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    padding: 10px;
-    color: #ff0000;
-    text-align: justify;
-}
+    .NoteText {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        padding: 10px;
+        color: #ff0000;
+        text-align: justify;
+    }
 
-.ProfileTextFile {
-    width: 300px;
-    color: #212121;
-    border: none;
-    outline: none;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    padding: 10px;
-}
+    .ProfileTextFile {
+        width: 300px;
+        color: #212121;
+        border: none;
+        outline: none;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        padding: 10px;
+    }
 
-.ProfileTextFile::file-selector-button {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
-    background-color: #7C4DFF;
-    color: #FFFFFF;
-    padding: 5px;
-    outline: none;
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
+    .ProfileTextFile::file-selector-button {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+        background-color: #7C4DFF;
+        color: #FFFFFF;
+        padding: 5px;
+        outline: none;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
 
-.ProfileTextFile::file-selector-button:hover {
-    background-color: #303F9F;
-    color: #C5CAE9;
-    border: none;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.5s ease;
-}
+    .ProfileTextFile::file-selector-button:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        border: none;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        transition: background-color 0.5s ease;
+    }
 
-.ProfileTextInputer {
-    width: 300px;
-    color: #212121;
-    border: none;
-    border-bottom: solid 1px #BDBDBD;
-    outline: none;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    padding: 10px;
-}
+    .ProfileTextInputer {
+        width: 300px;
+        color: #212121;
+        border: none;
+        border-bottom: solid 1px #BDBDBD;
+        outline: none;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        padding: 10px;
+    }
 
-.ProfileTextInputer::placeholder {
-    color: #757575;
-}
+    .ProfileTextInputer::placeholder {
+        color: #757575;
+    }
 
-.ProfileTextInputer:focus {
-    border-bottom: solid 1px #212121;
-}
+    .ProfileTextInputer:focus {
+        border-bottom: solid 1px #212121;
+    }
 
-.ProfileSettingsTitle {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 24px;
-    line-height: 50px;
-    padding: 10px;
-}
+    .ProfileSettingsTitle {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 24px;
+        line-height: 50px;
+        padding: 10px;
+    }
 
-.ProfileSettings {
-    width: 70%;
-    height: auto;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    background-color: #FFFFFF;
-    animation: FadeIn 0.5s;
-    animation: SlideIn 0.5s;
-    margin: 5px auto;
-    border-radius: 10px;
-    transition: 0.5s ease-in-out;
-}
+    .ProfileSettings {
+        width: 95%;
+        height: auto;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        background-color: #FFFFFF;
+        animation: FadeIn 0.5s;
+        animation: SlideIn 0.5s;
+        margin: 5px auto;
+        border-radius: 10px;
+        transition: 0.5s ease-in-out;
+    }
 
-.ProfileFinishButton {
-    font-family: Arial, Helvetica, sans-serif;
-    outline: none;
-    border: none;
-    background-color: #7C4DFF;
-    padding: 12px;
-    margin: 12px;
-    color: #FFFFFF;
-    letter-spacing: 2px;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
+    .ProfileFinishButton {
+        font-family: Arial, Helvetica, sans-serif;
+        outline: none;
+        border: none;
+        background-color: #7C4DFF;
+        padding: 12px;
+        margin: 12px;
+        color: #FFFFFF;
+        letter-spacing: 2px;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
 
-.ProfileFinishButton:hover {
-    background-color: #303F9F;
-    color: #C5CAE9;
-    transition: background-color 0.5s ease;
+    .ProfileFinishButton:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        transition: background-color 0.5s ease;
+    }
 }
 </style>

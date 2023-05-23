@@ -256,7 +256,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2;
+    z-index: 1;
     transition: 0.5s ease-in-out;
     animation: formBoxLoadIn 0.5s;
     /* Apply the 'formBoxLoadIn' animation when the component is loaded */

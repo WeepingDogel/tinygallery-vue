@@ -99,7 +99,7 @@ export default {
                 <img class="UserAvatar" :src="(items as any).avatar" />
                 <p class="ImageUserName">{{ (items as any).user_name }}</p>
                 <p class="LikesDisplay">{{ (items as any).dots }} likes</p>
-                <p class="ImageDate">{{ TimeZoneCaculator.CaculateTheCorrectDate((items as any).date)  }}</p>
+                <p class="ImageDate">{{ TimeZoneCaculator.CaculateTheCorrectDate((items as any).date) }}</p>
             </div>
         </div>
     </div>
@@ -253,7 +253,7 @@ export default {
 
 .LikesDisplay {
     font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
+    font-weight: bolder;
     color: #7C4DFF;
     padding: 10px;
     line-height: 40px;
@@ -285,5 +285,184 @@ export default {
     align-items: center;
     position: relative;
     bottom: -60px;
+}
+
+@media only screen and (max-width: 768px) {
+    @keyframes FadeIn {
+        from {
+            opacity: 0;
+            top: 10px;
+        }
+
+        to {
+            opacity: 1;
+            top: 0px;
+        }
+    }
+
+    @keyframes FlashIn {
+        from {
+            scale: 0.5;
+            transform: translateY(90%);
+        }
+
+        to {
+            scale: 1;
+            transform: translateY(0%);
+        }
+    }
+
+
+    .Container {
+        width: 100%;
+        /* height: 100vh; */
+        /* height: 200vh; */
+        /* Test ScrollTop */
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: column;
+        flex-wrap: wrap;
+        animation: FadeIn 0.5s;
+    }
+
+    .Card {
+        width: 95%;
+        height: 450px;
+        border-radius: 10px;
+        margin-top: 20px;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        transition: 0.5s ease-in-out;
+        animation: FlashIn 0.5s;
+        background-color: #FFFFFF;
+    }
+
+    .Card:hover {
+        scale: 0.9;
+    }
+
+    .ImageTitle {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bolder;
+        font-size: 20px;
+        text-indent: 0.5em;
+        color: #FFFFFF;
+        text-shadow: 2px 2px 4px #212121;
+        position: relative;
+        top: -40px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .displayImage {
+        width: 100%;
+        height: 300px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        object-fit: cover;
+        text-overflow: ellipsis;
+        cursor: pointer;
+
+    }
+
+    .displayImage_NSFW {
+        width: 100%;
+        height: 300px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        object-fit: cover;
+        text-overflow: ellipsis;
+        cursor: pointer;
+        filter: blur(20px);
+    }
+
+    .ImageDescription {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 16px;
+        color: #757575;
+        position: relative;
+        top: -15px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 15px;
+    }
+
+    .BackToTop {
+        position: fixed;
+        float: right;
+        right: 2%;
+        top: 80%;
+        display: none;
+    }
+
+    .TopButton {
+        padding: 2px;
+        width: 40px;
+        height: 40px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        background-color: #7C4DFF;
+        color: #FFFFFF;
+        border-radius: 8px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .TopButton:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        transition: background-color 0.5s ease;
+    }
+
+
+    .ImageUserName {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 14px;
+        color: #212121;
+        padding: 10px;
+        line-height: 40px;
+    }
+
+    .LikesDisplay {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bolder;
+        font-size: 14px;
+        color: #7C4DFF;
+        padding: 10px;
+        line-height: 40px;
+    }
+
+    .ImageDate {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 14px;
+        color: #757575;
+        padding: 10px;
+        line-height: 40px;
+        margin-left: auto;
+    }
+
+    .UserAvatar {
+        width: 25px;
+        height: 25px;
+        border: solid 1px #BDBDBD;
+        border-radius: 100%;
+        margin: 5px;
+
+    }
+
+    .UserInfoBar {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        position: relative;
+        bottom: -20px;
+    }
 }
 </style>

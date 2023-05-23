@@ -72,87 +72,176 @@ export default {
 <style scoped>
 /* CSS styling for the component */
 
-@keyframes FadeIn {
-    from {
-        opacity: 0;
-        top: 10px;
+@media only screen and(min-width: 768px) {
+    @keyframes FadeIn {
+        from {
+            opacity: 0;
+            top: 10px;
+        }
+
+        to {
+            opacity: 1;
+            top: 0px;
+        }
     }
 
-    to {
-        opacity: 1;
-        top: 0px;
+    .AboutContainer {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        animation: FadeIn 0.5s;
+    }
+
+    .IntroductionPart {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        transition: 0.5s ease-in-out;
+        margin: 10px auto;
+        border-radius: 10px;
+        animation: FadeIn 0.5s;
+        background-color: #FFFFFF;
+    }
+
+    .Logo {
+        width: 350px;
+        height: 350px;
+        /* margin: 0 auto; */
+        display: block;
+        padding: 10px;
+    }
+
+
+    .top-control {
+        display: flex;
+        flex-direction: row;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .text-control {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .AboutTitle {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 25px;
+        padding: 20px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+    .AboutParaTitle {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 22px;
+        padding: 10px;
+    }
+
+    .AboutPara {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        padding: 10px;
+        text-align: justify;
+        line-height: 20px;
+    }
+
+    .AboutPara img {
+        margin: 5px;
     }
 }
 
-.AboutContainer {
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    animation: FadeIn 0.5s;
-}
+@media only screen and (max-width: 768px) {
+    @keyframes FadeIn {
+        from {
+            opacity: 0;
+            top: 10px;
+        }
 
-.IntroductionPart {
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    transition: 0.5s ease-in-out;
-    margin: 10px auto;
-    border-radius: 10px;
-    animation: FadeIn 0.5s;
-    background-color: #FFFFFF;
-}
+        to {
+            opacity: 1;
+            top: 0px;
+        }
+    }
 
-.Logo {
-    width: 350px;
-    height: 350px;
-    /* margin: 0 auto; */
-    display: block;
-    padding: 10px;
-}
+    .AboutContainer {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        animation: FadeIn 0.5s;
+    }
 
+    .IntroductionPart {
+        width: 95%;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        transition: 0.5s ease-in-out;
+        margin: 10px auto;
+        border-radius: 10px;
+        animation: FadeIn 0.5s;
+        background-color: #FFFFFF;
+    }
 
-.top-control {
-    display: flex;
-    flex-direction: row;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.text-control {
-    display: flex;
-    flex-direction: column;
-}
-
-.AboutTitle {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 25px;
-    padding: 20px;
-    margin-left: auto;
-    margin-right: auto;
-}
+    .Logo {
+        width: 350px;
+        height: 350px;
+        /* margin: 0 auto; */
+        display: block;
+        padding: 10px;
+    }
 
 
-.AboutParaTitle {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 22px;
-    padding: 10px;
-}
+    .top-control {
+        display: flex;
+        flex-direction: column;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-.AboutPara {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    padding: 10px;
-    text-align: justify;
-    line-height: 20px;
-}
+    .text-control {
+        display: flex;
+        flex-direction: column;
+    }
 
-.AboutPara img {
-    margin: 5px;
+    .AboutTitle {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 25px;
+        padding: 20px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+    .AboutParaTitle {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 22px;
+        padding: 10px;
+    }
+
+    .AboutPara {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: lighter;
+        font-size: 18px;
+        padding: 10px;
+        /* text-align: justify; */
+        line-height: 20px;
+        /* text-indent: 2em; */
+    }
+
+    .AboutPara img {
+        margin: 5px;
+    }
 }
 </style>

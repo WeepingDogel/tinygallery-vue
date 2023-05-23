@@ -88,124 +88,252 @@ export default {
 </template>
 
 <style scoped>
-@keyframes FadeIn {
-    from {
-        opacity: 0;
-        top: 10px;
+@media only screen and (min-width: 768px) {
+    @keyframes FadeIn {
+        from {
+            opacity: 0;
+            top: 10px;
+        }
+
+        to {
+            opacity: 1;
+            top: 0px;
+        }
     }
 
-    to {
-        opacity: 1;
-        top: 0px;
+    .ProfileContainer {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        /* justify-content: center; */
+        /* align-items: center; */
+        animation: FadeIn 0.5s;
+    }
+
+    .ProfileCard {
+        width: 70%;
+        height: 50vh;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        animation: FadeIn 0.5s;
+        /* margin: 10px auto; */
+        margin-top: 10px;
+        margin-bottom: 5px;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 10px;
+        transition: 0.5s ease-in-out;
+        background-color: #FFFFFF;
+    }
+
+    .UserCover {
+        width: 100%;
+        height: 300px;
+        background-color: #3F51B5;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .UserCover img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+    }
+
+    .ProfileAvatar {
+        width: 200px;
+        height: 200px;
+        border: solid 1px #BDBDBD;
+        border-radius: 10px;
+        position: relative;
+        margin: 0 50px;
+        top: -10%;
+        background-color: #FFFFFF;
+    }
+
+    .ProfileAvatar img {
+        width: 200px;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .ProfileUserName {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bolder;
+        font-size: 30px;
+        color: #212121;
+    }
+
+    .ProfileUserNameContainerBox {
+        position: relative;
+        left: 280px;
+        top: -160px;
+    }
+
+    .ProfileEditButton {
+        font-family: Arial, Helvetica, sans-serif;
+        outline: none;
+        border: none;
+        background-color: #7C4DFF;
+        padding: 13px;
+        color: #FFFFFF;
+        letter-spacing: 2px;
+        border-radius: 8px;
+        cursor: pointer;
+        position: relative;
+        top: -200px;
+        right: 50px;
+        float: right;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .ProfileEditButton:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        transition: background-color 0.5s ease;
+    }
+
+    .ProfileArtWorks {
+        width: 70%;
+        height: 500px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        animation: FadeIn 0.5s;
+        margin: 5px auto;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 10px;
+        transition: 0.5s ease-in-out;
+        background-color: #FFFFFF;
     }
 }
 
-.ProfileContainer {
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    /* justify-content: center; */
-    /* align-items: center; */
-    animation: FadeIn 0.5s;
-}
+@media only screen and (max-width: 768px) {
+    @keyframes FadeIn {
+        from {
+            opacity: 0;
+            top: 10px;
+        }
 
-.ProfileCard {
-    width: 70%;
-    height: 50vh;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    animation: FadeIn 0.5s;
-    /* margin: 10px auto; */
-    margin-top: 10px;
-    margin-bottom: 5px;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 10px;
-    transition: 0.5s ease-in-out;
-    background-color: #FFFFFF;
-}
+        to {
+            opacity: 1;
+            top: 0px;
+        }
+    }
 
-.UserCover {
-    width: 100%;
-    height: 300px;
-    background-color: #3F51B5;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
+    .ProfileContainer {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        /* justify-content: center; */
+        /* align-items: center; */
+        animation: FadeIn 0.5s;
+    }
 
-.UserCover img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-}
+    .ProfileCard {
+        width: 95%;
+        height: 50vh;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        animation: FadeIn 0.5s;
+        /* margin: 10px auto; */
+        margin-top: 10px;
+        margin-bottom: 5px;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 10px;
+        transition: 0.5s ease-in-out;
+        background-color: #FFFFFF;
+    }
 
-.ProfileAvatar {
-    width: 200px;
-    height: 200px;
-    border: solid 1px #BDBDBD;
-    border-radius: 10px;
-    position: relative;
-    margin: 0 50px;
-    top: -10%;
-    background-color: #FFFFFF;
-}
+    .UserCover {
+        width: 100%;
+        height: 200px;
+        background-color: #3F51B5;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
 
-.ProfileAvatar img {
-    width: 200px;
-    height: auto;
-    border-radius: 10px;
-}
+    .UserCover img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+    }
 
-.ProfileUserName {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bolder;
-    font-size: 30px;
-    color: #212121;
-}
+    .ProfileAvatar {
+        width: 100px;
+        height: 100px;
+        border: solid 1px #BDBDBD;
+        border-radius: 10px;
+        position: relative;
+        /* margin: 0 50px; */
+        margin-left: 20px;
+        top: -8%;
+        background-color: #FFFFFF;
+    }
 
-.ProfileUserNameContainerBox {
-    position: relative;
-    left: 280px;
-    top: -160px;
-}
+    .ProfileAvatar img {
+        width: 100px;
+        height: auto;
+        border-radius: 10px;
+    }
 
-.ProfileEditButton {
-    font-family: Arial, Helvetica, sans-serif;
-    outline: none;
-    border: none;
-    background-color: #7C4DFF;
-    padding: 13px;
-    color: #FFFFFF;
-    letter-spacing: 2px;
-    border-radius: 8px;
-    cursor: pointer;
-    position: relative;
-    top: -200px;
-    right: 50px;
-    float: right;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
+    .ProfileUserName {
+        display: inline-block;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bolder;
+        font-size: 20px;
+        color: #212121;
+    }
 
-.ProfileEditButton:hover {
-    background-color: #303F9F;
-    color: #C5CAE9;
-    transition: background-color 0.5s ease;
-}
+    .ProfileUserNameContainerBox {
+        width: 50%;
+        position: relative;
+        left: 135px;
+        top: -90px;
+    }
 
-.ProfileArtWorks {
-    width: 70%;
-    height: 500px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    animation: FadeIn 0.5s;
-    margin: 5px auto;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 10px;
-    transition: 0.5s ease-in-out;
-    background-color: #FFFFFF;
+    .ProfileEditButton {
+        font-family: Arial, Helvetica, sans-serif;
+        outline: none;
+        border: none;
+        background-color: #7C4DFF;
+        padding: 13px;
+        color: #FFFFFF;
+        letter-spacing: 2px;
+        border-radius: 8px;
+        cursor: pointer;
+        position: relative;
+        top: -120px;
+        right: 10px;
+        float: right;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .ProfileEditButton:hover {
+        background-color: #303F9F;
+        color: #C5CAE9;
+        transition: background-color 0.5s ease;
+    }
+
+    .ProfileArtWorks {
+        width: 95%;
+        height: 500px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        animation: FadeIn 0.5s;
+        margin: 5px auto;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 10px;
+        transition: 0.5s ease-in-out;
+        background-color: #FFFFFF;
+    }
 }
 </style>
