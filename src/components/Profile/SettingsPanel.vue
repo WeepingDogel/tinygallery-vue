@@ -90,7 +90,7 @@ export default {
                 <input @change="loadBackground" class="ProfileTextFile" placeholder="ChangeBackground" type="file">
             </p>
         </div>
-        <div class="SettingsBox">
+        <!-- <div class="SettingsBox">
             <h2 class="ProfileSettingsTitle">Time Zone</h2>
             <p class="ProfileText">
                 Select your timezone:
@@ -121,7 +121,7 @@ export default {
                     <option value="12">12</option>
                 </select>
             </p>
-        </div>
+        </div> -->
         <button @click="CloseAndSaveSettings" class="ProfileFinishButton"> Apply </button>
         <button @click="DiscardSettings" class="ProfileFinishButton">Discard</button>
     </div>
@@ -228,7 +228,7 @@ export default {
 }
 
 .ProfileSettings {
-    width: 80%;
+    width: 70%;
     height: auto;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     background-color: #FFFFFF;

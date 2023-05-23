@@ -105,17 +105,21 @@ export default {
     height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: start;
+    /* justify-content: center; */
+    /* align-items: center; */
     animation: FadeIn 0.5s;
 }
 
 .ProfileCard {
-    width: 80%;
+    width: 70%;
     height: 50vh;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     animation: FadeIn 0.5s;
-    margin: 10px auto;
+    /* margin: 10px auto; */
+    margin-top: 10px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 10px;
     transition: 0.5s ease-in-out;
     background-color: #FFFFFF;
@@ -191,11 +195,15 @@ export default {
 }
 
 .ProfileArtWorks {
-    width: 80%;
+    width: 70%;
     height: 500px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     animation: FadeIn 0.5s;
     margin: 5px auto;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 10px;
     transition: 0.5s ease-in-out;
     background-color: #FFFFFF;
