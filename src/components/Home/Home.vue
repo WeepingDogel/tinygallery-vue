@@ -462,7 +462,7 @@ export default {
         flex-direction: row;
         align-items: center;
         position: relative;
-        bottom: -20px;
+        bottom: -10px;
     }
 }
 </style>

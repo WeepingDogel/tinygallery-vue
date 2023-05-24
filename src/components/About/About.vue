@@ -72,7 +72,7 @@ export default {
 <style scoped>
 /* CSS styling for the component */
 
-@media only screen and(min-width: 768px) {
+@media only screen and (min-width: 768px) {
     @keyframes FadeIn {
         from {
             opacity: 0;

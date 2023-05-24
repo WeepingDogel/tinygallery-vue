@@ -411,4 +411,6 @@ span.StatusMessage {
 .con-box button:hover {
     background-color: #7C4DFF;
     color: #fff;
-}</style>
+}
+
+</style>
