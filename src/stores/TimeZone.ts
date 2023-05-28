@@ -33,7 +33,10 @@ export const Timezone = defineStore(
             },
             CaculateTheCorrectDate(OriginalDate: String){
                 const dateString = OriginalDate;
-                return moment.tz(dateString, this.TimeZoneServer).clone().tz(this.TimeZoneBrowser).format('YYYY-MM-DD HH:mm');
+                return moment.tz(dateString, this.TimeZoneServer)
+                .clone()
+                .tz(this.TimeZoneBrowser)
+                .format('YYYY-MM-DD HH:mm');
             }
         }
     }
