@@ -179,7 +179,7 @@ export default {
                     <div class="CommentText">
                         <h2 class="UserNameOfRemarkSender">{{ (OriginalRemark as any).user_name }}</h2>
                         <p class="OriginalRemarkContent">{{ (OriginalRemark as any).content }}</p>
-                        <p class="RemarkDate">{{ (OriginalRemark as any).date }}</p>
+                        <p class="RemarkDate">{{ TimeZoneCaculator.CaculateTheCorrectDate((OriginalRemark as any).date) }}</p>
                     </div>
                 </div>
                 <div class="ReplyDisplay">
