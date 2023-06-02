@@ -1,5 +1,8 @@
 <!-- 
     Profile.vue
+
+
+    
  -->
 <script lang="ts">
 import SettingsPanel from "@/components/Profile/SettingsPanel.vue"
