@@ -1,11 +1,44 @@
 <!-- About -->
 <script lang="ts">
+import axios from 'axios';
+
 export default {
     // Define the component's data
     data() {
         return {
             Version: "1.0.0-Beta", // The current version of TinyGallery
+            user_num: String,
+            posts_num: String,
+            comments_num: String
         }
+    },
+    methods:{
+        GetTheData(){
+            axios.get('/userdata/get/user_num')
+            .then(
+                (response) => {
+                    this.user_num = response.data.toLocaleString();
+                }
+            );
+            axios.get('/userdata/get/posts_num')
+            .then(
+                (response) => {
+                    this.posts_num = response.data.toLocaleString();
+                }
+            )
+            axios.get('/userdata/get/comments_num')
+            .then(
+                (response) => {
+                    this.comments_num = response.data.toLocaleString();
+                }
+            )
+            console.log(this.user_num);
+            console.log(this.posts_num);
+            console.log(this.comments_num);
+        }
+    },
+    mounted(){
+        this.GetTheData();
     }
 }
 </script>
@@ -62,6 +95,15 @@ export default {
                             <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&amp;logo=github&amp;logoColor=white"
                                 alt="GitHub">
                         </a>
+                    </p>
+                    <p class="AboutPara">
+                        <span class="InfoNumber">{{ user_num }}</span> Users are enjoying this example site! 
+                    </p>
+                    <p class="AboutPara">
+                        <span class="InfoNumber">{{ posts_num }}</span> ArtWorks were published! 
+                    </p>
+                    <p class="AboutPara">
+                        <span class="InfoNumber">{{ comments_num }}</span> Comments in total the users posted!
                     </p>
                 </div>
             </div>
@@ -155,6 +197,16 @@ export default {
 
     .AboutPara img {
         margin: 5px;
+    }
+
+    .InfoNumber {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bolder;
+        font-size: 28px;
+        padding: 10px;
+        text-align: justify;
+        line-height: 20px;
+        color: #7C4DFF;
     }
 }
 
