@@ -8,6 +8,16 @@ export default {
         SideMenu,
         Overview,
         DataManagement
+    },
+    data(){
+        return {
+            PanelOpen: 0,
+        }
+    },
+    methods: {
+        UpdatePanelOpen(OpenNum: number){
+            this.PanelOpen = OpenNum;
+        }
     }
 }
 
@@ -15,10 +25,10 @@ export default {
 
 <template>
     <div class="AdminPanel">
-        <SideMenu />
+        <SideMenu :child-open-num="PanelOpen" @update-open-num="UpdatePanelOpen"/>
         <div class="ManagementDisplay">
-            <Overview />
-            <DataManagement />
+            <Overview v-if="PanelOpen == 0"/>
+            <DataManagement v-if="PanelOpen == 1"/>
         </div>
     </div>
 </template>
@@ -36,6 +46,7 @@ export default {
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
 }
 
 </style>

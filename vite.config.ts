@@ -45,6 +45,9 @@ export default defineConfig({
       },
       '/likes':{
         target: 'http://127.0.0.1:8000'
+      },
+      '/user/admin_authentication': {
+        target: 'http://127.0.0.1:8000'
       }
     },
   },

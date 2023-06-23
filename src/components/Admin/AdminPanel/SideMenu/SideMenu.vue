@@ -1,7 +1,27 @@
 <script lang="ts">
 
 export default {
-
+    props: {
+        ChildOpenNum: Number,
+    },
+    data(){
+        return {
+            ChildNum: this.ChildOpenNum,
+        }
+    },
+    methods: {
+        OpenOverView(){
+            this.ChildNum = 0;
+            this.$emit('update-open-num', this.ChildNum);
+        },
+        OpenDataManagement(){
+            this.ChildNum = 1;
+            this.$emit('update-open-num', this.ChildNum);
+        },
+        ExitAdminPage(){
+            this.$router.push("/");
+        }
+    }
 }
 </script>
 
@@ -13,9 +33,9 @@ export default {
         <p class="MenuPara">
             Hi, respective <span class="userNameText">[Admin Username]</span>!
         </p>
-        <button class="MenuItemButton">Overview</button>
-        <button class="MenuItemButton">Data Managment</button>
-        <button class="MenuItemButton">Exit</button>
+        <button @click="OpenOverView" class="MenuItemButton" :class="{ MenuItemButtonSelected: ChildNum==0 }">Overview</button>
+        <button @click="OpenDataManagement" class="MenuItemButton" :class="{ MenuItemButtonSelected: ChildNum==1 }">Data Managment</button>
+        <button @click="ExitAdminPage" class="MenuItemButton">Exit</button>
     </div>
 </template>
 

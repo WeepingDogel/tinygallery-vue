@@ -35,7 +35,7 @@ export default {
 
 <template>
     <!-- Render the NavBar and the RouterView. -->
-    <NavBar v-if="$route.meta.showNavBar" />
+    <NavBar v-if="$route.path != '/admin'"/>
     <RouterView />
 </template>
 

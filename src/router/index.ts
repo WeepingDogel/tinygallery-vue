@@ -50,41 +50,35 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomePage,
-      meta: { showNavBar: true }
     },
     {
       // Define the login page route
       path: '/login',
       name: 'login',
       component: () => import('../views/AuthView.vue'),
-      meta: { showNavBar: true }
     },
     {
       // Define the about page route
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue'),
-      meta: { showNavBar: true }
     },
     {
       // Define the profile page route
       path: '/profile',
       name: 'Profile',
       component: () => import('../views/ProfileView.vue'),
-      meta: { showNavBar: true }
     },
     {
       // Define the remark page route with a dynamic parameter
       path: '/remark/:post_uuid',
       name: 'Remark',
       component: () => import('../views/RemarkView.vue'),
-      meta: { showNavBar: true }
     },
     {
       path: '/admin',
       name: 'Administration',
       component: () => import('../views/AdminView.vue'),
-      meta: { showNavBar: false }
     }
   ]
 })
