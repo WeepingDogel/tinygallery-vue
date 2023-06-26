@@ -17,7 +17,7 @@ export default {
         VerifyAdminIdentity(){
             const Token = localStorage.getItem('Token');
             axios.get(
-                '/user/admin_authentication',
+                '/admin/admin_authentication',
                 {
                     headers: {
                         "Authorization": "Bearer " + Token

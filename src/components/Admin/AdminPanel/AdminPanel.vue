@@ -1,14 +1,18 @@
 <script lang="ts">
 import SideMenu from './SideMenu/SideMenu.vue';
 import Overview from './Overview/Overview.vue';
-import DataManagement from './DataManagement/DataManagement.vue';
+import UserManagement from './DataManagement/UserManagement.vue';
+import PostsManagement from './DataManagement/PostsManagement.vue';
+import CommentsAndRepliesManagement from './DataManagement/CommentsAndRepliesManagement.vue';
 
 export default {
     components: {
-        SideMenu,
-        Overview,
-        DataManagement
-    },
+    SideMenu,
+    Overview,
+    UserManagement,
+    PostsManagement,
+    CommentsAndRepliesManagement
+},
     data(){
         return {
             PanelOpen: 0,
@@ -28,7 +32,9 @@ export default {
         <SideMenu :child-open-num="PanelOpen" @update-open-num="UpdatePanelOpen"/>
         <div class="ManagementDisplay">
             <Overview v-if="PanelOpen == 0"/>
-            <DataManagement v-if="PanelOpen == 1"/>
+            <UserManagement v-if="PanelOpen == 1" />
+            <PostsManagement v-if="PanelOpen == 2" />
+            <CommentsAndRepliesManagement v-if="PanelOpen == 3"/>
         </div>
     </div>
 </template>
