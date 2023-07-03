@@ -52,7 +52,7 @@ export default {
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>UUID</th>
+                        <!-- <th>UUID</th> -->
                         <th>User</th>
                         <th>Content</th>
                         <th>Date</th>
@@ -62,7 +62,7 @@ export default {
                 <tbody>
                     <tr v-for="(item, index) in CommentsDataList" :key="index">
                         <td>{{ (item as any).id }}</td>
-                        <td>{{ (item as any).remark_uuid }}</td>
+                        <!-- <td>{{ (item as any).remark_uuid }}</td> -->
                         <td>{{ (item as any).user_name }}</td>
                         <td>{{ (item as any).content }}</td>
                         <td>{{ (item as any).date }}</td>
@@ -79,7 +79,7 @@ export default {
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>UUID</th>
+                        <!-- <th>UUID</th> -->
                         <th>User</th>
                         <th>Content</th>
                         <th>Date</th>
@@ -89,7 +89,7 @@ export default {
                 <tbody>
                     <tr v-for="(item, index) in RepliesDataList" :key="index">
                         <td>{{ (item as any).id }}</td>
-                        <td>{{ (item as any).reply_uuid }}</td>
+                        <!-- <td>{{ (item as any).reply_uuid }}</td> -->
                         <td>{{ (item as any).user_name }}</td>
                         <td>{{ (item as any).content }}</td>
                         <td>{{ (item as any).date }}</td>

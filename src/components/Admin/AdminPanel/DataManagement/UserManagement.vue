@@ -53,7 +53,7 @@ export default {
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>UUID</th>
+                        <!-- <th>UUID</th> -->
                         <th>Username</th>
                         <th>Email</th>
                         <th>Date</th>
@@ -63,7 +63,7 @@ export default {
                 <tbody>
                     <tr v-for="(item, index) in UserDataList" :key="index">
                         <td>{{ (item as any).id }}</td>
-                        <td>{{ (item as any).users_uuid }}</td>
+                        <!-- <td>{{ (item as any).users_uuid }}</td> -->
                         <td>{{ (item as any).user_name }}</td>
                         <td>{{ (item as any).email }}</td>
                         <td>{{ (item as any).date }}</td>
@@ -81,7 +81,7 @@ export default {
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>UUID</th>
+                        <!-- <th>UUID</th> -->
                         <th>Username</th>
                         <th>Email</th>
                         <th>Date</th>
@@ -91,7 +91,7 @@ export default {
                 <tbody>
                     <tr v-for="(item, index) in AdminDataList" :key="index">
                         <td>{{ (item as any).id }}</td>
-                        <td>{{ (item as any).users_uuid }}</td>
+                        <!-- <td>{{ (item as any).users_uuid }}</td> -->
                         <td>{{ (item as any).user_name }}</td>
                         <td>{{ (item as any).email }}</td>
                         <td>{{ (item as any).date }}</td>

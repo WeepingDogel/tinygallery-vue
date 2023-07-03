@@ -63,6 +63,12 @@ export default defineConfig({
       },
       '/admin/get_all_replies': {
         target: 'http://127.0.0.1:8000'
+      },
+      '/admin/user_tendency_addition': {
+        target: 'http://127.0.0.1:8000'
+      },
+      '/admin/posts_tendency_addition': {
+        target: 'http://127.0.0.1:8000'
       }
     },
   },

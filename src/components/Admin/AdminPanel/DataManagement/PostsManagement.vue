@@ -37,7 +37,7 @@ export default {
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>UUID</th>
+                        <!-- <th>UUID</th> -->
                         <th>Title</th>
                         <th>Description</th>
                         <th>Author</th>
@@ -49,7 +49,7 @@ export default {
                 <tbody>
                     <tr v-for="(item, index) in PostsDataList" :key="index">
                         <td>{{ (item as any).id }}</td>
-                        <td>{{ (item as any).post_uuid }}</td>
+                        <!-- <td>{{ (item as any).post_uuid }}</td> -->
                         <td>{{ (item as any).post_title }}</td>
                         <td>{{ (item as any).description }}</td>
                         <td>{{ (item as any).user_name }}</td>
