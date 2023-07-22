@@ -34,7 +34,7 @@ export default {
                     (response) => {
                         this.AdminDataList = response.data
                     }
-            )
+                )
         }
 
     },

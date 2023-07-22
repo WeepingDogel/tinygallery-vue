@@ -1,7 +1,19 @@
 <script lang="ts">
-export default {
 
+export default {
+    data(){
+        return {
+
+        }
+    },
+    methods: {
+
+    },
+    mounted(){
+        
+    }
 }
+
 </script>
 
 <template>
@@ -17,15 +29,14 @@ export default {
     width: 100%;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .EditorBox {
     width: 700px;
     height: 400px;
     background-color: white;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: auto;
-    margin-left: auto;
 }
 </style>

@@ -7,19 +7,19 @@ import CommentsAndRepliesManagement from './DataManagement/CommentsAndRepliesMan
 
 export default {
     components: {
-    SideMenu,
-    Overview,
-    UserManagement,
-    PostsManagement,
-    CommentsAndRepliesManagement
-},
-    data(){
+        SideMenu,
+        Overview,
+        UserManagement,
+        PostsManagement,
+        CommentsAndRepliesManagement
+    },
+    data() {
         return {
             PanelOpen: 0,
         }
     },
     methods: {
-        UpdatePanelOpen(OpenNum: number){
+        UpdatePanelOpen(OpenNum: number) {
             this.PanelOpen = OpenNum;
         }
     }
@@ -29,12 +29,12 @@ export default {
 
 <template>
     <div class="AdminPanel">
-        <SideMenu :child-open-num="PanelOpen" @update-open-num="UpdatePanelOpen"/>
+        <SideMenu :child-open-num="PanelOpen" @update-open-num="UpdatePanelOpen" />
         <div class="ManagementDisplay">
-            <Overview v-if="PanelOpen == 0"/>
+            <Overview v-if="PanelOpen == 0" />
             <UserManagement v-if="PanelOpen == 1" />
             <PostsManagement v-if="PanelOpen == 2" />
-            <CommentsAndRepliesManagement v-if="PanelOpen == 3"/>
+            <CommentsAndRepliesManagement v-if="PanelOpen == 3" />
         </div>
     </div>
 </template>
@@ -54,5 +54,4 @@ export default {
     display: flex;
     flex-direction: column;
 }
-
 </style>

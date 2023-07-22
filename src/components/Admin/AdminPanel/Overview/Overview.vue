@@ -77,7 +77,7 @@ export default {
             };
             chart.setOption(option);
         },
-        async renderPostsChart(){
+        async renderPostsChart() {
             const Token = localStorage.getItem('Token');
             const chartConatainer = this.$refs.line_chart_posts_tendency;
             const chart = echarts.init((chartConatainer as any));

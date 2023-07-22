@@ -4,7 +4,7 @@ import AdminPanel from './AdminPanel/AdminPanel.vue';
 import axios from 'axios';
 
 export default {
-    data(){
+    data() {
         return {
             is_admin: false,
         }
@@ -14,7 +14,7 @@ export default {
         AdminPanel
     },
     methods: {
-        VerifyAdminIdentity(){
+        VerifyAdminIdentity() {
             const Token = localStorage.getItem('Token');
             axios.get(
                 '/admin/admin_authentication',
@@ -25,20 +25,20 @@ export default {
                 }
             ).then(
                 (response) => {
-                    if(response.data.Code == 200){
+                    if (response.data.Code == 200) {
                         this.is_admin = !this.is_admin;
                     }
                 }
             ).catch(
                 (error) => {
-                    if(error.response.data.detail == "Permission Denied.") {
+                    if (error.response.data.detail == "Permission Denied.") {
                         this.is_admin = false
                     }
                 }
             )
         }
     },
-    mounted(){
+    mounted() {
         this.VerifyAdminIdentity();
     }
 }
@@ -46,10 +46,10 @@ export default {
 </script>
 
 <template>
-    <NavBarOfAdmin v-if="is_admin"/>
-    <AdminPanel v-if="is_admin"/>
+    <NavBarOfAdmin v-if="is_admin" />
+    <AdminPanel v-if="is_admin" />
     <div class="BanInfo" v-else>
-        <p class="BanText">400: Permission Denied!</p> 
+        <p class="BanText">400: Permission Denied!</p>
         <p class="BanSubText">You are not Administrator!</p>
     </div>
 </template>
@@ -82,7 +82,7 @@ export default {
     transition: 1000ms;
 }
 
-.BanText:active{
+.BanText:active {
     transition: 500ms;
     font-size: 40px;
     transform: rotate(2160deg);

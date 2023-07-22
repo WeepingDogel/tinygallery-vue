@@ -1,12 +1,14 @@
 <script lang="ts">
 export default {
-    
+
 }
 </script>
 
 <template>
     <div class="NavBarOfAdmin">
-        <h1 class="NavBarTitle">TinyGallery Administration</h1>
+        <h1 class="NavBarTitle">
+            TinyGallery Administration
+        </h1>
     </div>
 </template>
 

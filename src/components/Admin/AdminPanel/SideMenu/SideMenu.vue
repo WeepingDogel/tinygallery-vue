@@ -22,11 +22,11 @@ export default {
             this.ChildNum = 1;
             this.$emit('update-open-num', this.ChildNum);
         },
-        OpenPostsManagement(){
+        OpenPostsManagement() {
             this.ChildNum = 2;
             this.$emit('update-open-num', this.ChildNum);
         },
-        OpenCommentsAndRepliesManagement(){
+        OpenCommentsAndRepliesManagement() {
             this.ChildNum = 3;
             this.$emit('update-open-num', this.ChildNum);
         },
@@ -83,7 +83,8 @@ export default {
         <button @click="OpenPostsManagement" class="MenuItemButton" :class="{ MenuItemButtonSelected: ChildNum == 2 }">
             Posts
         </button>
-        <button @click="OpenCommentsAndRepliesManagement" class="MenuItemButton" :class="{ MenuItemButtonSelected: ChildNum == 3 }" >
+        <button @click="OpenCommentsAndRepliesManagement" class="MenuItemButton"
+            :class="{ MenuItemButtonSelected: ChildNum == 3 }">
             Comment and Replies
         </button>
         <button @click="ExitAdminPage" class="MenuItemButton">
