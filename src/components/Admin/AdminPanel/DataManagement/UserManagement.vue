@@ -1,12 +1,18 @@
 <script lang="ts">
 import axios from 'axios';
+import UserEditor from './UserEditor.vue';
 
 
 export default {
+    components: {
+        UserEditor
+    },
     data() {
         return {
             UserDataList: [],
-            AdminDataList: []
+            AdminDataList: [],
+            UserEditorSwitch: false,
+            QueriedUserUUID: ''
         }
     },
     methods: {
@@ -35,6 +41,10 @@ export default {
                         this.AdminDataList = response.data
                     }
                 )
+        },
+        SwiftUpUserEditor(user_uuid: string) {
+            this.UserEditorSwitch = true;
+            this.QueriedUserUUID = user_uuid;
         }
 
     },
@@ -68,7 +78,7 @@ export default {
                         <td>{{ (item as any).email }}</td>
                         <td>{{ (item as any).date }}</td>
                         <td>
-                            <button class="editButton" @click="">Edit</button>
+                            <button class="editButton" @click="SwiftUpUserEditor((item as any).users_uuid)">Edit</button>
                         </td>
                     </tr>
                 </tbody>
@@ -96,13 +106,15 @@ export default {
                         <td>{{ (item as any).email }}</td>
                         <td>{{ (item as any).date }}</td>
                         <td>
-                            <button class="editButton" @click="">Edit</button>
+                            <button class="editButton"
+                                @click="SwiftUpUserEditor((item as any).users_uuid as string)">Edit</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+    <UserEditor v-if="UserEditorSwitch" v-model="UserEditorSwitch" :user_uuid="QueriedUserUUID" />
 </template>
 
 <style scoped>
@@ -125,6 +137,7 @@ export default {
     animation: FadeIn 1s;
     overflow-y: scroll;
     scrollbar-width: none;
+    z-index: 1;
 }
 
 .ManagementTitle {

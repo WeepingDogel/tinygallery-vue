@@ -1,25 +1,50 @@
 <script lang="ts">
+import axios from 'axios';
+
 
 export default {
-    data(){
+    props: {
+        post_uuid: {
+            type: String,
+            require: true
+        }
+    },
+    data() {
         return {
 
         }
     },
     methods: {
+        GetPostData(post_uuid: string) {
+            axios.get('', {
 
+            })
+                .then(
+                    (response) => {
+
+                    }
+                )
+        }
     },
-    mounted(){
-        
+    mounted() {
+
     }
-}
+};
 
 </script>
 
 <template>
     <div class="mask">
         <div class="EditorBox">
-
+            <div class="top-control">
+                <input type="text" />
+            </div>
+            <div class="mid-control">
+                <input type="text" />
+            </div>
+            <div class="foot-control">
+                <input type="text" />
+            </div>
         </div>
     </div>
 </template>

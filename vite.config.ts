@@ -69,6 +69,9 @@ export default defineConfig({
       },
       '/admin/posts_tendency_addition': {
         target: 'http://127.0.0.1:8000'
+      },
+      '/admin/get_single_user': {
+        target: 'http://127.0.0.1:8000'
       }
     },
   },
