@@ -200,28 +200,31 @@ export default {
             const token = localStorage.getItem('Token');
             if (token == null || token == "") {
                 alert("Please login to like it!");
-            }
-            axios.post(
-                '/likes/send/like', {},
-                {
-                    headers: {
-                        "Authorization": "Bearer " + token
-                    },
-                    params: {
-                        post_uuid: this.$route.params.post_uuid
+            } 
+            else {
+                axios.post(
+                    '/likes/send/like', {},
+                    {
+                        headers: {
+                            "Authorization": "Bearer " + token
+                        },
+                        params: {
+                            post_uuid: this.$route.params.post_uuid
+                        }
                     }
-                }
-            ).then(
-                (response) => {
-                    console.log(response.data);
-                    this.CheckIfLiked();
-                    this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid)
-                }
-            ).catch(
-                (error) => {
-                    console.log(error.detail)
-                }
-            )
+                ).then(
+                    (response) => {
+                        console.log(response.data);
+                        this.CheckIfLiked();
+                        this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid)
+                    }
+                ).catch(
+                    (error) => {
+                        console.log(error.detail)
+                    }
+                )
+            }
+
         }
     },
     beforeMount() { // A lifecycle hook that runs before the component is mounted.
@@ -725,6 +728,8 @@ export default {
         height: auto;
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
         cursor: pointer;
     }
 
