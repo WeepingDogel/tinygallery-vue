@@ -62,7 +62,7 @@ export default {
     },
     mounted() {
         this.GetUserData(this.user_uuid);
-       
+
     }
 
 };
@@ -86,7 +86,7 @@ export default {
             </div>
             <div class="FootControl">
                 <button class="Submit">Submit</button>
-                <button class="Cancel">Cancel</button>
+                <!-- <button class="Cancel">Cancel</button> -->
                 <button class="Block">Block User</button>
                 <button class="Delete">Delete User</button>
             </div>
