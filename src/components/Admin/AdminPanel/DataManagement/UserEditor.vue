@@ -1,6 +1,5 @@
 <script lang="ts">
 import axios from 'axios';
-import { use } from 'echarts';
 
 export default {
     props: {
@@ -24,10 +23,10 @@ export default {
             // Get the data
             axios.get('/admin/get_single_user', {
                 headers: {
-                    "Authorization": "Bearer " + Token
+                    "Authorization": "Bearer " + Token,
                 },
                 params: {
-                    user_uuid: user_uuid
+                    user_uuid: user_uuid,
                 }
             })
                 .then(
@@ -56,13 +55,16 @@ export default {
                     }
                 )
         },
+        EditTheUserData(user_uuid: string, user_name: string, email: string, date: string){
+            
+        },
         CloseTheEditor() {
             this.$emit('update:modelValue', false)
         }
     },
     mounted() {
         this.GetUserData(this.user_uuid);
-
+        
     }
 
 };

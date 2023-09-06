@@ -1,7 +1,6 @@
 <script lang="ts">
 import axios from 'axios';
 import * as echarts from 'echarts';
-import { ref, onMounted, reactive } from 'vue';
 
 export default {
     data() {
@@ -31,6 +30,7 @@ export default {
                         this.comments_num = response.data.toLocaleString();
                     }
                 )
+            // Output the log with the data.
             console.log(this.user_num);
             console.log(this.posts_num);
             console.log(this.comments_num);
@@ -119,11 +119,56 @@ export default {
             };
             chart.setOption(option);
         },
+        // Render the chart of the tendencies of comments.
+        async renderCommentsChart() {
+            const Token = localStorage.getItem('Token');
+            const chartConatainer = this.$refs.line_chart_comments_tendency;
+            const chart = echarts.init((chartConatainer as any));
+            const response = await axios.get('/admin/comments_tendency_addition', { headers: { "Authorization": "Bearer " + Token } });
+            const data = (response as any).data;
+            const xAxisData = data.map((item: { date: any; }) => item.date);
+            const yAxisData = data.map((item: { count: any; }) => item.count);
+
+
+            const option = {
+                xAxis: {
+                    type: 'category',
+                    name: 'Date',
+                    data: xAxisData,
+                    boundaryGap: false
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Addittion of comments'
+                },
+                series: [
+                    {
+                        data: yAxisData,
+                        type: 'line',
+                        color: '#7C4DFF',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                fontSize: 20,
+                                color: '#7C4DFF'
+                            }
+                        },
+                        areaStyle: {
+                            color: '#7C4DFF'
+                        },
+
+                    }
+                ],
+            };
+            chart.setOption(option)
+        }
     },
     mounted() {
         this.GetTheData();
         this.renderUsersChart();
         this.renderPostsChart();
+        this.renderCommentsChart();
     }
 }
 </script>
@@ -139,6 +184,7 @@ export default {
         <h1 class="OverviewTitle">Tendency Of Posts' Addition</h1>
         <div ref="line_chart_posts_tendency" style="width: 100%; height: 400px;"></div>
         <h1 class="OverviewTitle">Tendency Of Comments</h1>
+        <div ref="line_chart_comments_tendency" style="width: 100%; height: 400px;"></div>
     </div>
 </template>
 
