@@ -55,7 +55,7 @@ export default {
                     }
                 )
         },
-        EditTheUserData(user_uuid: string, user_name: string, email: string, date: string){
+        EditTheUserData(user_uuid: string, user_name: string, password: string, email: string, date: string){
             
         },
         CloseTheEditor() {
