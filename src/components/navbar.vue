@@ -118,9 +118,9 @@ export default {
         },
         OpenMenu() {
             this.Menu = !this.Menu;
-            if(this.Menu){
+            if (this.Menu) {
                 this.MenuText = "Close";
-            }else{
+            } else {
                 this.MenuText = "Menu";
             }
         }
@@ -268,15 +268,17 @@ export default {
 @media only screen and (max-width: 768px) {
 
     @keyframes MobileMenuLoading {
-        from{
+        from {
             opacity: 0;
             /* margin-bottom: 100%; */
         }
-        to{
+
+        to {
             opacity: 1;
             /* margin-bottom: 0px; */
         }
     }
+
     .uploadButton {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 36px;

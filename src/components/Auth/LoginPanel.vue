@@ -412,5 +412,4 @@ span.StatusMessage {
     background-color: #7C4DFF;
     color: #fff;
 }
-
 </style>

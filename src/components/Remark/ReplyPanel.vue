@@ -201,7 +201,7 @@ export default {
             </div>
             <div class="FootControl">
                 <div class="ReplySender">
-                    <img alt="Not Authorized" :src="UserAvatar" class="AvatarOfReplier" />
+                    <img alt="Not Authorized" :src="((UserAvatar) as any)" class="AvatarOfReplier" />
                     <input v-model="ReplyComment" class="ReplyInput" placeholder="ReplyTo" />
                     <button @click="SendAReply" class="ReplyButton">Reply</button>
                 </div>
