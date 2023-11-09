@@ -1,15 +1,15 @@
 <!-- @/views/AboutView.vue -->
 
 <script lang="ts">
-import About from "@/components/About/About.vue"
+import About from "@/components/About/About.vue";
 
 export default {
-    components: {
-        About
-    }
-}
+  components: {
+    About,
+  },
+};
 </script>
 
 <template>
-    <About />
+  <About />
 </template>

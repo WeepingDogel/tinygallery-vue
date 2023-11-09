@@ -1,15 +1,15 @@
 <!-- @/views/AdminView.vue -->
 
 <script lang="ts">
-import Admin from '@/components/Admin/Admin.vue'
+import Admin from "@/components/Admin/Admin.vue";
 
 export default {
-    components: {
-        Admin
-    }
-}
+  components: {
+    Admin,
+  },
+};
 </script>
 
 <template>
-    <Admin />
+  <Admin />
 </template>

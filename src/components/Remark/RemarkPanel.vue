@@ -48,396 +48,398 @@ It promotes code reusability, maintainability, and modularity in your Vue.js app
  -->
 
 <script lang="ts">
-import axios from 'axios';
-import { UpdateRemarks } from '@/stores/UpdateRemarks';
+import axios from "axios";
+import { UpdateRemarks } from "@/stores/UpdateRemarks";
 
 export default {
-    props: {
-        modelValue: Boolean, // Prop to control the visibility of the component
-        PostUUID: String // Prop to store the UUID of the post
+  props: {
+    modelValue: Boolean, // Prop to control the visibility of the component
+    PostUUID: String, // Prop to store the UUID of the post
+  },
+  emits: ["update:modelValue"], // Event emitted to update the visibility of the component
+  data() {
+    return {
+      comment: "", // Data property to store the user's comment
+    };
+  },
+  methods: {
+    CloseRemarkPanel() {
+      // Method to close the remark panel
+      this.$emit("update:modelValue", false); // Emits an event to update the visibility of the component
     },
-    emits: ['update:modelValue'], // Event emitted to update the visibility of the component
-    data() {
-        return {
-            comment: "" // Data property to store the user's comment
-        }
-    },
-    methods: {
-        CloseRemarkPanel() {
-            // Method to close the remark panel
-            this.$emit('update:modelValue', false); // Emits an event to update the visibility of the component
+    SendRemark() {
+      // Method to send the user's remark
+      const commentToSent = this.comment; // Get the comment from the data property
+      const post_uuid = this.PostUUID; // Get the post UUID from the prop
+      const token = localStorage.getItem("Token"); // Get the token from local storage
+      const config = {
+        headers: {
+          Authorization: "Bearer " + token, // Set the authorization header with the token
         },
-        SendRemark() {
-            // Method to send the user's remark
-            const commentToSent = this.comment; // Get the comment from the data property
-            const post_uuid = this.PostUUID; // Get the post UUID from the prop
-            const token = localStorage.getItem('Token'); // Get the token from local storage
-            const config = {
-                headers: {
-                    "Authorization": "Bearer " + token, // Set the authorization header with the token
-                }
-            }
-            if (this.comment == "" || this.comment == " ") {
-                alert("Empty content is invalid."); // Show an alert if the comment is empty
-            } else {
-                axios.post(
-                    '/remark/create/inpost',
-                    {
-                        post_uuid: post_uuid,
-                        content: commentToSent // Send the post UUID and the comment in the request body
-                    },
-                    config
-                ).then(
-                    (response) => {
-                        console.log(post_uuid);
-                        console.log(response.data); // Log the response data
-                        UpdateRemarks().Update(1); // Call the Update method from the UpdateRemarks store
-                        this.CloseRemarkPanel(); // Close the remark panel
-                        this.comment = ""; // Clear the comment
-                    }
-                ).catch(
-                    (error) => {
-                        console.log(error.detail); // Log the error detail if an error occurs
-                    }
-                )
-            }
-        }
-    }
-}
+      };
+      if (this.comment == "" || this.comment == " ") {
+        alert("Empty content is invalid."); // Show an alert if the comment is empty
+      } else {
+        axios
+          .post(
+            "/remark/create/inpost",
+            {
+              post_uuid: post_uuid,
+              content: commentToSent, // Send the post UUID and the comment in the request body
+            },
+            config
+          )
+          .then((response) => {
+            console.log(post_uuid);
+            console.log(response.data); // Log the response data
+            UpdateRemarks().Update(1); // Call the Update method from the UpdateRemarks store
+            this.CloseRemarkPanel(); // Close the remark panel
+            this.comment = ""; // Clear the comment
+          })
+          .catch((error) => {
+            console.log(error.detail); // Log the error detail if an error occurs
+          });
+      }
+    },
+  },
+};
 </script>
 
 <template>
-    <div class="Mask" v-if="modelValue">
-        <div class="RemarkPanel">
-            <div class="TopControl">
-                <button @click="CloseRemarkPanel" class="CloseButton">X</button>
-            </div>
-            <div class="MidControl">
-                <textarea class="CommentArea" placeholder="Leave your comment." v-model="comment"></textarea>
-            </div>
-            <div class="FootControl">
-                <button class="SentButton" @click="SendRemark">Comment</button>
-            </div>
-        </div>
+  <div class="Mask" v-if="modelValue">
+    <div class="RemarkPanel">
+      <div class="TopControl">
+        <button @click="CloseRemarkPanel" class="CloseButton">X</button>
+      </div>
+      <div class="MidControl">
+        <textarea
+          class="CommentArea"
+          placeholder="Leave your comment."
+          v-model="comment"
+        ></textarea>
+      </div>
+      <div class="FootControl">
+        <button class="SentButton" @click="SendRemark">Comment</button>
+      </div>
     </div>
+  </div>
 </template>
-
 
 <style scoped>
 @media only screen and (min-width: 768px) {
-    @keyframes FadeIn {
-        from {
-            opacity: 0;
-            scale: 0.5;
-            margin-top: 200px;
-        }
-
-        to {
-            opacity: 1;
-            scale: 1;
-            margin-top: 0px;
-        }
+  @keyframes FadeIn {
+    from {
+      opacity: 0;
+      scale: 0.5;
+      margin-top: 200px;
     }
 
-    .Mask {
-        width: 100%;
-        height: 120vh;
-        background-color: rgba(0, 0, 0, 0.3);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: fixed;
-        bottom: 0px;
-        z-index: 2;
+    to {
+      opacity: 1;
+      scale: 1;
+      margin-top: 0px;
     }
+  }
 
-    .RemarkPanel {
-        width: 500px;
-        height: 500px;
-        background-color: #FFFFFF;
-        border-radius: 10px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        animation: FadeIn 0.5s;
-    }
+  .Mask {
+    width: 100%;
+    height: 120vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 0px;
+    z-index: 2;
+  }
 
-    .TopControl {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        margin-bottom: auto;
-    }
+  .RemarkPanel {
+    width: 500px;
+    height: 500px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    animation: FadeIn 0.5s;
+  }
 
-    .MidControl {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin-bottom: auto;
-    }
+  .TopControl {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: auto;
+  }
 
-    .FootControl {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        margin-top: auto;
-    }
+  .MidControl {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: auto;
+  }
 
-    .CloseButton {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 18px;
-        font-weight: lighter;
-        width: 50px;
-        height: 50px;
-        border: none;
-        outline: none;
-        border-top-right-radius: 10px;
-        color: #212121;
-        background-color: #FFFFFF;
-        cursor: pointer;
-        transition: background-color 0.5s ease;
-    }
+  .FootControl {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: auto;
+  }
 
-    .SentButton {
-        width: 100px;
-        height: 50px;
-        background-color: #7C4DFF;
-        color: #FFFFFF;
-        font-family: Arial, Helvetica, sans-serif;
-        font-weight: lighter;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-        border: none;
-        outline: none;
-        border-radius: 10px;
-        margin-left: auto;
-        margin-right: 10px;
-        margin-bottom: 10px;
-        cursor: pointer;
-        transition: background-color 0.5s ease;
-    }
+  .CloseButton {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: lighter;
+    width: 50px;
+    height: 50px;
+    border: none;
+    outline: none;
+    border-top-right-radius: 10px;
+    color: #212121;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+  }
 
-    .CloseButton:hover {
-        background-color: #7C4DFF;
-        color: #FFFFFF;
-        border: none;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-        transition: background-color 0.5s ease;
-    }
+  .SentButton {
+    width: 100px;
+    height: 50px;
+    background-color: #7c4dff;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+  }
 
-    .SentButton:hover {
-        background-color: #303F9F;
-        color: #C5CAE9;
-        transition: background-color 0.5s ease;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    }
+  .CloseButton:hover {
+    background-color: #7c4dff;
+    color: #ffffff;
+    border: none;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.5s ease;
+  }
 
-    .ReplyTo {
-        width: 70%;
-        height: 40px;
-        font-family: Arial, Helvetica, sans-serif;
-        font-weight: lighter;
-        font-size: 18px;
-        margin: auto;
-        color: #212121;
-        border: none;
-        border-bottom: solid 2px #BDBDBD;
-        outline: none;
-        padding: 5px;
-        transition: ease-in-out 0.5s border;
-    }
+  .SentButton:hover {
+    background-color: #303f9f;
+    color: #c5cae9;
+    transition: background-color 0.5s ease;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+  }
 
-    .CommentArea {
-        width: 68%;
-        height: 290px;
-        margin: auto;
-        margin-top: 10px;
-        resize: none;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 18px;
-        text-align: justify;
-        padding: 10px;
-        outline: none;
-        color: #212121;
-        border: solid 2px #BDBDBD;
-        transition: 1000ms;
-        border-radius: 10px;
-        transition: ease-in-out 0.5s border;
-    }
+  .ReplyTo {
+    width: 70%;
+    height: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 18px;
+    margin: auto;
+    color: #212121;
+    border: none;
+    border-bottom: solid 2px #bdbdbd;
+    outline: none;
+    padding: 5px;
+    transition: ease-in-out 0.5s border;
+  }
 
-    .ReplyTo:hover,
-    .ReplyTo:focus {
-        transition: ease-in-out 0.5s border;
-        border-bottom: solid 2px #212121;
-        color: #212121;
-    }
+  .CommentArea {
+    width: 68%;
+    height: 290px;
+    margin: auto;
+    margin-top: 10px;
+    resize: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    text-align: justify;
+    padding: 10px;
+    outline: none;
+    color: #212121;
+    border: solid 2px #bdbdbd;
+    transition: 1000ms;
+    border-radius: 10px;
+    transition: ease-in-out 0.5s border;
+  }
 
-    .CommentArea:hover,
-    .CommentArea:focus {
-        transition: ease-in-out 0.5s border;
-        border: solid 2px #212121;
-        color: #212121;
-    }
+  .ReplyTo:hover,
+  .ReplyTo:focus {
+    transition: ease-in-out 0.5s border;
+    border-bottom: solid 2px #212121;
+    color: #212121;
+  }
+
+  .CommentArea:hover,
+  .CommentArea:focus {
+    transition: ease-in-out 0.5s border;
+    border: solid 2px #212121;
+    color: #212121;
+  }
 }
 
 @media only screen and (max-width: 768px) {
-    @keyframes FadeIn {
-        from {
-            opacity: 0;
-            /* scale: 0.5; */
-            margin-top: 1000px;
-        }
-
-        to {
-            opacity: 1;
-            /* scale: 1; */
-            margin-top: 0px;
-        }
+  @keyframes FadeIn {
+    from {
+      opacity: 0;
+      /* scale: 0.5; */
+      margin-top: 1000px;
     }
 
-    .Mask {
-        width: 100%;
-        height: 50vh;
-        /* background-color: rgba(0, 0, 0, 0.3); */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: fixed;
-        bottom: 0px;
-        z-index: 2;
+    to {
+      opacity: 1;
+      /* scale: 1; */
+      margin-top: 0px;
     }
+  }
 
-    .RemarkPanel {
-        width: 100%;
-        height: 100%;
-        background-color: #FFFFFF;
-        border-radius: 10px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        animation: FadeIn 0.5s;
-    }
+  .Mask {
+    width: 100%;
+    height: 50vh;
+    /* background-color: rgba(0, 0, 0, 0.3); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 0px;
+    z-index: 2;
+  }
 
-    .TopControl {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        /* margin-top: 50px; */
-        /* margin-bottom: auto; */
-    }
+  .RemarkPanel {
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    animation: FadeIn 0.5s;
+  }
 
-    .MidControl {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin-top: 10px;
-        /* margin-bottom: auto; */
-    }
+  .TopControl {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    /* margin-top: 50px; */
+    /* margin-bottom: auto; */
+  }
 
-    .FootControl {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        margin-top: 10px;
-        margin-bottom: auto;
-    }
+  .MidControl {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 10px;
+    /* margin-bottom: auto; */
+  }
 
-    .CloseButton {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 18px;
-        font-weight: lighter;
-        width: 50px;
-        height: 50px;
-        border: none;
-        outline: none;
-        border-top-right-radius: 10px;
-        color: #212121;
-        background-color: #FFFFFF;
-        cursor: pointer;
-        transition: background-color 0.5s ease;
-    }
+  .FootControl {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-bottom: auto;
+  }
 
-    .SentButton {
-        width: 100px;
-        height: 50px;
-        background-color: #7C4DFF;
-        color: #FFFFFF;
-        font-family: Arial, Helvetica, sans-serif;
-        font-weight: lighter;
-        border: none;
-        outline: none;
-        border-radius: 10px;
-        margin-left: auto;
-        margin-right: 10px;
-        margin-bottom: 10px;
-        cursor: pointer;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-        transition: background-color 0.5s ease;
-    }
+  .CloseButton {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: lighter;
+    width: 50px;
+    height: 50px;
+    border: none;
+    outline: none;
+    border-top-right-radius: 10px;
+    color: #212121;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+  }
 
-    .CloseButton:hover {
-        background-color: #7C4DFF;
-        color: #FFFFFF;
-        border: none;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-        transition: background-color 0.5s ease;
-    }
+  .SentButton {
+    width: 100px;
+    height: 50px;
+    background-color: #7c4dff;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.5s ease;
+  }
 
-    .SentButton:hover {
-        background-color: #303F9F;
-        color: #C5CAE9;
-        transition: background-color 0.5s ease;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    }
+  .CloseButton:hover {
+    background-color: #7c4dff;
+    color: #ffffff;
+    border: none;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.5s ease;
+  }
 
-    .ReplyTo {
-        width: 70%;
-        height: 40px;
-        font-family: Arial, Helvetica, sans-serif;
-        font-weight: lighter;
-        font-size: 18px;
-        margin: auto;
-        color: #212121;
-        border: none;
-        border-bottom: solid 2px #BDBDBD;
-        outline: none;
-        padding: 5px;
-        transition: ease-in-out 0.5s border;
-    }
+  .SentButton:hover {
+    background-color: #303f9f;
+    color: #c5cae9;
+    transition: background-color 0.5s ease;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+  }
 
-    .CommentArea {
-        width: 90%;
-        height: 80px;
-        /* margin: auto; */
-        /* margin-top: 10px; */
-        margin-left: auto;
-        margin-right: auto;
-        resize: none;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 18px;
-        text-align: justify;
-        padding: 10px;
-        outline: none;
-        color: #212121;
-        border: solid 2px #BDBDBD;
-        transition: 1000ms;
-        border-radius: 10px;
-        transition: ease-in-out 0.5s border;
-    }
+  .ReplyTo {
+    width: 70%;
+    height: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 18px;
+    margin: auto;
+    color: #212121;
+    border: none;
+    border-bottom: solid 2px #bdbdbd;
+    outline: none;
+    padding: 5px;
+    transition: ease-in-out 0.5s border;
+  }
 
-    .ReplyTo:hover,
-    .ReplyTo:focus {
-        transition: ease-in-out 0.5s border;
-        border-bottom: solid 2px #212121;
-        color: #212121;
-    }
+  .CommentArea {
+    width: 90%;
+    height: 80px;
+    /* margin: auto; */
+    /* margin-top: 10px; */
+    margin-left: auto;
+    margin-right: auto;
+    resize: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    text-align: justify;
+    padding: 10px;
+    outline: none;
+    color: #212121;
+    border: solid 2px #bdbdbd;
+    transition: 1000ms;
+    border-radius: 10px;
+    transition: ease-in-out 0.5s border;
+  }
 
-    .CommentArea:hover,
-    .CommentArea:focus {
-        transition: ease-in-out 0.5s border;
-        border: solid 2px #212121;
-        color: #212121;
-    }
+  .ReplyTo:hover,
+  .ReplyTo:focus {
+    transition: ease-in-out 0.5s border;
+    border-bottom: solid 2px #212121;
+    color: #212121;
+  }
+
+  .CommentArea:hover,
+  .CommentArea:focus {
+    transition: ease-in-out 0.5s border;
+    border: solid 2px #212121;
+    color: #212121;
+  }
 }
 </style>

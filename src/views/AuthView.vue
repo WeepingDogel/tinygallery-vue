@@ -1,16 +1,15 @@
 <!-- @/views/AuthView.vue -->
 
 <script lang="ts">
-import LoginPanel from "@/components/Auth/LoginPanel.vue"
-
+import LoginPanel from "@/components/Auth/LoginPanel.vue";
 
 export default {
-    components: {
-        LoginPanel
-    }
-}
+  components: {
+    LoginPanel,
+  },
+};
 </script>
 
 <template>
-<LoginPanel />
+  <LoginPanel />
 </template>

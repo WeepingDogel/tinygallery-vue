@@ -1,15 +1,15 @@
 <!-- @/views/ProfileView.vue -->
 
 <script lang="ts">
-import Profile from "@/components/Profile/Profile.vue"
+import Profile from "@/components/Profile/Profile.vue";
 
 export default {
-    components: {
-        Profile
-    }
-}
+  components: {
+    Profile,
+  },
+};
 </script>
 
 <template>
-    <Profile />
+  <Profile />
 </template>

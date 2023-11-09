@@ -1,15 +1,15 @@
 <!-- @/views/RemarkView.vue -->
 
 <script lang="ts">
-import Remark from "@/components/Remark/Remark.vue"
+import Remark from "@/components/Remark/Remark.vue";
 
 export default {
-    components: {
-        Remark
-    }
-}
+  components: {
+    Remark,
+  },
+};
 </script>
 
 <template>
-    <Remark />
+  <Remark />
 </template>
