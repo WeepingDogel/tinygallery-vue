@@ -47,9 +47,8 @@ export default {
       const Token = localStorage.getItem("Token");
       if (Token) {
         axios
-          .put(
+          .get(
             "/userdata/get/username",
-            {},
             {
               // Sends a PUT request to retrieve the username associated with the token
               headers: {
