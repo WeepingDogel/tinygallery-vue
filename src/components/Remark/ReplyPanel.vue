@@ -112,7 +112,7 @@ export default {
       } else {
         // Send a PUT request to retrieve the username associated with the given token
         axios
-          .put("/userdata/get/username", {}, headers)
+          .get("/userdata/get/username", headers)
           .then((response) => {
             // The username is retrieved successfully
             const username = response.data.username;

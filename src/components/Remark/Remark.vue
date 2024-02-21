@@ -154,9 +154,8 @@ export default {
       // A method that opens the 'RemarkPanel' component and passes the UUID of the comment being replied to.
       const token = localStorage.getItem("Token");
       axios
-        .put(
+        .get(
           "/userdata/get/username",
-          {},
           {
             headers: {
               Authorization: "Bearer " + token,

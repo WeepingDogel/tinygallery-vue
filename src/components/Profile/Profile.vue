@@ -28,9 +28,8 @@ export default {
       const token = localStorage.getItem("Token");
       // GetUserName
       axios
-        .put(
-          "/userdata/get/username",
-          {},
+        .get(
+          "/userdata/get/username",      
           {
             headers: {
               Authorization: "Bearer " + token,
