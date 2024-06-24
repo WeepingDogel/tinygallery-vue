@@ -1,8 +1,5 @@
 <!-- 
     Profile.vue
-
-
-    
  -->
 <script lang="ts">
 import SettingsPanel from "@/components/Profile/SettingsPanel.vue";
@@ -119,7 +116,7 @@ export default {
 
   .ProfileCard {
     width: 70%;
-    height: 50vh;
+    height: 75vh;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     animation: FadeIn 0.5s;
     /* margin: 10px auto; */
