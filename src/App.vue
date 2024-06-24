@@ -28,6 +28,7 @@ export default {
   },
   components: {
     NavBar,
+    RouterView
   },
 };
 </script>
