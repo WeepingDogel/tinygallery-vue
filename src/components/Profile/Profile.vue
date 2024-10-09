@@ -3,11 +3,13 @@
  -->
 <script lang="ts">
 import SettingsPanel from "@/components/Profile/SettingsPanel.vue";
+import EditPost from "@/components/Profile/EditPost.vue"; // Import the EditPost component
 import axios from "axios";
 
 export default {
   components: {
     SettingsPanel,
+    EditPost, // Register the EditPost component
   },
   data() {
     return {
@@ -15,6 +17,9 @@ export default {
       UserName: "",
       AvatarLink: "",
       BackgroundImageLink: "",
+      posts: [], // Array to hold posts
+      isEditing: false, // State to control editing mode
+      currentPost: null, // Current post being edited
     };
   },
   methods: {
@@ -25,20 +30,18 @@ export default {
       const token = localStorage.getItem("Token");
       // GetUserName
       axios
-        .get(
-          "/userdata/get/username",      
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          }
-        )
+        .get("/userdata/get/username", {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        })
         .then((response) => {
           const username = response.data.username;
           if (username == false) {
             this.UserName = "Please relogin.";
           } else {
             this.UserName = username;
+            this.fetchUserPosts(username); // Fetch posts for the user
             axios.get("/resources/avatar/" + username, {}).then((response) => {
               console.log(response.data);
               this.AvatarLink = response.data.avatar_200px;
@@ -53,13 +56,43 @@ export default {
           console.log(username);
         });
     },
-    // getUserAvatar(){
-
-    // },
+    async fetchUserPosts(username) {
+      const token = localStorage.getItem("Token");
+      const response = await axios.get(
+        `/resources/posts/getAllPostsBelongToUser/1?user_name=${username}`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      this.posts = response.data; // Set the posts data
+    },
+    startEditing(post) {
+      this.currentPost = post; // Set the current post to be edited
+      this.isEditing = true; // Open the edit component
+    },
+    removePost(postUuid) {
+      const token = localStorage.getItem("Token"); // Retrieve the token from local storage
+      console.log(`Removing post with UUID: ${postUuid}`);
+      // Call the backend API to remove the post
+      axios
+        .delete(`/posts/remove/${postUuid}`, {
+          headers: {
+            Authorization: "Bearer " + token, // Include the token in the headers
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          this.fetchUserPosts(this.UserName); // Refresh the posts list
+        })
+        .catch((error) => {
+          console.error("Error removing post:", error);
+        });
+    },
   },
   mounted() {
     this.getUserInfo();
-    // this.getUserAvatar()
   },
   watch: {
     SettingsON(newValue, oldValue) {
@@ -86,7 +119,21 @@ export default {
       <button @click="openSettings" class="ProfileEditButton">Edit</button>
     </div>
     <SettingsPanel v-model="SettingsON" />
-    <div class="ProfileArtWorks"></div>
+    <div class="ProfileArtWorks">
+      <h3 class="ProfileArtWorksTitle">Your Posts</h3>
+      <div v-if="posts.length === 0" class="NoPosts">No posts available.</div>
+      <div v-for="post in posts" :key="post.post_uuid" class="PostItem">
+        <h4>{{ post.post_title }}</h4>
+        <p>{{ post.description }}</p>
+        <button @click="startEditing(post)" class="ActionButton">
+          Edit
+        </button>
+        <button @click="removePost(post.post_uuid)" class="ActionButton">
+          Remove
+        </button>
+      </div>
+    </div>
+    <EditPost v-if="isEditing" :post="currentPost" @close="isEditing = false" />
   </div>
 </template>
 
@@ -200,18 +247,39 @@ export default {
 
   .ProfileArtWorks {
     width: 70%;
-    height: 500px;
+    margin: 20px auto;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    animation: FadeIn 0.5s;
-    margin: 5px auto;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    margin-left: auto;
-    margin-right: auto;
     border-radius: 10px;
-    transition: 0.5s ease-in-out;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
   }
+
+  .PostItem {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+  }
+
+  .PostItem button {
+    margin-right: 10px;
+  }
+}
+
+.NoPosts {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  font-size: 30px;
+  color: #212121;
+  padding: 10px;
+}
+
+.ProfileArtWorksTitle {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  font-size: 30px;
+  color: #212121;
+  padding: 10px;
 }
 
 @media only screen and (max-width: 768px) {
@@ -326,17 +394,40 @@ export default {
 
   .ProfileArtWorks {
     width: 95%;
-    height: 500px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    animation: FadeIn 0.5s;
-    margin: 5px auto;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 20px auto;
     border-radius: 10px;
-    transition: 0.5s ease-in-out;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
   }
+
+  .PostItem {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+  }
+
+  .PostItem button {
+    margin-right: 10px;
+  }
+}
+
+.ActionButton {
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+  font-family: Arial, Helvetica, sans-serif;
+  outline: none;
+  border: none;
+  background-color: #7c4dff;
+  padding: 13px;
+  color: #ffffff;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 10px; /* Space between buttons */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.ActionButton:hover {
+  background-color: #303f9f; /* Darker shade on hover */
 }
 </style>

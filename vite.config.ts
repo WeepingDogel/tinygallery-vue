@@ -31,6 +31,12 @@ export default defineConfig({
       '/posts/create': {
         target: 'http://127.0.0.1:8000',
       },
+      '/posts/remove':{
+        target: 'http://127.0.0.1:8000',
+      },
+      '/posts/update': {
+        target: 'http://127.0.0.1:8000',
+      },
       '/resources': {
         target: 'http://127.0.0.1:8000',
       },

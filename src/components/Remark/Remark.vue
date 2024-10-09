@@ -154,14 +154,11 @@ export default {
       // A method that opens the 'RemarkPanel' component and passes the UUID of the comment being replied to.
       const token = localStorage.getItem("Token");
       axios
-        .get(
-          "/userdata/get/username",
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          }
-        )
+        .get("/userdata/get/username", {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        })
         .then((response) => {
           const username = response.data.username;
           if (username) {
@@ -586,8 +583,8 @@ export default {
     line-height: 20px;
     color: #757575;
     position: relative;
-    overflow: scroll;
-    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    white-space: pre-wrap; /* Allow text to wrap */
     padding: 20px;
   }
 
@@ -863,8 +860,8 @@ export default {
     line-height: 20px;
     color: #757575;
     position: relative;
-    overflow: scroll;
-    white-space: pre-wrap;
+    white-space: pre-wrap; /* Allow text to wrap */
+    overflow-wrap: break-word; /* Break long words */
     padding: 20px;
   }
 
