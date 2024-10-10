@@ -16,7 +16,8 @@ export default defineConfig({
   plugins: [vue()], // Use the Vue plugin
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)) // Create an alias for the src directory
+      '@': fileURLToPath(new URL('./src', import.meta.url)), // Create an alias for the src directory
+      'moment-timezone': 'moment-timezone/builds/moment-timezone-with-data-10-year-range.min.js'
     }
   },
   server: {
@@ -52,37 +53,23 @@ export default defineConfig({
       '/likes': {
         target: 'http://127.0.0.1:8000'
       },
-      '/admin/admin_authentication': {
-        target: 'http://127.0.0.1:8000'
+      // Updated admin API routes
+      '/admin/users': {
+        target: 'http://127.0.0.1:8000',
       },
-      '/admin/get_all_users': {
-        target: 'http://127.0.0.1:8000'
+      '/admin/posts': {
+        target: 'http://127.0.0.1:8000',
       },
-      '/admin/get_all_posts': {
-        target: 'http://127.0.0.1:8000'
-      },
-      '/admin/get_all_admin': {
-        target: 'http://127.0.0.1:8000'
-      },
-      '/admin/get_all_comments': {
-        target: 'http://127.0.0.1:8000'
-      },
-      '/admin/get_all_replies': {
-        target: 'http://127.0.0.1:8000'
+      '/admin/comments': {
+        target: 'http://127.0.0.1:8000',
       },
       '/admin/user_tendency_addition': {
-        target: 'http://127.0.0.1:8000'
-      },
-      '/admin/posts_tendency_addition': {
-        target: 'http://127.0.0.1:8000'
-      },
-      '/admin/get_single_user': {
-        target: 'http://127.0.0.1:8000'
-      },
-      '/admin/comments_tendency_addition': {
-        target: 'http://127.0.0.1:8000'
+        target: 'http://127.0.0.1:8000',
       },
       '/admin/posts_toplist': {
+        target: 'http://127.0.0.1:8000',
+      },
+      '/admin/admin_authentication': {
         target: 'http://127.0.0.1:8000'
       },
       '/static': {

@@ -1,69 +1,133 @@
 <script lang="ts">
 import axios from "axios";
 
+interface User {
+  id: number;
+  users_uuid: string;
+  user_name: string;
+  email: string;
+  date: string;
+  avatar: string;
+}
+
+interface UpdateData {
+  user_name: string;
+  email: string;
+  password?: string;
+}
+
 export default {
   props: {
     user_uuid: {
       type: String,
-      require: true,
+      required: true,
     },
-    modelValue: Boolean,
+    modelValue: {
+      type: Boolean,
+      required: true,
+    },
   },
-  emits: ["update:modelValue"],
+  emits: ['update:modelValue', 'user-updated'],
   data() {
     return {
-      user_data: Object,
-      avatar_link: "",
+      user: {} as User,
+      newPassword: "",
+      avatarFile: null as File | null,
+      avatarPreview: null as string | null,
+      errorMessage: "",
     };
   },
   methods: {
-    GetUserData(user_uuid: string | undefined) {
-      // Get the token.
+    fetchUserData() {
       const Token = localStorage.getItem("Token");
-      // Get the data
       axios
-        .get("/admin/get_single_user", {
+        .get<User>(`/admin/users/${this.user_uuid}`, {
           headers: {
             Authorization: "Bearer " + Token,
           },
-          params: {
-            user_uuid: user_uuid,
+        })
+        .then((response) => {
+          this.user = response.data;
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          this.errorMessage = "Failed to fetch user data";
+        });
+    },
+    updateUser() {
+      const Token = localStorage.getItem("Token");
+      const updateData: UpdateData = {
+        user_name: this.user.user_name,
+        email: this.user.email,
+      };
+      if (this.newPassword) {
+        updateData.password = this.newPassword;
+      }
+      axios
+        .put(`/admin/users/${this.user_uuid}`, updateData, {
+          headers: {
+            Authorization: "Bearer " + Token,
+            "Content-Type": "application/json",
           },
         })
-        .then((response) => {
-          this.user_data = response.data;
-          this.GetTheAvatarLink();
-          console.log(response.data);
+        .then(() => {
+          this.$emit("user-updated");
+          if (this.avatarFile) {
+            this.updateAvatar();
+          } else {
+            this.closeEditor();
+          }
         })
         .catch((error) => {
-          console.log("Unable to find the user.");
+          console.error("Error updating user:", error);
+          this.errorMessage = "Failed to update user: " + (error.response?.data?.detail || error.message);
         });
     },
-    GetTheAvatarLink() {
+    updateAvatar() {
+      if (!this.avatarFile) return;
+
+      const Token = localStorage.getItem("Token");
+      const formData = new FormData();
+      formData.append("avatar", this.avatarFile);
+
       axios
-        .get(
-          "/resources/avatar/" + ((this.user_data as any).user_name as string)
-        )
-        .then((response) => {
-          this.avatar_link = response.data.full_image;
+        .put(`/admin/users/${this.user_uuid}/avatar`, formData, {
+          headers: {
+            Authorization: "Bearer " + Token,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(() => {
+          this.$emit("user-updated");
+          this.closeEditor();
         })
         .catch((error) => {
-          console.log("Unable to fetch avatar.");
+          console.error("Error updating avatar:", error);
+          this.errorMessage = "Failed to update avatar: " + (error.response?.data?.detail || error.message);
         });
     },
-    EditTheUserData(
-      user_uuid: string,
-      user_name: string,
-      password: string,
-      email: string,
-      date: string
-    ) {},
-    CloseTheEditor() {
-      this.$emit("update:modelValue", false);
+    handleAvatarChange(event: Event) {
+      const target = event.target as HTMLInputElement;
+      if (target.files && target.files.length > 0) {
+        this.avatarFile = target.files[0];
+        this.previewAvatar();
+      }
+    },
+    previewAvatar() {
+      if (this.avatarFile) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.avatarPreview = e.target?.result as string;
+        };
+        reader.readAsDataURL(this.avatarFile);
+      }
+    },
+    closeEditor() {
+      this.$emit('update:modelValue', false);
     },
   },
   mounted() {
-    this.GetUserData(this.user_uuid);
+    this.fetchUserData();
   },
 };
 </script>
@@ -71,110 +135,73 @@ export default {
 <template>
   <div class="mask" v-if="modelValue">
     <div class="EditBox">
-      <div class="TopControl">
-        <button class="CloseButton" @click="CloseTheEditor">X</button>
-      </div>
       <div class="MidControl">
-        <img :src="avatar_link" class="AVATAR" />
-        <p class="UUID">{{ user_uuid }}</p>
+        <img :src="avatarPreview || user.avatar" class="USER-AVATAR" />
+        <p class="UUID">{{ user.users_uuid }}</p>
         <input
           type="text"
           class="USERNAME"
           placeholder="USERNAME"
-          :value="((user_data as any).user_name as string)"
+          v-model="user.user_name"
         />
         <input
           type="password"
           class="PASSWORD"
-          placeholder="PASSWORD"
-          :value="((user_data as any).password as string)"
+          placeholder="NEW PASSWORD"
+          v-model="newPassword"
         />
         <input
           type="email"
           class="EMAIL"
           placeholder="EMAIL"
-          :value="((user_data as any).email as string)"
+          v-model="user.email"
         />
         <input
           type="text"
           class="DATE"
           placeholder="DATE"
-          :value="((user_data as any).date as string)"
+          v-model="user.date"
+          disabled
         />
+        <input
+          type="file"
+          class="AVATAR-INPUT"
+          accept="image/*"
+          @change="handleAvatarChange"
+        />
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       </div>
       <div class="FootControl">
-        <button class="Submit">Submit</button>
-        <!-- <button class="Cancel">Cancel</button> -->
-        <button class="Block">Block User</button>
-        <button class="Delete">Delete User</button>
+        <button class="Submit" @click="updateUser">Submit</button>
+        <button class="Cancel" @click="closeEditor">Cancel</button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-@keyframes WipeFromRight {
-  from {
-    transform: translateX(100%);
-  }
-
-  to {
-    transform: translateX(0%);
-  }
-}
-
-@keyframes FadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 100%;
-  }
-}
-
 .mask {
-  width: 1588px;
+  width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.2);
   display: flex;
   z-index: 2;
   position: fixed;
-  justify-content: flex-end;
+  top: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;
   animation: FadeIn 0.5s;
 }
 
 .EditBox {
-  width: 50%;
-  height: 100%;
+  width: 400px;
   background-color: white;
   display: flex;
   animation: WipeFromRight 1s;
   flex-direction: column;
-}
-
-.TopControl {
-  width: 100%;
-  height: 40px;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.CloseButton {
-  width: 40px;
-  height: 40px;
-  border: none;
-  outline: none;
-  background-color: white;
-  color: #212121;
-  cursor: pointer;
-  transition: ease-in-out 250ms;
-}
-
-.CloseButton:hover {
-  transition: ease-in-out 250ms;
-  color: white;
-  background-color: #7c4dff;
+  border-radius: 8px;
+  padding: 20px;
 }
 
 .MidControl {
@@ -182,125 +209,82 @@ export default {
   flex-direction: column;
   padding: 20px;
   font-family: Arial, Helvetica, sans-serif;
-  justify-content: center;
-  align-items: center;
+  font-size: 14px;
 }
 
-.AVATAR {
-  width: 400px;
-  height: 400px;
-  border: solid 2px #7c4dff;
-  border-radius: 100%;
-  margin-bottom: 20px;
+.USER-AVATAR {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+}
+
+.UUID, .USERNAME, .PASSWORD, .EMAIL, .DATE, .AVATAR-INPUT {
+  width: 100%;
+  margin-bottom: 12px;
 }
 
 .UUID {
-  width: 400px;
-  height: 24px;
-  font-size: 18px;
-  border-bottom: solid 1px #212121;
-  margin-bottom: 20px;
+  font-size: 12px;
+  color: #666;
+  word-break: break-all;
 }
 
-.USERNAME {
-  width: 400px;
-  height: 24px;
-  font-size: 18px;
-  outline: none;
-  border: none;
-  color: #212121;
-  border-bottom: solid 1px #212121;
-  margin-bottom: 20px;
-}
-
-.PASSWORD {
-  width: 400px;
-  height: 24px;
-  font-size: 18px;
-  outline: none;
-  border: none;
-  color: #212121;
-  border-bottom: solid 1px #212121;
-  margin-bottom: 20px;
-}
-
-.EMAIL {
-  width: 400px;
-  height: 24px;
-  font-size: 18px;
-  outline: none;
-  border: none;
-  color: #212121;
-  border-bottom: solid 1px #212121;
-  margin-bottom: 20px;
+.USERNAME, .PASSWORD, .EMAIL, .DATE {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .DATE {
-  width: 400px;
-  height: 24px;
-  font-size: 18px;
-  outline: none;
-  border: none;
-  color: #212121;
-  border-bottom: solid 1px #212121;
-  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+.AVATAR-INPUT {
+  margin-top: 8px;
 }
 
 .FootControl {
   display: flex;
-  flex-direction: row;
   justify-content: center;
+  padding: 15px 0;
+}
+
+.Submit, .Cancel {
+  padding: 8px 20px;
+  margin: 0 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 .Submit {
-  outline: none;
-  border: none;
-  margin: 2.5px;
-  width: 80px;
-  height: 40px;
-  border-radius: 5px;
   background-color: #7c4dff;
-  color: #ffffff;
-  cursor: pointer;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  color: white;
 }
 
 .Cancel {
-  outline: none;
-  border: none;
-  margin: 2.5px;
-  width: 80px;
-  height: 40px;
-  border-radius: 5px;
-  background-color: #7c4dff;
-  color: #ffffff;
-  cursor: pointer;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  background-color: #f0f0f0;
+  color: #333;
 }
 
-.Block {
-  outline: none;
-  border: none;
-  margin: 2.5px;
-  width: 80px;
-  height: 40px;
-  border-radius: 5px;
-  background-color: #000000;
-  color: #ffffff;
-  cursor: pointer;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 8px;
 }
 
-.Delete {
-  outline: none;
-  border: none;
-  margin: 2.5px;
-  width: 80px;
-  height: 40px;
-  border-radius: 5px;
-  background-color: #ff0000;
-  color: #ffffff;
-  cursor: pointer;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+@keyframes FadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes WipeFromRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0%); }
 }
 </style>

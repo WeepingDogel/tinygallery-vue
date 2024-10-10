@@ -1,25 +1,68 @@
 <script lang="ts">
 import axios from "axios";
+import PostsEditor from "./PostsEditor.vue";
+
+interface Post {
+  id: number;
+  post_uuid: string;
+  user_name: string;
+  post_title: string;
+  description: string;
+  nsfw: boolean;
+  dots: number;
+  share_num: number;
+  date: string;
+  image_link: string;
+}
 
 export default {
+  components: {
+    PostsEditor,
+  },
   data() {
     return {
-      PostsDataList: [],
+      PostsDataList: [] as Post[],
+      PostEditorSwitch: false,
+      QueriedPostUUID: "",
     };
   },
   methods: {
     fetchPostsData() {
       const Token = localStorage.getItem("Token");
       axios
-        .get("/admin/get_all_posts", {
+        .get<Post[]>("/admin/posts", {
           headers: {
             Authorization: "Bearer " + Token,
           },
         })
         .then((response) => {
           this.PostsDataList = response.data;
-          console.log(this.PostsDataList);
+        })
+        .catch((error) => {
+          console.error("Error fetching posts data:", error);
         });
+    },
+    openPostEditor(post_uuid: string) {
+      this.QueriedPostUUID = post_uuid;
+      this.PostEditorSwitch = true;
+    },
+    deletePost(post_uuid: string) {
+      // Add confirmation dialog
+      if (confirm("Are you sure you want to delete this post?")) {
+        const Token = localStorage.getItem("Token");
+        axios
+          .delete(`/admin/posts/${post_uuid}`, {
+            headers: {
+              Authorization: "Bearer " + Token,
+            },
+          })
+          .then(() => {
+            this.fetchPostsData();
+          })
+          .catch((error) => {
+            console.error("Error deleting post:", error);
+          });
+      }
     },
   },
   mounted() {
@@ -36,33 +79,43 @@ export default {
         <thead>
           <tr>
             <th>ID</th>
-            <!-- <th>UUID</th> -->
             <th>Title</th>
             <th>Description</th>
             <th>Author</th>
             <th>NSFW</th>
             <th>Likes</th>
+            <th>Shares</th>
             <th>Date</th>
+            <th>Image</th>
+            <th>Operation</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in PostsDataList" :key="index">
-            <td>{{ (item as any).id }}</td>
-            <!-- <td>{{ (item as any).post_uuid }}</td> -->
-            <td>{{ (item as any).post_title }}</td>
-            <td>{{ (item as any).description }}</td>
-            <td>{{ (item as any).user_name }}</td>
-            <td>{{ (item as any).nsfw }}</td>
-            <td>{{ (item as any).dots }}</td>
-            <td>{{ (item as any).date }}</td>
+          <tr v-for="item in PostsDataList" :key="item.post_uuid">
+            <td>{{ item.id }}</td>
+            <td>{{ item.post_title }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.user_name }}</td>
+            <td>{{ item.nsfw ? 'Yes' : 'No' }}</td>
+            <td>{{ item.dots }}</td>
+            <td>{{ item.share_num }}</td>
+            <td>{{ item.date }}</td>
+            <td><img :src="item.image_link" alt="Post image" style="width: 50px; height: 50px; object-fit: cover;" /></td>
             <td>
-              <button class="editButton" @click="">Edit</button>
+              <button class="editButton" @click="openPostEditor(item.post_uuid)">Edit</button>
+              <button class="deleteButton" @click="deletePost(item.post_uuid)">Delete</button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+  <PostsEditor
+    v-if="PostEditorSwitch"
+    v-model="PostEditorSwitch"
+    :post_uuid="QueriedPostUUID"
+    @post-updated="fetchPostsData"
+  />
 </template>
 
 <style scoped>
@@ -133,6 +186,25 @@ tr:nth-child(even) {
 .editButton:hover {
   background-color: #303f9f;
   color: #c5cae9;
+  transition: background-color 0.5s ease;
+}
+
+.deleteButton {
+  font-family: Arial, Helvetica, sans-serif;
+  outline: none;
+  border: none;
+  background-color: #ff0000;
+  color: #ffffff;
+  padding: 5px;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.deleteButton:hover {
+  background-color: #ff3333;
+  color: #ffffff;
   transition: background-color 0.5s ease;
 }
 </style>

@@ -1,42 +1,68 @@
 <script lang="ts">
 import axios from "axios";
+import CommentsEditor from "./CommentsEditor.vue";
+
+interface Comment {
+  id: number;
+  remark_uuid: string;
+  post_uuid: string;
+  user_name: string;
+  content: string;
+  date: string;
+}
 
 export default {
+  components: {
+    CommentsEditor,
+  },
   data() {
     return {
-      CommentsDataList: [],
-      RepliesDataList: [],
+      CommentsDataList: [] as Comment[],
+      CommentEditorSwitch: false,
+      QueriedCommentUUID: "",
     };
   },
   methods: {
     fetchCommentsData() {
       const Token = localStorage.getItem("Token");
       axios
-        .get("/admin/get_all_comments", {
+        .get<Comment[]>("/admin/comments", {
           headers: {
             Authorization: "Bearer " + Token,
           },
         })
         .then((response) => {
           this.CommentsDataList = response.data;
+        })
+        .catch((error) => {
+          console.error("Error fetching comments data:", error);
         });
     },
-    fetchRepliesData() {
-      const Token = localStorage.getItem("Token");
-      axios
-        .get("/admin/get_all_replies", {
-          headers: {
-            Authorization: "Bearer " + Token,
-          },
-        })
-        .then((response) => {
-          this.RepliesDataList = response.data;
-        });
+    openCommentEditor(comment_uuid: string) {
+      this.QueriedCommentUUID = comment_uuid;
+      this.CommentEditorSwitch = true;
+    },
+    deleteComment(comment_uuid: string) {
+      // Add confirmation dialog
+      if (confirm("Are you sure you want to delete this comment?")) {
+        const Token = localStorage.getItem("Token");
+        axios
+          .delete(`/admin/comments/${comment_uuid}`, {
+            headers: {
+              Authorization: "Bearer " + Token,
+            },
+          })
+          .then(() => {
+            this.fetchCommentsData();
+          })
+          .catch((error) => {
+            console.error("Error deleting comment:", error);
+          });
+      }
     },
   },
   mounted() {
     this.fetchCommentsData();
-    this.fetchRepliesData();
   },
 };
 </script>
@@ -49,55 +75,35 @@ export default {
         <thead>
           <tr>
             <th>ID</th>
-            <!-- <th>UUID</th> -->
             <th>User</th>
             <th>Content</th>
+            <th>Post UUID</th>
             <th>Date</th>
             <th>Operation</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in CommentsDataList" :key="index">
-            <td>{{ (item as any).id }}</td>
-            <!-- <td>{{ (item as any).remark_uuid }}</td> -->
-            <td>{{ (item as any).user_name }}</td>
-            <td>{{ (item as any).content }}</td>
-            <td>{{ (item as any).date }}</td>
+          <tr v-for="item in CommentsDataList" :key="item.remark_uuid">
+            <td>{{ item.id }}</td>
+            <td>{{ item.user_name }}</td>
+            <td>{{ item.content }}</td>
+            <td>{{ item.post_uuid }}</td>
+            <td>{{ item.date }}</td>
             <td>
-              <button class="editButton" @click="">Edit</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="RepliesManage">
-      <h1 class="ManagementTitle">Replies</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <!-- <th>UUID</th> -->
-            <th>User</th>
-            <th>Content</th>
-            <th>Date</th>
-            <th>Operation</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in RepliesDataList" :key="index">
-            <td>{{ (item as any).id }}</td>
-            <!-- <td>{{ (item as any).reply_uuid }}</td> -->
-            <td>{{ (item as any).user_name }}</td>
-            <td>{{ (item as any).content }}</td>
-            <td>{{ (item as any).date }}</td>
-            <td>
-              <button class="editButton" @click="">Edit</button>
+              <button class="editButton" @click="openCommentEditor(item.remark_uuid)">Edit</button>
+              <button class="deleteButton" @click="deleteComment(item.remark_uuid)">Delete</button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+  <CommentsEditor
+    v-if="CommentEditorSwitch"
+    v-model="CommentEditorSwitch"
+    :comment_uuid="QueriedCommentUUID"
+    @comment-updated="fetchCommentsData"
+  />
 </template>
 
 <style scoped>
@@ -168,6 +174,25 @@ tr:nth-child(even) {
 .editButton:hover {
   background-color: #303f9f;
   color: #c5cae9;
+  transition: background-color 0.5s ease;
+}
+
+.deleteButton {
+  font-family: Arial, Helvetica, sans-serif;
+  outline: none;
+  border: none;
+  background-color: #ff0000;
+  color: #ffffff;
+  padding: 5px;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.deleteButton:hover {
+  background-color: #ff3333;
+  color: #ffffff;
   transition: background-color 0.5s ease;
 }
 </style>

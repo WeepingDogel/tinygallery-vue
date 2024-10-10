@@ -2,14 +2,21 @@
 import axios from "axios";
 import UserEditor from "./UserEditor.vue";
 
+interface User {
+  id: number;
+  user_name: string;
+  email: string;
+  date: string;
+  users_uuid: string;
+}
+
 export default {
   components: {
     UserEditor,
   },
   data() {
     return {
-      UserDataList: [],
-      AdminDataList: [],
+      UserDataList: [] as User[],
       UserEditorSwitch: false,
       QueriedUserUUID: "",
     };
@@ -18,35 +25,43 @@ export default {
     fetchUserData() {
       const Token = localStorage.getItem("Token");
       axios
-        .get("/admin/get_all_users", {
+        .get<User[]>("/admin/users", {
           headers: {
             Authorization: "Bearer " + Token,
           },
         })
         .then((response) => {
           this.UserDataList = response.data;
-        });
-    },
-    fetchAdminData() {
-      const Token = localStorage.getItem("Token");
-      axios
-        .get("/admin/get_all_admin", {
-          headers: {
-            Authorization: "Bearer " + Token,
-          },
         })
-        .then((response) => {
-          this.AdminDataList = response.data;
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
         });
     },
     SwiftUpUserEditor(user_uuid: string) {
-      this.UserEditorSwitch = true;
       this.QueriedUserUUID = user_uuid;
+      this.UserEditorSwitch = true;
+    },
+    deleteUser(user_uuid: string) {
+      // Add confirmation dialog
+      if (confirm("Are you sure you want to delete this user?")) {
+        const Token = localStorage.getItem("Token");
+        axios
+          .delete(`/admin/users/${user_uuid}`, {
+            headers: {
+              Authorization: "Bearer " + Token,
+            },
+          })
+          .then(() => {
+            this.fetchUserData();
+          })
+          .catch((error) => {
+            console.error("Error deleting user:", error);
+          });
+      }
     },
   },
   mounted() {
     this.fetchUserData();
-    this.fetchAdminData();
   },
 };
 </script>
@@ -59,7 +74,6 @@ export default {
         <thead>
           <tr>
             <th>ID</th>
-            <!-- <th>UUID</th> -->
             <th>Username</th>
             <th>Email</th>
             <th>Date</th>
@@ -68,50 +82,16 @@ export default {
         </thead>
         <tbody>
           <tr v-for="(item, index) in UserDataList" :key="index">
-            <td>{{ (item as any).id }}</td>
-            <!-- <td>{{ (item as any).users_uuid }}</td> -->
-            <td>{{ (item as any).user_name }}</td>
-            <td>{{ (item as any).email }}</td>
-            <td>{{ (item as any).date }}</td>
+            <td>{{ item.id }}</td>
+            <td>{{ item.user_name }}</td>
+            <td>{{ item.email }}</td>
+            <td>{{ item.date }}</td>
             <td>
-              <button
-                class="editButton"
-                @click="SwiftUpUserEditor((item as any).users_uuid)"
-              >
+              <button class="editButton" @click="SwiftUpUserEditor(item.users_uuid)">
                 Edit
               </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="AdminManage">
-      <h1 class="ManagementTitle">Administrators</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <!-- <th>UUID</th> -->
-            <th>Username</th>
-            <th>Email</th>
-            <th>Date</th>
-            <th>Operation</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in AdminDataList" :key="index">
-            <td>{{ (item as any).id }}</td>
-            <!-- <td>{{ (item as any).users_uuid }}</td> -->
-            <td>{{ (item as any).user_name }}</td>
-            <td>{{ (item as any).email }}</td>
-            <td>{{ (item as any).date }}</td>
-            <td>
-              <button
-                class="editButton"
-                @click="SwiftUpUserEditor((item as any).users_uuid as string)"
-              >
-                Edit
+              <button class="deleteButton" @click="deleteUser(item.users_uuid)">
+                Delete
               </button>
             </td>
           </tr>
@@ -123,6 +103,7 @@ export default {
     v-if="UserEditorSwitch"
     v-model="UserEditorSwitch"
     :user_uuid="QueriedUserUUID"
+    @user-updated="fetchUserData"
   />
 </template>
 
@@ -195,6 +176,25 @@ tr:nth-child(even) {
 .editButton:hover {
   background-color: #303f9f;
   color: #c5cae9;
+  transition: background-color 0.5s ease;
+}
+
+.deleteButton {
+  font-family: Arial, Helvetica, sans-serif;
+  outline: none;
+  border: none;
+  background-color: #ff0000;
+  color: #ffffff;
+  padding: 5px;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.deleteButton:hover {
+  background-color: #ff3333;
+  color: #ffffff;
   transition: background-color 0.5s ease;
 }
 </style>

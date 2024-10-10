@@ -12,6 +12,7 @@ export default {
   },
   methods: {
     GetTheData() {
+      // You may need to update these endpoints if they've changed
       axios.get("/userdata/get/user_num").then((response) => {
         this.user_num = response.data.toLocaleString();
       });
@@ -21,34 +22,32 @@ export default {
       axios.get("/userdata/get/comments_num").then((response) => {
         this.comments_num = response.data.toLocaleString();
       });
-      // Output the log with the data.
-      console.log(this.user_num);
-      console.log(this.posts_num);
-      console.log(this.comments_num);
     },
     async renderChart() {
       const Token = localStorage.getItem("Token");
-      const chartConatainer = this.$refs.line_chart_tendency;
-      const chart = echarts.init(chartConatainer as any);
-      setInterval(async () => {
+      const chartContainer = this.$refs.line_chart_tendency;
+      const chart = echarts.init(chartContainer as any);
+      try {
         const response = await axios.get("/admin/user_tendency_addition", {
           headers: { Authorization: "Bearer " + Token },
         });
         chart.setOption(JSON.parse(response.data));
-      }, 3000);
+      } catch (error) {
+        console.error("Error fetching user tendency data:", error);
+      }
     },
     async renderToplistChart() {
       const Token = localStorage.getItem("Token");
-      const chartConatainer = this.$refs.bar_chart_tendency;
-      const chart = echarts.init(chartConatainer as any);
-      setInterval(async () => {
+      const chartContainer = this.$refs.bar_chart_tendency;
+      const chart = echarts.init(chartContainer as any);
+      try {
         const response = await axios.get("/admin/posts_toplist", {
-          headers: {
-            Authorization: "Bearer " + Token,
-          },
+          headers: { Authorization: "Bearer " + Token },
         });
         chart.setOption(JSON.parse(response.data));
-      }, 3000);
+      } catch (error) {
+        console.error("Error fetching posts toplist data:", error);
+      }
     },
   },
   mounted() {

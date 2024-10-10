@@ -1,22 +1,18 @@
 <script lang="ts">
 import axios from "axios";
 
-interface Post {
+interface Comment {
   id: number;
+  remark_uuid: string;
   post_uuid: string;
   user_name: string;
-  post_title: string;
-  description: string;
-  nsfw: boolean;
-  dots: number;
-  share_num: number;
+  content: string;
   date: string;
-  image_link: string;
 }
 
 export default {
   props: {
-    post_uuid: {
+    comment_uuid: {
       type: String,
       required: true,
     },
@@ -25,51 +21,49 @@ export default {
       required: true,
     },
   },
-  emits: ['update:modelValue', 'post-updated'],
+  emits: ['update:modelValue', 'comment-updated'],
   data() {
     return {
-      post: {} as Post,
+      comment: {} as Comment,
       errorMessage: "",
     };
   },
   methods: {
-    fetchPostData() {
+    fetchCommentData() {
       const Token = localStorage.getItem("Token");
       axios
-        .get<Post>(`/admin/posts/${this.post_uuid}`, {
+        .get<Comment>(`/admin/comments/${this.comment_uuid}`, {
           headers: {
             Authorization: "Bearer " + Token,
           },
         })
         .then((response) => {
-          this.post = response.data;
+          this.comment = response.data;
         })
         .catch((error) => {
-          console.error("Error fetching post data:", error);
-          this.errorMessage = "Failed to fetch post data";
+          console.error("Error fetching comment data:", error);
+          this.errorMessage = "Failed to fetch comment data";
         });
     },
-    updatePost() {
+    updateComment() {
       const Token = localStorage.getItem("Token");
       const updateData = {
-        post_title: this.post.post_title,
-        description: this.post.description,
-        nsfw: this.post.nsfw,
+        content: this.comment.content,
       };
       axios
-        .put(`/admin/posts/${this.post_uuid}`, updateData, {
+        .put(`/admin/comments/${this.comment_uuid}`, updateData, {
           headers: {
             Authorization: "Bearer " + Token,
             "Content-Type": "application/json",
           },
         })
         .then(() => {
-          this.$emit("post-updated");
+          this.$emit("comment-updated");
           this.closeEditor();
         })
         .catch((error) => {
-          console.error("Error updating post:", error);
-          this.errorMessage = "Failed to update post: " + (error.response?.data?.detail || error.message);
+          console.error("Error updating comment:", error);
+          this.errorMessage = "Failed to update comment: " + (error.response?.data?.detail || error.message);
         });
     },
     closeEditor() {
@@ -77,7 +71,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchPostData();
+    this.fetchCommentData();
   },
 };
 </script>
@@ -86,33 +80,19 @@ export default {
   <div class="mask" v-if="modelValue">
     <div class="EditBox">
       <div class="MidControl">
-        <img :src="post.image_link" class="POST-IMAGE" />
-        <p class="UUID">{{ post.post_uuid }}</p>
-        <input
-          type="text"
-          class="POSTTITLE"
-          placeholder="POST TITLE"
-          v-model="post.post_title"
-        />
+        <p class="UUID">Comment UUID: {{ comment.remark_uuid }}</p>
+        <p class="POST-UUID">Post UUID: {{ comment.post_uuid }}</p>
+        <p class="AUTHOR">Author: {{ comment.user_name }}</p>
         <textarea
-          class="DESCRIPTION"
-          placeholder="DESCRIPTION"
-          v-model="post.description"
+          class="CONTENT"
+          placeholder="COMMENT CONTENT"
+          v-model="comment.content"
         ></textarea>
-        <div class="NSFW-TOGGLE">
-          <label>
-            <input type="checkbox" v-model="post.nsfw" />
-            NSFW
-          </label>
-        </div>
-        <p class="AUTHOR">Author: {{ post.user_name }}</p>
-        <p class="LIKES">Likes: {{ post.dots }}</p>
-        <p class="SHARES">Shares: {{ post.share_num }}</p>
-        <p class="DATE">Date: {{ post.date }}</p>
+        <p class="DATE">Date: {{ comment.date }}</p>
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       </div>
       <div class="FootControl">
-        <button class="Submit" @click="updatePost">Submit</button>
+        <button class="Submit" @click="updateComment">Submit</button>
         <button class="Cancel" @click="closeEditor">Cancel</button>
       </div>
     </div>
@@ -152,14 +132,7 @@ export default {
   font-size: 14px;
 }
 
-.POST-IMAGE {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-  margin: 0 auto 15px;
-}
-
-.UUID, .POSTTITLE, .DESCRIPTION, .NSFW-TOGGLE, .AUTHOR, .LIKES, .SHARES, .DATE {
+.UUID, .AUTHOR, .CONTENT, .DATE {
   width: 100%;
   margin-bottom: 12px;
 }
@@ -170,26 +143,14 @@ export default {
   word-break: break-all;
 }
 
-.POSTTITLE, .DESCRIPTION {
+.CONTENT {
   width: 100%;
   padding: 8px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-.DESCRIPTION {
   height: 100px;
   resize: vertical;
-}
-
-.NSFW-TOGGLE {
-  display: flex;
-  align-items: center;
-}
-
-.NSFW-TOGGLE input {
-  margin-right: 5px;
 }
 
 .FootControl {

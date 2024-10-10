@@ -4,6 +4,7 @@ import AdminPanel from "./AdminPanel/AdminPanel.vue";
 import axios from "axios";
 
 export default {
+  name: 'AdminView',
   data() {
     return {
       is_admin: false,

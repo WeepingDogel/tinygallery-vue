@@ -29,8 +29,10 @@
 <script lang="ts">
 import { UpdateImages } from "@/stores/UpdateImages"; // Import a module called 'UpdateImages' from a local file in the project.
 import axios from "axios"; // Import the Axios library for making HTTP requests.
+import moment from 'moment-timezone';
 
 export default {
+  name: 'UploaderComponent', // Changed to multi-word component name
   props: {
     modelValue: Boolean, // Define a prop called 'modelValue' of type Boolean. This allows data to be passed into the component from its parent component.
   },
@@ -100,13 +102,15 @@ export default {
           console.log(this.uploadImagesFile[i]);
           bodyFormData.append("uploaded_file", this.uploadImagesFile[i]);
         }
+        const currentDate = moment().utc().format('YYYY-MM-DD HH:mm:ss');
+        bodyFormData.append("date", currentDate);
         console.log(bodyFormData); // Log the final form data object to the console.
         axios
           .post("/posts/create", bodyFormData, config) // Send a POST request to the '/posts/create' endpoint with the form data as the payload.
           .then((response) => {
             // If the request is successful...
             console.log(response); // Log the response to the console for debugging purposes.
-            if ((response.data.status = "success")) {
+            if (response.data.status === "success") {
               // Check if the server responded with a success status.
               this.$emit("update:modelValue", false); // Emit the 'update:modelValue' event with a value of false to close the uploader panel.
               UpdateImages().Update(1); // Call the 'UpdateImages' function to update the images displayed on the website.
@@ -130,457 +134,198 @@ export default {
 
 <template>
   <div class="Mask" v-if="modelValue">
-    <!-- Display the uploader panel only if the 'modelValue' prop is true -->
     <div class="UploaderPanel">
-      <!-- <button @click="test">test</button> -->
       <h1 class="UploaderTitle">Upload Your Creativity</h1>
-      <!-- Display a title for the uploader panel -->
-      <button @click="closeUploader" class="closeButton">X</button>
-      <!-- Display a close button to hide the uploader panel -->
+      <button @click="closeUploader" class="CloseButton">X</button>
       <input
         v-model="post_title"
         class="TitleInputer"
         placeholder="Type Your Title of your artwork."
       />
-      <!-- Display an input field for the user to enter the post title -->
       <textarea
         v-model="description"
         class="DescriptionText"
         placeholder="Description"
       ></textarea>
-      <!-- Display a text area for the user to enter the post description -->
       <div class="FileSelectionContainer">
         <input @change="loadFile" class="UploaderFile" type="file" multiple />
-        <!-- Display a file input field for the user to select images to upload -->
-        <input type="checkbox" v-model="(is_nsfw as any)" id="isNSFW" />
-        <label class="NSFW" for="isNSFW">NSFW</label>
-        <!-- Display a checkbox for the user to mark the post as NSFW (not safe for work) -->
-        <input type="checkbox" v-model="CustomCover" id="CustomCover" />
-        <label class="NSFW" for="CustomCover">CustomCover</label>
-        <!-- Display a checkbox for the user to choose whether to use a custom cover image for the post -->
+        <div class="CheckboxContainer">
+          <input type="checkbox" v-model="is_nsfw" id="isNSFW" />
+          <label class="CheckboxLabel" for="isNSFW">NSFW</label>
+        </div>
+        <div class="CheckboxContainer">
+          <input type="checkbox" v-model="CustomCover" id="CustomCover" />
+          <label class="CheckboxLabel" for="CustomCover">Custom Cover</label>
+        </div>
       </div>
-      <div class="FileSelectionContainer">
+      <div class="FileSelectionContainer" v-if="CustomCover">
         <input
-          v-if="CustomCover"
           @change="loadCoverFile"
           class="UploaderFile"
           type="file"
         />
-        <!-- If the 'CustomCover' data property is true, display a file input field for the user to select a cover image for the post -->
       </div>
       <div class="UploaderButtonContainer">
         <button @click="uploadPost" class="UploaderFunctionButton">
           Upload
         </button>
-        <!-- Display a button that triggers the 'uploadPost' method when clicked -->
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* CSS styling for the component */
-
-@media only screen and (min-width: 768px) {
-  @keyframes FadeIn {
-    from {
-      opacity: 0;
-      scale: 0.8;
-      margin-top: 200px;
-    }
-
-    to {
-      opacity: 1;
-      scale: 1;
-      margin-top: 0px;
-    }
-  }
-
-  .NSFW {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    margin: 10px;
-  }
-
-  .FileSelectionContainer {
-    width: 100%;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  .UploaderFile {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    margin-top: 10px;
-  }
-
-  .UploaderFile::file-selector-button {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
-    font-weight: lighter;
-    width: 150px;
-    height: 50px;
-    border: none;
-    outline: none;
-    border-radius: 8px;
-    color: #212121;
-    background-color: #ffffff;
-    border: solid 1px #bdbdbd;
-    margin: auto 30px;
-    cursor: pointer;
-    transition: 1000ms;
-  }
-
-  .closeButton {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
-    font-weight: lighter;
-    width: 50px;
-    height: 50px;
-    border: none;
-    outline: none;
-    border-top-right-radius: 8px;
-    color: #212121;
-    background-color: #ffffff;
-    cursor: pointer;
-    position: relative;
-    left: 575px;
-    top: -100px;
-    transition: 1000ms;
-  }
-
-  .UploaderFunctionButton {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
-    font-weight: lighter;
-    width: 150px;
-    height: 50px;
-    border: none;
-    outline: none;
-    border-radius: 8px;
-    color: #212121;
-    background-color: #ffffff;
-    border: solid 1px #bdbdbd;
-    margin: auto 30px;
-    cursor: pointer;
-    transition: 1000ms;
-  }
-
-  .UploaderFile::file-selector-button:hover,
-  .closeButton:hover,
-  .UploaderFunctionButton:hover {
-    background-color: #7c4dff;
-    color: #ffffff;
-    border: none;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.5s ease;
-  }
-
-  .UploaderFile::file-selector-button:active,
-  .closeButton:active,
-  .UploaderFunctionButton:active {
-    background-color: #303f9f;
-    color: #c5cae9;
-    transition: background-color 0.5s ease;
-  }
-
-  .UploaderTitle {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 36px;
-    font-weight: lighter;
-    line-height: 100px;
-    text-align: center;
-    text-transform: uppercase;
-    color: #212121;
-  }
-
-  .TitleInputer {
-    width: 70%;
-    height: 40px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 28px;
-    margin: auto;
-    color: #212121;
-    border: none;
-    border-bottom: solid 2px #bdbdbd;
-    outline: none;
-    transition: 1000ms;
-    padding: 5px;
-  }
-
-  .TitleInputer:focus {
-    transition: 1000ms;
-    border-bottom: solid 2px #212121;
-  }
-
-  .TitleInputer::placeholder {
-    color: #757575;
-  }
-
-  .DescriptionText {
-    width: 69%;
-    height: 200px;
-    resize: none;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 20px;
-    text-align: justify;
-    padding: 10px;
-    outline: none;
-    color: #212121;
-    border: solid 2px #bdbdbd;
-    transition: 1000ms;
-    border-radius: 8px;
-  }
-
-  .DescriptionText:focus {
-    transition: 1000ms;
-    border: solid 2px #212121;
-  }
-
-  .DescriptionText::placeholder {
-    color: #757575;
-  }
-
-  .Mask {
-    position: fixed;
-    width: 100%;
-    height: 120vh;
-    background-color: rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
-    top: -100px;
-  }
-
-  .UploaderPanel {
-    width: 1200px;
-    height: 800px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    animation: FadeIn 0.5s;
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .UploaderButtonContainer {
-    width: 100%;
-    height: 120px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-  }
+.Mask {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  top: 0;
+  left: 0;
 }
 
-@media only screen and (max-width: 768px) {
-  @keyframes FadeIn {
-    from {
-      opacity: 0;
-      /* scale: 0.8; */
-      margin-top: 200px;
-    }
+.UploaderPanel {
+  width: 90%;
+  max-width: 600px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 45px;
+  position: relative;
+  animation: FadeIn 0.3s ease-out;
+}
 
-    to {
-      opacity: 1;
-      /* scale: 1; */
-      margin-top: 0px;
-    }
-  }
+.UploaderTitle {
+  font-family: Arial, sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
 
-  .NSFW {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    margin: 10px;
-  }
+.CloseButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+}
 
-  .FileSelectionContainer {
-    width: 100%;
-    height: auto;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    justify-content: center;
-  }
+.TitleInputer, .DescriptionText {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
 
-  .UploaderFile {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    margin-top: 10px;
-  }
+.DescriptionText {
+  height: 100px;
+  resize: vertical;
+}
 
-  .UploaderFile::file-selector-button {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
-    font-weight: lighter;
-    width: 150px;
-    height: 50px;
-    border: none;
-    outline: none;
-    border-radius: 8px;
-    color: #212121;
-    background-color: #ffffff;
-    border: solid 1px #bdbdbd;
-    margin: auto 30px;
-    cursor: pointer;
-    transition: 1000ms;
-  }
+.FileSelectionContainer {
+  margin-bottom: 15px;
+}
 
-  .closeButton {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
-    font-weight: lighter;
-    width: 50px;
-    height: 50px;
-    border: none;
-    outline: none;
-    border-top-right-radius: 8px;
-    color: #212121;
-    background-color: #ffffff;
-    cursor: pointer;
-    position: relative;
-    right: -180px;
-    top: -100px;
-    transition: 1000ms;
-  }
+.UploaderFile {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
 
-  .UploaderFunctionButton {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
-    font-weight: lighter;
-    width: 150px;
-    height: 50px;
-    border: none;
-    outline: none;
-    border-radius: 8px;
-    color: #212121;
-    background-color: #ffffff;
-    border: solid 1px #bdbdbd;
-    margin: auto 30px;
-    cursor: pointer;
-    transition: 1000ms;
-  }
+.CheckboxContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
 
-  .UploaderFile::file-selector-button:hover,
-  .closeButton:hover,
-  .UploaderFunctionButton:hover {
-    background-color: #7c4dff;
-    color: #ffffff;
-    border: none;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.5s ease;
-  }
+.CheckboxLabel {
+  margin-left: 5px;
+  font-size: 14px;
+  color: #333;
+}
 
-  .UploaderFile::file-selector-button:active,
-  .closeButton:active,
-  .UploaderFunctionButton:active {
-    background-color: #303f9f;
-    color: #c5cae9;
-    transition: background-color 0.5s ease;
+.UploaderButtonContainer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.UploaderFunctionButton {
+  background-color: #7c4dff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.UploaderFunctionButton:hover {
+  background-color: #6c3ce6;
+}
+
+@keyframes FadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .UploaderPanel {
+    width: 95%;
+    padding: 15px;
+    max-height: 90vh;
+    overflow-y: auto;
   }
 
   .UploaderTitle {
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
-    font-weight: lighter;
-    line-height: 100px;
-    text-align: center;
-    text-transform: uppercase;
-    color: #212121;
+    margin-bottom: 15px;
   }
 
-  .TitleInputer {
-    width: 80%;
-    height: 40px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    margin: 10px auto;
-    color: #212121;
-    border: none;
-    border-bottom: solid 2px #bdbdbd;
-    outline: none;
-    transition: 1000ms;
-    padding: 5px;
+  .CloseButton {
+    top: 5px;
+    right: 5px;
+    font-size: 18px;
   }
 
-  .TitleInputer:focus {
-    transition: 1000ms;
-    border-bottom: solid 2px #212121;
-  }
-
-  .TitleInputer::placeholder {
-    color: #757575;
+  .TitleInputer, .DescriptionText, .UploaderFile {
+    font-size: 14px;
+    padding: 8px;
+    margin-bottom: 10px;
   }
 
   .DescriptionText {
-    width: 80%;
-    height: 100px;
-    resize: none;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    text-align: justify;
-    padding: 10px;
-    outline: none;
-    color: #212121;
-    border: solid 2px #bdbdbd;
-    transition: 1000ms;
-    border-radius: 8px;
+    height: 80px;
   }
 
-  .DescriptionText:focus {
-    transition: 1000ms;
-    border: solid 2px #212121;
+  .CheckboxContainer {
+    margin-top: 5px;
   }
 
-  .DescriptionText::placeholder {
-    color: #757575;
-  }
-
-  .Mask {
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    /* background-color: rgba(0, 0, 0, 0.3); */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
-    /* top: -100px; */
-  }
-
-  .UploaderPanel {
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    animation: FadeIn 0.5s;
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .CheckboxLabel {
+    font-size: 12px;
   }
 
   .UploaderButtonContainer {
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-top: 5px;
-    justify-content: flex-start;
+    margin-top: 15px;
+  }
+
+  .UploaderFunctionButton {
+    padding: 8px 16px;
+    font-size: 14px;
   }
 }
 </style>

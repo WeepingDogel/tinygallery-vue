@@ -8,12 +8,26 @@ import axios from "axios"; // Import axios for making HTTP requests
 import { UpdateImages } from "@/stores/UpdateImages"; // Import the Pinia store
 import { Timezone } from "@/stores/TimeZone";
 import { storeToRefs } from "pinia"; // Import the `storeToRefs` function from Pinia
+import moment from 'moment-timezone';
+
+interface Post {
+  post_uuid: string;
+  cover_url: string;
+  nsfw: boolean;
+  post_title: string;
+  description: string;
+  avatar: string;
+  user_name: string;
+  dots: number;
+  date: string;
+}
 
 export default {
+  name: 'HomeView',
   data() {
     return {
       pages: 1, // The current page number
-      displayData: [], // An array to store the displayed images.
+      displayData: [] as Post[], // An array to store the displayed images.
     };
   },
   // Setup hook for Pinia store
@@ -71,10 +85,13 @@ export default {
         }
       }
     },
-    OpenRemarkBySingleUUID(post_uuid: any) {
+    OpenRemarkBySingleUUID(post_uuid: string) {
       // Open a specific post by UUID in the "Remark" component
       this.$router.push("/remark/" + post_uuid); // Navigate to the "Remark" component with the specified UUID
     },
+    formatDate(dateString: string) {
+      return moment.utc(dateString).local().format('YYYY-MM-DD HH:mm:ss');
+    }
   },
   created() {
     // Called when the component is created
@@ -104,29 +121,29 @@ export default {
   <div class="Container">
     <!-- {{ convertedDate("2023-05-19 21:33") }} -->
     <!-- Loop over displayData and render each image as a "Card" on the page -->
-    <div class="Card" v-for="items of displayData">
+    <div class="Card" v-for="item in displayData" :key="item.post_uuid">
       <img
-        @click="OpenRemarkBySingleUUID((items as any).post_uuid)"
+        @click="OpenRemarkBySingleUUID(item.post_uuid)"
         class="displayImage_NSFW"
-        :src="(items as any).cover_url"
-        :alt="(items as any).post_uuid"
-        v-if="(items as any).nsfw"
+        :src="item.cover_url"
+        :alt="item.post_uuid"
+        v-if="item.nsfw"
       />
       <img
-        @click="OpenRemarkBySingleUUID((items as any).post_uuid)"
+        @click="OpenRemarkBySingleUUID(item.post_uuid)"
         class="displayImage"
-        :src="(items as any).cover_url"
-        :alt="(items as any).post_uuid"
+        :src="item.cover_url"
+        :alt="item.post_uuid"
         v-else
       />
-      <h2 class="ImageTitle">{{ (items as any).post_title }}</h2>
-      <p class="ImageDescription">{{ (items as any).description }}</p>
+      <h2 class="ImageTitle">{{ item.post_title }}</h2>
+      <p class="ImageDescription">{{ item.description }}</p>
       <div class="UserInfoBar">
-        <img class="UserAvatar" :src="(items as any).avatar" />
-        <p class="ImageUserName">{{ (items as any).user_name }}</p>
-        <p class="LikesDisplay">{{ (items as any).dots }} likes</p>
+        <img class="UserAvatar" :src="item.avatar" />
+        <p class="ImageUserName">{{ item.user_name }}</p>
+        <p class="LikesDisplay">{{ item.dots }} likes</p>
         <p class="ImageDate">
-          {{ TimeZoneCaculator.CaculateTheCorrectDate((items as any).date) }}
+          {{ formatDate(item.date) }}
         </p>
       </div>
     </div>
@@ -186,7 +203,7 @@ export default {
   margin-right: auto;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
   transition: 0.5s ease-in-out;
-  animation: FlashIn 0.5s;
+  animation: FlashIn 1s;
   background-color: #ffffff;
 }
 
