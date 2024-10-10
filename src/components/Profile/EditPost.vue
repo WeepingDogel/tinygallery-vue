@@ -38,10 +38,17 @@
 <script lang="ts">
 import axios from "axios";
 
+interface Post {
+  post_uuid: string;
+  post_title: string;
+  description: string;
+  // Add other properties as needed
+}
+
 export default {
   props: {
     post: {
-      type: Object,
+      type: Object as () => Post,
       required: true,
     },
   },
@@ -49,17 +56,23 @@ export default {
     return {
       postTitle: this.post.post_title,
       description: this.post.description,
-      isNsfw: "false", // Default value
-      cover: null, // To hold the cover image file
-      uploadedFiles: [], // To hold additional uploaded files
+      isNsfw: "false",
+      cover: null as File | null,
+      uploadedFiles: [] as File[],
     };
   },
   methods: {
-    handleFileUpload(event) {
-      this.cover = event.target.files[0]; // Get the selected cover file
+    handleFileUpload(event: Event) {
+      const target = event.target as HTMLInputElement;
+      if (target.files && target.files.length > 0) {
+        this.cover = target.files[0];
+      }
     },
-    handleAdditionalFilesUpload(event) {
-      this.uploadedFiles = Array.from(event.target.files); // Get additional files
+    handleAdditionalFilesUpload(event: Event) {
+      const target = event.target as HTMLInputElement;
+      if (target.files) {
+        this.uploadedFiles = Array.from(target.files);
+      }
     },
     async updatePost() {
       const token = localStorage.getItem("Token");
@@ -67,22 +80,28 @@ export default {
       formData.append("post_title", this.postTitle);
       formData.append("description", this.description);
       formData.append("is_nsfw", this.isNsfw);
-      formData.append("cover", this.cover); // Append the cover image
-      formData.append("supplementary_mode", "false"); // Set supplementary_mode as needed
+      if (this.cover) {
+        formData.append("cover", this.cover);
+      }
+      formData.append("supplementary_mode", "false");
 
-      // Append additional uploaded files
       this.uploadedFiles.forEach(file => {
         formData.append("uploaded_file", file);
       });
 
-      await axios.put(`/posts/update/${this.post.post_uuid}`, formData, {
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "multipart/form-data", // Set the content type for form data
-        },
-      });
-      alert("Post updated successfully!");
-      this.$emit('close'); // Emit close event after updating
+      try {
+        await axios.put(`/posts/update/${this.post.post_uuid}`, formData, {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        alert("Post updated successfully!");
+        this.$emit('close');
+      } catch (error) {
+        console.error("Error updating post:", error);
+        alert("Failed to update post. Please try again.");
+      }
     },
   },
 };

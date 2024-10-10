@@ -1,15 +1,24 @@
 <!-- 
-    Profile.vue
+    UserProfile.vue
  -->
 <script lang="ts">
 import SettingsPanel from "@/components/Profile/SettingsPanel.vue";
-import EditPost from "@/components/Profile/EditPost.vue"; // Import the EditPost component
+import EditPost from "@/components/Profile/EditPost.vue";
 import axios from "axios";
 
+// Define the Post type based on the JSON data from the backend
+interface Post {
+  post_uuid: string;
+  post_title: string;
+  description: string;
+  // Add other properties as needed
+}
+
 export default {
+  name: "UserProfile", // Multi-word component name
   components: {
     SettingsPanel,
-    EditPost, // Register the EditPost component
+    EditPost,
   },
   data() {
     return {
@@ -17,9 +26,9 @@ export default {
       UserName: "",
       AvatarLink: "",
       BackgroundImageLink: "",
-      posts: [], // Array to hold posts
-      isEditing: false, // State to control editing mode
-      currentPost: null, // Current post being edited
+      posts: [] as Post[],
+      isEditing: false,
+      currentPost: null as Post | null,
     };
   },
   methods: {
@@ -56,9 +65,9 @@ export default {
           console.log(username);
         });
     },
-    async fetchUserPosts(username) {
+    async fetchUserPosts(username: string) {
       const token = localStorage.getItem("Token");
-      const response = await axios.get(
+      const response = await axios.get<Post[]>(
         `/resources/posts/getAllPostsBelongToUser/1?user_name=${username}`,
         {
           headers: {
@@ -66,13 +75,13 @@ export default {
           },
         }
       );
-      this.posts = response.data; // Set the posts data
+      this.posts = response.data;
     },
-    startEditing(post) {
-      this.currentPost = post; // Set the current post to be edited
-      this.isEditing = true; // Open the edit component
+    startEditing(post: Post) {
+      this.currentPost = post;
+      this.isEditing = true;
     },
-    removePost(postUuid) {
+    removePost(postUuid: string) {
       const token = localStorage.getItem("Token"); // Retrieve the token from local storage
       console.log(`Removing post with UUID: ${postUuid}`);
       // Call the backend API to remove the post
@@ -133,7 +142,7 @@ export default {
         </button>
       </div>
     </div>
-    <EditPost v-if="isEditing" :post="currentPost" @close="isEditing = false" />
+    <EditPost v-if="isEditing" :post="currentPost!" @close="isEditing = false" />
   </div>
 </template>
 
