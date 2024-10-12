@@ -135,27 +135,27 @@ export default {
 <template>
   <div class="Mask" v-if="modelValue">
     <div class="UploaderPanel">
-      <h1 class="UploaderTitle">Upload Your Creativity</h1>
+      <h1 class="UploaderTitle">上传您的创意</h1>
       <button @click="closeUploader" class="CloseButton">X</button>
       <input
         v-model="post_title"
         class="TitleInputer"
-        placeholder="Type Your Title of your artwork."
+        placeholder="输入您作品的标题。"
       />
       <textarea
         v-model="description"
         class="DescriptionText"
-        placeholder="Description"
+        placeholder="描述"
       ></textarea>
       <div class="FileSelectionContainer">
         <input @change="loadFile" class="UploaderFile" type="file" multiple />
         <div class="CheckboxContainer">
           <input type="checkbox" v-model="is_nsfw" id="isNSFW" />
-          <label class="CheckboxLabel" for="isNSFW">NSFW</label>
+          <label class="CheckboxLabel" for="isNSFW">成人内容</label>
         </div>
         <div class="CheckboxContainer">
           <input type="checkbox" v-model="CustomCover" id="CustomCover" />
-          <label class="CheckboxLabel" for="CustomCover">Custom Cover</label>
+          <label class="CheckboxLabel" for="CustomCover">自定义封面</label>
         </div>
       </div>
       <div class="FileSelectionContainer" v-if="CustomCover">
@@ -167,7 +167,7 @@ export default {
       </div>
       <div class="UploaderButtonContainer">
         <button @click="uploadPost" class="UploaderFunctionButton">
-          Upload
+          上传
         </button>
       </div>
     </div>

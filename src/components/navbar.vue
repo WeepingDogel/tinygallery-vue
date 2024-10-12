@@ -53,13 +53,13 @@ export default {
   data() {
     return {
       DisplayLink: "/login", // Initialize the login link
-      DisplayTitle: "Login", // Initialize the title to be "Login"
+      DisplayTitle: "登录", // Initialize the title to be "Login"
       functionDisplay: false, // Initialize the function display to be false
       UploaderON: false, // Initialize the state of the uploader to be closed
       MobileScreen: false,
       DesktopScreen: false,
       Menu: false,
-      MenuText: "Menu",
+      MenuText: "菜单",
     };
   },
   setup() {
@@ -83,10 +83,10 @@ export default {
       // Change the URL and title in the navbar based on whether the user is logged in or not
       if (this.logStatus.isLogged) {
         this.DisplayLink = "/profile";
-        this.DisplayTitle = "Profile";
+        this.DisplayTitle = "个人资料";
       } else {
         this.DisplayLink = "/login";
-        this.DisplayTitle = "Login";
+        this.DisplayTitle = "登录";
       }
     },
     displayLogout() {
@@ -149,16 +149,16 @@ export default {
     <button @click="OpenUploader" class="uploadButton" v-if="functionDisplay">
       +
     </button>
-    <RouterLink to="/">Home</RouterLink>
-    <!-- Link to the home page -->
+    <RouterLink to="/">首页</RouterLink>
+    <!-- 链接到主页 -->
     <RouterLink :to="DisplayLink">{{ DisplayTitle }}</RouterLink>
-    <!-- Link to either the login or profile page, depending on the user's authentication status -->
+    <!-- 根据用户的认证状态链接到登录或个人资料页面 -->
     <button class="functionButton" v-if="functionDisplay" @click="logout">
-      Logout
+      登出
     </button>
-    <!-- Display the logout button if the user is authenticated -->
-    <RouterLink to="/about">About</RouterLink>
-    <!-- Link to the about page -->
+    <!-- 如果用户已认证，则显示登出按钮 -->
+    <RouterLink to="/about">关于我们</RouterLink>
+    <!-- 链接到关于我们页面 -->
   </div>
   <div id="bar">
     <h1 id="MainTitle">TinyGallery Vue Beta</h1>
@@ -166,20 +166,20 @@ export default {
       {{ MenuText }}
     </button>
     <div id="linkContainer" v-if="DesktopScreen">
-      <RouterLink to="/">Home</RouterLink>
-      <!-- Link to the home page -->
+      <RouterLink to="/">首页</RouterLink>
+      <!-- 链接到主页 -->
       <RouterLink :to="DisplayLink">{{ DisplayTitle }}</RouterLink>
-      <!-- Link to either the login or profile page, depending on the user's authentication status -->
+      <!-- 根据用户的认证状态链接到登录或个人资料页面 -->
       <button class="functionButton" v-if="functionDisplay" @click="logout">
-        Logout
+        登出
       </button>
-      <!-- Display the logout button if the user is authenticated -->
-      <RouterLink to="/about">About</RouterLink>
-      <!-- Link to the about page -->
+      <!-- 如果用户已认证，则显示登出按钮 -->
+      <RouterLink to="/about">关于我们</RouterLink>
+      <!-- 链接到关于我们页面 -->
       <button @click="OpenUploader" class="uploadButton" v-if="functionDisplay">
         +
       </button>
-      <!-- Display the uploader button if the user is authenticated -->
+      <!-- 如果用户已认证，则显示上传按钮 -->
     </div>
   </div>
   <Uploader v-model="UploaderON" />

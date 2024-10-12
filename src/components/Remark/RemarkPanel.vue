@@ -114,12 +114,12 @@ export default {
       <div class="MidControl">
         <textarea
           class="CommentArea"
-          placeholder="Leave your comment."
+          placeholder="留下您的评论。"
           v-model="comment"
         ></textarea>
       </div>
       <div class="FootControl">
-        <button class="SentButton" @click="SendRemark">Comment</button>
+        <button class="SentButton" @click="SendRemark">评论</button>
       </div>
     </div>
   </div>

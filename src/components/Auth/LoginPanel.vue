@@ -129,67 +129,67 @@ export default {
   <div class="root">
     <div class="container">
       <div ref="form_box" id="form_box" class="form-box">
-        <!-- The form box contains the login and register boxes -->
-        <!-- Login Box -->
+        <!-- 表单框包含登录和注册框 -->
+        <!-- 登录框 -->
         <div
           v-if="displayStatus"
           ref="login_box"
           id="login_box"
           class="login-box"
         >
-          <!-- If the 'displayStatus' data property is true, display the login box -->
-          <h1>Login</h1>
-          <input v-model="logUserName" type="text" placeholder="Username" />
-          <!-- Display an input field for the user to enter their username -->
-          <input v-model="logPassWord" type="password" placeholder="Password" />
-          <!-- Display an input field for the user to enter their password -->
-          <button @click="LoginAccount" type="button">Login</button>
-          <!-- Display a button that triggers the 'LoginAccount' method when clicked -->
+          <!-- 如果'displayStatus'数据属性为真，显示登录框 -->
+          <h1>登录</h1>
+          <input v-model="logUserName" type="text" placeholder="用户名" />
+          <!-- 显示一个输入字段供用户输入用户名 -->
+          <input v-model="logPassWord" type="password" placeholder="密码" />
+          <!-- 显示一个输入字段供用户输入密码 -->
+          <button @click="LoginAccount" type="button">登录</button>
+          <!-- 显示一个按钮，点击时触发'LoginAccount'方法 -->
           <span class="StatusMessage">{{ Result }}</span>
-          <!-- Display the result message from the server, if any -->
+          <!-- 显示来自服务器的结果消息（如果有） -->
         </div>
-        <!-- Register Box -->
+        <!-- 注册框 -->
         <div
           v-else
           ref="register_box"
           id="register_box"
           class="register-box hidden"
         >
-          <!-- If the 'displayStatus' data property is false, display the register box -->
-          <h1>Register</h1>
-          <input v-model="regUserName" type="text" placeholder="Username" />
-          <!-- Display an input field for the user to enter their desired username -->
-          <input v-model="regPassWord" type="password" placeholder="Password" />
-          <!-- Display an input field for the user to enter their desired password -->
+          <!-- 如果'displayStatus'数据属性为假，显示注册框 -->
+          <h1>注册</h1>
+          <input v-model="regUserName" type="text" placeholder="用户名" />
+          <!-- 显示一个输入字段供用户输入所需的用户名 -->
+          <input v-model="regPassWord" type="password" placeholder="密码" />
+          <!-- 显示一个输入字段供用户输入所需的密码 -->
           <input
             v-model="regConfirmPassword"
             type="password"
-            placeholder="Confirm password"
+            placeholder="确认密码"
           />
-          <!-- Display an input field for the user to confirm their password -->
-          <input v-model="regEmail" type="email" placeholder="Email" />
-          <!-- Display an input field for the user to enter their email address -->
-          <button @click="RegisterAccount" type="button">Register</button>
-          <!-- Display a button that triggers the 'RegisterAccount' method when clicked -->
+          <!-- 显示一个输入字段供用户确认密码 -->
+          <input v-model="regEmail" type="email" placeholder="邮箱" />
+          <!-- 显示一个输入字段供用户输入邮箱地址 -->
+          <button @click="RegisterAccount" type="button">注册</button>
+          <!-- 显示一个按钮，点击时触发'RegisterAccount'方法 -->
           <span class="StatusMessage">{{ Result }}</span>
-          <!-- Display the result message from the server, if any -->
+          <!-- 显示来自服务器的结果消息（如果有） -->
         </div>
       </div>
       <div class="con-box left">
-        <h2>Welcome to <span>TinyGallery</span></h2>
-        <p>Share your artworks!</p>
+        <h2>欢迎来到 <span>TinyGallery</span></h2>
+        <p>分享你的艺术作品！</p>
         <img src="@/assets/TinyGallery_Logo.png" />
-        <p>Had an account already?</p>
-        <button @click="selectToLogin" type="button">Go to login!</button>
-        <!-- Display a button that sets the 'displayStatus' data property to true, showing the login box -->
+        <p>已经有账户了吗？</p>
+        <button @click="selectToLogin" type="button">去登录！</button>
+        <!-- 显示一个按钮，将'displayStatus'数据属性设置为真，显示登录框 -->
       </div>
       <div class="con-box right">
-        <h2>Welcome to <span>TinyGallery</span></h2>
-        <p>Share your artworks!</p>
+        <h2>欢迎来到 <span>TinyGallery</span></h2>
+        <p>分享你的艺术作品！</p>
         <img src="@/assets/TinyGallery_Logo.png" />
-        <p>Don't have an account?</p>
-        <button @click="selectToRegister" type="button">Go to register!</button>
-        <!-- Display a button that sets the 'displayStatus' data property to false, showing the register box -->
+        <p>还没有账户吗？</p>
+        <button @click="selectToRegister" type="button">去注册！</button>
+        <!-- 显示一个按钮，将'displayStatus'数据属性设置为假，显示注册框 -->
       </div>
     </div>
   </div>
@@ -197,6 +197,7 @@ export default {
 
 <style scoped>
 /* CSS styling for the component */
+
 
 @keyframes ContainerLoadIn {
   /* Define a keyframe animation called 'ContainerLoadIn' */
@@ -377,7 +378,7 @@ span.StatusMessage {
 
 .con-box h2 {
   color: #212121;
-  font-size: 25px;
+  font-size: 18px;
   font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
   letter-spacing: 3px;

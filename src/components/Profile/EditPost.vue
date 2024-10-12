@@ -1,34 +1,34 @@
 <template>
   <div class="EditPostContainer">
     <div class="EditPostCard">
-      <h2>Edit Post</h2>
+      <h2>编辑帖子</h2>
       <form @submit.prevent="updatePost">
         <div>
-          <label for="postTitle">Title:</label>
+          <label for="postTitle">标题：</label>
           <input type="text" v-model="postTitle" required />
         </div>
         <div>
-          <label for="description">Description:</label>
+          <label for="description">描述：</label>
           <textarea v-model="description" required></textarea>
         </div>
         <div>
-          <label for="isNsfw">NSFW:</label>
+          <label for="isNsfw">NSFW：</label>
           <select v-model="isNsfw">
-            <option value="false">No</option>
-            <option value="true">Yes</option>
+            <option value="false">否</option>
+            <option value="true">是</option>
           </select>
         </div>
         <div>
-          <label for="cover">Cover Image:</label>
+          <label for="cover">封面图片：</label>
           <input type="file" @change="handleFileUpload" />
         </div>
         <div>
-          <label for="uploadedFiles">Additional Files:</label>
+          <label for="uploadedFiles">附加文件：</label>
           <input type="file" multiple @change="handleAdditionalFilesUpload" />
         </div>
         <div class="ButtonContainer">
-          <button type="submit" class="PrimaryButton">Update Post</button>
-          <button type="button" class="SecondaryButton" @click="$emit('close')">Cancel</button> <!-- Close button -->
+          <button type="submit" class="PrimaryButton">更新帖子</button>
+          <button type="button" class="SecondaryButton" @click="$emit('close')">取消</button> <!-- 关闭按钮 -->
         </div>
       </form>
     </div>

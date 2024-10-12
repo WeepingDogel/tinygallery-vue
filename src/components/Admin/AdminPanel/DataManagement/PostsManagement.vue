@@ -74,20 +74,20 @@ export default {
 <template>
   <div class="DataManagement">
     <div class="PostsManage">
-      <h1 class="ManagementTitle">Posts</h1>
+      <h1 class="ManagementTitle">帖子管理</h1>
       <table>
         <thead>
           <tr>
             <th>ID</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Author</th>
-            <th>NSFW</th>
-            <th>Likes</th>
-            <th>Shares</th>
-            <th>Date</th>
-            <th>Image</th>
-            <th>Operation</th>
+            <th>标题</th>
+            <th>描述</th>
+            <th>作者</th>
+            <th>成人内容</th>
+            <th>点赞</th>
+            <th>分享</th>
+            <th>日期</th>
+            <th>图片</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
@@ -96,14 +96,14 @@ export default {
             <td>{{ item.post_title }}</td>
             <td>{{ item.description }}</td>
             <td>{{ item.user_name }}</td>
-            <td>{{ item.nsfw ? 'Yes' : 'No' }}</td>
+            <td>{{ item.nsfw ? '是' : '否' }}</td>
             <td>{{ item.dots }}</td>
             <td>{{ item.share_num }}</td>
             <td>{{ item.date }}</td>
-            <td><img :src="item.image_link" alt="Post image" style="width: 50px; height: 50px; object-fit: cover;" /></td>
+            <td><img :src="item.image_link" alt="帖子图片" style="width: 50px; height: 50px; object-fit: cover;" /></td>
             <td>
-              <button class="editButton" @click="openPostEditor(item.post_uuid)">Edit</button>
-              <button class="deleteButton" @click="deletePost(item.post_uuid)">Delete</button>
+              <button class="editButton" @click="openPostEditor(item.post_uuid)">编辑</button>
+              <button class="deleteButton" @click="deletePost(item.post_uuid)">删除</button>
             </td>
           </tr>
         </tbody>

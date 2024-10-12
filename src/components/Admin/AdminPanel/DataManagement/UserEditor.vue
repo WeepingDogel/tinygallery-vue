@@ -141,25 +141,25 @@ export default {
         <input
           type="text"
           class="USERNAME"
-          placeholder="USERNAME"
+          placeholder="用户名"
           v-model="user.user_name"
         />
         <input
           type="password"
           class="PASSWORD"
-          placeholder="NEW PASSWORD"
+          placeholder="新密码"
           v-model="newPassword"
         />
         <input
           type="email"
           class="EMAIL"
-          placeholder="EMAIL"
+          placeholder="电子邮件"
           v-model="user.email"
         />
         <input
           type="text"
           class="DATE"
-          placeholder="DATE"
+          placeholder="日期"
           v-model="user.date"
           disabled
         />
@@ -172,8 +172,8 @@ export default {
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       </div>
       <div class="FootControl">
-        <button class="Submit" @click="updateUser">Submit</button>
-        <button class="Cancel" @click="closeEditor">Cancel</button>
+        <button class="Submit" @click="updateUser">提交</button>
+        <button class="Cancel" @click="closeEditor">取消</button>
       </div>
     </div>
   </div>

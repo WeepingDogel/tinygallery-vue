@@ -45,8 +45,8 @@ export default {
   <NavBarOfAdmin v-if="is_admin" />
   <AdminPanel v-if="is_admin" />
   <div class="BanInfo" v-else>
-    <p class="BanText">400: Permission Denied!</p>
-    <p class="BanSubText">You are not Administrator!</p>
+    <p class="BanText">400: 权限被拒绝!</p>
+    <p class="BanSubText">您不是管理员!</p>
   </div>
 </template>
 

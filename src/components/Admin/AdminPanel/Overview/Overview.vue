@@ -60,15 +60,15 @@ export default {
 
 <template>
   <div class="OverviewPanel">
-    <h1 class="OverviewTitle">Current Data Count</h1>
+    <h1 class="OverviewTitle">当前数据统计</h1>
     <p class="OverviewPara">
-      User count: <span class="InfoNumber">{{ user_num }}</span>
+      用户数量: <span class="InfoNumber">{{ user_num }}</span>
     </p>
     <p class="OverviewPara">
-      Posts count: <span class="InfoNumber">{{ posts_num }}</span>
+      帖子数量: <span class="InfoNumber">{{ posts_num }}</span>
     </p>
     <p class="OverviewPara">
-      Comments count: <span class="InfoNumber">{{ comments_num }}</span>
+      评论数量: <span class="InfoNumber">{{ comments_num }}</span>
     </p>
     <div
       ref="line_chart_tendency"

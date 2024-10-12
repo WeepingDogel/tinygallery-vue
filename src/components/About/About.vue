@@ -37,20 +37,19 @@ export default {
 <template>
   <div class="AboutContainer">
     <div class="IntroductionPart">
-      <h1 class="AboutTitle">About TinyGallery</h1>
+      <h1 class="AboutTitle">关于我们</h1>
       <div class="top-control">
         <!-- TinyGallery logo -->
         <img class="Logo" src="@/assets/TinyGallery_Logo.png" />
         <div class="text-control">
           <!-- Introduction section -->
-          <h1 class="AboutParaTitle">Introduction</h1>
+          <h1 class="AboutParaTitle">欢迎来到我们的网站</h1>
           <p class="AboutPara">
-            TinyGallery is an open-source project providing the drawing lovers a
-            free and simple gallery service.
+            TinyGallery 是一个开源项目，为绘画爱好者提供一个免费且简单的画廊服务。
           </p>
-          <p class="AboutPara">And this one is made as a vue edition.</p>
+          <p class="AboutPara">而这个是作为 Vue 版本制作的。</p>
           <!-- Technology stack section -->
-          <h1 class="AboutParaTitle">Technology Stack</h1>
+          <h1 class="AboutParaTitle">技术栈</h1>
           <p class="AboutPara">
             <!-- Badges for various technologies used in TinyGallery -->
             <img
@@ -79,9 +78,9 @@ export default {
             />
           </p>
           <!-- Source code section -->
-          <h1 class="AboutParaTitle">Source Code</h1>
+          <h1 class="AboutParaTitle">源代码</h1>
           <p class="AboutPara">
-            Vue Front End:
+            Vue 前端:
             <br />
             <a href="https://github.com/WeepingDogel/tinygallery-vue">
               <img
@@ -90,7 +89,7 @@ export default {
               />
             </a>
             <br />
-            Backend:
+            后端:
             <br />
             <a href="https://github.com/WeepingDogel/tinygallery-backend">
               <img
@@ -100,16 +99,14 @@ export default {
             </a>
           </p>
           <p class="AboutPara">
-            <span class="InfoNumber">{{ user_num }}</span> Users are enjoying
-            this example site!
+            <span class="InfoNumber">{{ user_num }}</span> 用户正在享受
+            这个示例网站！
           </p>
           <p class="AboutPara">
-            <span class="InfoNumber">{{ posts_num }}</span> ArtWorks were
-            published!
+            <span class="InfoNumber">{{ posts_num }}</span> 艺术作品已发布！
           </p>
           <p class="AboutPara">
-            <span class="InfoNumber">{{ comments_num }}</span> Comments in total
-            the users posted!
+            <span class="InfoNumber">{{ comments_num }}</span> 用户总共发布了评论！
           </p>
         </div>
       </div>

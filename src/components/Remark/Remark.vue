@@ -251,56 +251,56 @@ export default {
 </script>
 
 <template>
-  <!-- Comment #1: This is a Vue template that contains a RemarkPanel component, a ReplyPanel component, and a container for displaying remarks -->
-  <!-- <button @click="test">test</button> -->
-  <!-- Comment #2: This button was commented out, so it won't be displayed on the page -->
+  <!-- 注释 #1: 这是一个 Vue 模板，包含一个 RemarkPanel 组件、一个 ReplyPanel 组件和一个用于显示评论的容器 -->
+  <!-- <button @click="test">测试</button> -->
+  <!-- 注释 #2: 这个按钮被注释掉了，所以不会显示在页面上 -->
   <RemarkPanel
     :PostUUID="(ThePost as any).post_uuid"
     v-model="RemarkPanelON"
     v-if="RemarkPanelON"
   />
-  <!-- Comment #3: The RemarkPanel component is used to display a panel for submitting a new remark -->
+  <!-- 注释 #3: RemarkPanel 组件用于显示提交新评论的面板 -->
   <ReplyPanel
     :RemarkUUID="ReplyToUUID"
     v-model="ReplyPanelON"
     v-if="ReplyPanelON"
   />
-  <!-- Comment #4: The ReplyPanel component is used to display a panel for submitting a reply to an existing remark -->
+  <!-- 注释 #4: ReplyPanel 组件用于显示提交对现有评论的回复的面板 -->
   <div class="RemarkContainer">
-    <!-- Comment #5: This div is used as a container for displaying all the remarks -->
+    <!-- 注释 #5: 这个 div 用作显示所有评论的容器 -->
     <div class="RemarkBox">
-      <!-- Comment #6: This div contains the post information and the list of remarks -->
+      <!-- 注释 #6: 这个 div 包含帖子信息和评论列表 -->
       <div class="ImageDisplayArea">
-        <!-- Comment #7: This div contains the cover image and any additional images uploaded for the post -->
+        <!-- 注释 #7: 这个 div 包含封面图片和任何上传的附加图片 -->
         <img
           @click="OpenImage((ThePost as any).files_url.original_cover_url)"
           v-if="(ThePost as any).files_url.image_files_url.length > 1"
           class="DisplayedImage"
           :src="(ThePost as any).files_url.original_cover_url"
         />
-        <!-- Comment #8: This is the cover image for the post, which will be displayed if there is only one image in the post -->
+        <!-- 注释 #8: 这是帖子的封面图片，如果帖子中只有一张图片，将显示此图片 -->
         <div v-for="items of (ThePost as any).files_url.image_files_url">
           <img @click="OpenImage(items)" class="DisplayedImage" :src="items" />
         </div>
-        <!-- Comment #9: This loop is used to display any additional images uploaded for the post -->
+        <!-- 注释 #9: 这个循环用于显示任何上传的附加图片 -->
       </div>
       <div class="RemarksArea">
-        <!-- Comment #10: This div contains the post information and the list of remarks -->
+        <!-- 注释 #10: 这个 div 包含帖子信息和评论列表 -->
         <div class="InfoBox">
-          <!-- Comment #11: This div contains the post information, such as the post title, author name, description, and number of likes -->
+          <!-- 注释 #11: 这个 div 包含帖子信息，如帖子标题、作者姓名、描述和点赞数 -->
           <h1 class="InfoTitlte">{{ (ThePost as any).post_title }}</h1>
-          <!-- Comment #12: This is the title of the post -->
+          <!-- 注释 #12: 这是帖子的标题 -->
           <p class="InfoDescription">
-            Author:
+            作者：
             <b style="color: #7c4dff">{{ (ThePost as any).user_name }}</b>
             <br />
             {{ (ThePost as any).description }}
             <br />
             <b style="color: #7c4dff"
-              >{{ (ThePost as any).dots }} likes in total</b
+              >{{ (ThePost as any).dots }} 总共点赞</b
             >
           </p>
-          <!-- Comment #13: This is the description of the post, which includes the author name and number of likes -->
+          <!-- 注释 #13: 这是帖子的描述，包括作者姓名和点赞数 -->
           <div class="InfoBoxFoot">
             <p class="PublishDate">
               {{
@@ -312,38 +312,38 @@ export default {
               @click="SentLikeRequest"
               v-if="(LikesData as any) == false || (LikesData as any).liked == false"
             >
-              Like
+              点赞
             </button>
             <button class="LikedButton" @click="SentLikeRequest" v-else>
-              Liked!
+              已点赞！
             </button>
-            <!-- Comment #14: This button is used to like the post -->
+            <!-- 注释 #14: 这个按钮用于点赞帖子 -->
             <button class="CommentButton" @click="OpenRemarkPanel">
-              Comment
+              评论
             </button>
-            <!-- Comment #15: This button is used to open the RemarkPanel component for submitting a new remark -->
+            <!-- 注释 #15: 这个按钮用于打开 RemarkPanel 组件以提交新评论 -->
           </div>
         </div>
         <div class="CommentDisplayArea">
           <div class="CommentBox" v-for="items in Remarks">
-            <!-- Comment #16: This div is used to display all the remarks, which are represented by the items in the Remarks array -->
+            <!-- 注释 #16: 这个 div 用于显示所有评论，这些评论由 Remarks 数组中的项表示 -->
             <img class="UserAvatar" :src="(items as any).avatar" />
-            <!-- Comment #17: This is the avatar of the user who submitted the remark -->
+            <!-- 注释 #17: 这是提交评论的用户的头像 -->
             <h1 class="CommentUserName">{{ (items as any).user_name }}</h1>
-            <!-- Comment #18: This is the username of the user who submitted the remark -->
+            <!-- 注释 #18: 这是提交评论的用户的用户名 -->
             <p class="CommentText">{{ (items as any).content }}</p>
-            <!-- Comment #19: This is the content of the remark -->
+            <!-- 注释 #19: 这是评论的内容 -->
             <button
               class="ReplyButton"
               @click="ReplyAComment((items as any).remark_uuid)"
             >
-              Reply
+              回复
             </button>
-            <!-- Comment #20: This button is used to open the ReplyPanel component for submitting a reply to an existing remark -->
+            <!-- 注释 #20: 这个按钮用于打开 ReplyPanel 组件以提交对现有评论的回复 -->
             <span class="CommentTime">{{
               TimeZoneCaculator.CaculateTheCorrectDate((items as any).date)
             }}</span>
-            <!-- Comment #21: This is the date on which the remark was submitted -->
+            <!-- 注释 #21: 这是评论提交的日期 -->
           </div>
         </div>
       </div>
@@ -583,7 +583,7 @@ export default {
     line-height: 20px;
     color: #757575;
     position: relative;
-    overflow-wrap: break-word;
+    overflow-wrap: break-word; /* Allow text to wrap */
     white-space: pre-wrap; /* Allow text to wrap */
     padding: 20px;
   }

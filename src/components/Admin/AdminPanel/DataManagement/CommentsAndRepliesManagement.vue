@@ -70,16 +70,16 @@ export default {
 <template>
   <div class="DataManagement">
     <div class="CommentsManage">
-      <h1 class="ManagementTitle">Comments</h1>
+      <h1 class="ManagementTitle">评论和回复管理</h1>
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>User</th>
-            <th>Content</th>
-            <th>Post UUID</th>
-            <th>Date</th>
-            <th>Operation</th>
+            <th>编号</th>
+            <th>用户</th>
+            <th>内容</th>
+            <th>帖子 UUID</th>
+            <th>日期</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
@@ -90,8 +90,8 @@ export default {
             <td>{{ item.post_uuid }}</td>
             <td>{{ item.date }}</td>
             <td>
-              <button class="editButton" @click="openCommentEditor(item.remark_uuid)">Edit</button>
-              <button class="deleteButton" @click="deleteComment(item.remark_uuid)">Delete</button>
+              <button class="editButton" @click="openCommentEditor(item.remark_uuid)">编辑</button>
+              <button class="deleteButton" @click="deleteComment(item.remark_uuid)">删除</button>
             </td>
           </tr>
         </tbody>

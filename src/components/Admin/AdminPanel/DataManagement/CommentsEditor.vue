@@ -80,20 +80,20 @@ export default {
   <div class="mask" v-if="modelValue">
     <div class="EditBox">
       <div class="MidControl">
-        <p class="UUID">Comment UUID: {{ comment.remark_uuid }}</p>
-        <p class="POST-UUID">Post UUID: {{ comment.post_uuid }}</p>
-        <p class="AUTHOR">Author: {{ comment.user_name }}</p>
+        <p class="UUID">评论 UUID: {{ comment.remark_uuid }}</p>
+        <p class="POST-UUID">帖子 UUID: {{ comment.post_uuid }}</p>
+        <p class="AUTHOR">作者: {{ comment.user_name }}</p>
         <textarea
           class="CONTENT"
-          placeholder="COMMENT CONTENT"
+          placeholder="评论内容"
           v-model="comment.content"
         ></textarea>
-        <p class="DATE">Date: {{ comment.date }}</p>
+        <p class="DATE">日期: {{ comment.date }}</p>
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       </div>
       <div class="FootControl">
-        <button class="Submit" @click="updateComment">Submit</button>
-        <button class="Cancel" @click="closeEditor">Cancel</button>
+        <button class="Submit" @click="updateComment">提交</button>
+        <button class="Cancel" @click="closeEditor">取消</button>
       </div>
     </div>
   </div>

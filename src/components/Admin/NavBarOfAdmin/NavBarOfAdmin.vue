@@ -4,7 +4,7 @@ export default {};
 
 <template>
   <div class="NavBarOfAdmin">
-    <h1 class="NavBarTitle">TinyGallery Administration</h1>
+    <h1 class="NavBarTitle">TinyGallery 管理</h1>
   </div>
 </template>
 

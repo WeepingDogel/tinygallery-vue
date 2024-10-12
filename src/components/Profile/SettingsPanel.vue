@@ -76,35 +76,35 @@ export default {
   <!-- <button @click="test">test</button> -->
   <div v-if="modelValue" class="ProfileSettings">
     <div class="SettingsBox">
-      <h2 class="ProfileSettingsTitle">General Information</h2>
+      <h2 class="ProfileSettingsTitle">基本信息</h2>
       <!-- <p class="ProfileText">
-                Change UserName:
-                <input v-model="newUserName" class="ProfileTextInputer" type="text" placeholder="New UserName?" />
+                更改用户名：
+                <input v-model="newUserName" class="ProfileTextInputer" type="text" placeholder="新用户名？" />
             </p> -->
       <p class="ProfileText">
-        Avatar:
+        头像：
         <input
           @change="loadAvatar"
           class="ProfileTextFile"
-          placeholder="ChangeAvatar"
+          placeholder="更改头像"
           type="file"
         />
       </p>
       <p class="ProfileText">
-        Background:
+        背景：
         <input
           @change="loadBackground"
           class="ProfileTextFile"
-          placeholder="ChangeBackground"
+          placeholder="更改背景"
           type="file"
         />
       </p>
     </div>
     <button @click="CloseAndSaveSettings" class="ProfileFinishButton">
-      Apply
+      应用
     </button>
     <button @click="DiscardSettings" class="ProfileFinishButton">
-      Discard
+      放弃
     </button>
   </div>
 </template>

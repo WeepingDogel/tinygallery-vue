@@ -91,12 +91,12 @@ export default {
         <input
           type="text"
           class="POSTTITLE"
-          placeholder="POST TITLE"
+          placeholder="帖子标题"
           v-model="post.post_title"
         />
         <textarea
           class="DESCRIPTION"
-          placeholder="DESCRIPTION"
+          placeholder="描述"
           v-model="post.description"
         ></textarea>
         <div class="NSFW-TOGGLE">
@@ -105,15 +105,15 @@ export default {
             NSFW
           </label>
         </div>
-        <p class="AUTHOR">Author: {{ post.user_name }}</p>
-        <p class="LIKES">Likes: {{ post.dots }}</p>
-        <p class="SHARES">Shares: {{ post.share_num }}</p>
-        <p class="DATE">Date: {{ post.date }}</p>
+        <p class="AUTHOR">作者: {{ post.user_name }}</p>
+        <p class="LIKES">点赞: {{ post.dots }}</p>
+        <p class="SHARES">分享: {{ post.share_num }}</p>
+        <p class="DATE">日期: {{ post.date }}</p>
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       </div>
       <div class="FootControl">
-        <button class="Submit" @click="updatePost">Submit</button>
-        <button class="Cancel" @click="closeEditor">Cancel</button>
+        <button class="Submit" @click="updatePost">提交</button>
+        <button class="Cancel" @click="closeEditor">取消</button>
       </div>
     </div>
   </div>

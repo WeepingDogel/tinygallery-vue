@@ -125,20 +125,20 @@ export default {
       <div class="ProfileUserNameContainerBox">
         <h2 class="ProfileUserName">{{ UserName }}</h2>
       </div>
-      <button @click="openSettings" class="ProfileEditButton">Edit</button>
+      <button @click="openSettings" class="ProfileEditButton">编辑</button>
     </div>
     <SettingsPanel v-model="SettingsON" />
     <div class="ProfileArtWorks">
-      <h3 class="ProfileArtWorksTitle">Your Posts</h3>
-      <div v-if="posts.length === 0" class="NoPosts">No posts available.</div>
+      <h3 class="ProfileArtWorksTitle">你的帖子</h3>
+      <div v-if="posts.length === 0" class="NoPosts">没有可用的帖子。</div>
       <div v-for="post in posts" :key="post.post_uuid" class="PostItem">
         <h4>{{ post.post_title }}</h4>
         <p>{{ post.description }}</p>
         <button @click="startEditing(post)" class="ActionButton">
-          Edit
+          编辑
         </button>
         <button @click="removePost(post.post_uuid)" class="ActionButton">
-          Remove
+          删除
         </button>
       </div>
     </div>

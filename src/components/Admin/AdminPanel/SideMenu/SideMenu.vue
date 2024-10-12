@@ -62,43 +62,42 @@ export default {
 
 <template>
   <div class="sideMenu">
-    <h3 class="MenuTitle">Management</h3>
+    <h3 class="MenuTitle">管理</h3>
     <div class="AvatarCircle">
       <img :src="AdminAvatarImageLink" />
     </div>
     <p class="MenuPara">
-      Hi, respective <span class="userNameText">{{ AdminUserName }}</span
-      >!
+      嗨，尊敬的 <span class="userNameText">{{ AdminUserName }}</span>！
     </p>
     <button
       @click="OpenOverView"
       class="MenuItemButton"
       :class="{ MenuItemButtonSelected: ChildNum == 0 }"
     >
-      Overview
+      概览
     </button>
     <button
       @click="OpenUserManagement"
       class="MenuItemButton"
       :class="{ MenuItemButtonSelected: ChildNum == 1 }"
     >
-      Users
+      用户
     </button>
     <button
       @click="OpenPostsManagement"
       class="MenuItemButton"
       :class="{ MenuItemButtonSelected: ChildNum == 2 }"
     >
-      Posts
+      帖子
     </button>
     <button
       @click="OpenCommentsAndRepliesManagement"
       class="MenuItemButton"
       :class="{ MenuItemButtonSelected: ChildNum == 3 }"
     >
-      Comment and Replies
+      评论和回复
     </button>
-    <button @click="ExitAdminPage" class="MenuItemButton">Exit</button>
+    <button @click="ExitAdminPage" class="MenuItemButton">退出</button>
   </div>
 </template>
 

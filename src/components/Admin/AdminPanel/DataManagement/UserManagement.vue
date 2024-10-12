@@ -69,15 +69,15 @@ export default {
 <template>
   <div class="DataManagement">
     <div class="UsersManage">
-      <h1 class="ManagementTitle">Users</h1>
+      <h1 class="ManagementTitle">用户管理</h1>
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Date</th>
-            <th>Operation</th>
+            <th>编号</th>
+            <th>用户名</th>
+            <th>邮箱</th>
+            <th>日期</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
@@ -88,10 +88,10 @@ export default {
             <td>{{ item.date }}</td>
             <td>
               <button class="editButton" @click="SwiftUpUserEditor(item.users_uuid)">
-                Edit
+                编辑
               </button>
               <button class="deleteButton" @click="deleteUser(item.users_uuid)">
-                Delete
+                删除
               </button>
             </td>
           </tr>

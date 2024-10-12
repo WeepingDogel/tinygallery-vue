@@ -120,7 +120,7 @@ export default {
 <template>
   <div class="Container">
     <!-- {{ convertedDate("2023-05-19 21:33") }} -->
-    <!-- Loop over displayData and render each image as a "Card" on the page -->
+    <!-- 遍历 displayData 并将每个图像渲染为页面上的 "卡片" -->
     <div class="Card" v-for="item in displayData" :key="item.post_uuid">
       <img
         @click="OpenRemarkBySingleUUID(item.post_uuid)"
@@ -141,7 +141,7 @@ export default {
       <div class="UserInfoBar">
         <img class="UserAvatar" :src="item.avatar" />
         <p class="ImageUserName">{{ item.user_name }}</p>
-        <p class="LikesDisplay">{{ item.dots }} likes</p>
+        <p class="LikesDisplay">{{ item.dots }} 个赞</p>
         <p class="ImageDate">
           {{ formatDate(item.date) }}
         </p>
@@ -196,7 +196,7 @@ export default {
 
 .Card {
   width: 450px;
-  height: 500px;
+  height: 440px;
   border-radius: 10px;
   margin-top: 20px;
   margin-left: auto;
@@ -325,7 +325,7 @@ export default {
   flex-direction: row;
   align-items: center;
   position: relative;
-  bottom: -60px;
+  bottom: 0;
 }
 
 @media only screen and (max-width: 768px) {
