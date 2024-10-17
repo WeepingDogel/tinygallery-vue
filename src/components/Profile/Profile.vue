@@ -200,7 +200,6 @@ export default {
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
   }
-
   .ProfileAvatar {
     width: 200px;
     height: 200px;

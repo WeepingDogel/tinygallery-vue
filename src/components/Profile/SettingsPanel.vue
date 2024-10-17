@@ -12,6 +12,11 @@ export default {
       backgroundImage: null,
       avatarFile: null,
       Timezone: "",
+      previousPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+      errorMessage: "", // New data property for error messages
+      successMessage: "", // New data property for success messages
     };
   },
   methods: {
@@ -68,19 +73,58 @@ export default {
       // This function will not save any information when user clicked and close the Settings Panel.
       this.$emit("update:modelValue", false);
     },
+    changePassword() {
+      this.errorMessage = ""; // Reset error message before validation
+      this.successMessage = ""; // Reset success message before validation
+      if (this.newPassword !== this.confirmPassword) {
+        this.errorMessage = "新密码和确认密码不匹配。";
+        return;
+      }
+
+      const token = localStorage.getItem("Token");
+      const config = {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      };
+      const data = {
+        previous_password: this.previousPassword,
+        new_password: this.newPassword,
+        confirm_password: this.confirmPassword,
+      };
+      axios
+        .post("http://localhost:8000/userdata/change-password", data, config)
+        .then((response) => {
+          console.log(response.data);
+          // Handle success (e.g., show a success message)
+          this.successMessage = "密码已成功更改！"; // Set success message
+          // Clear the form fields
+          this.previousPassword = "";
+          this.newPassword = "";
+          this.confirmPassword = "";
+        })
+        .catch((error) => {
+          if (error.response && error.response.data) {
+            // Check for specific error message from backend
+            if (error.response.data.detail) {
+              this.errorMessage = error.response.data.detail; // Display detailed error message
+            } else {
+              this.errorMessage = "发生错误。请重试。";
+            }
+          } else {
+            this.errorMessage = "发生错误。请重试。";
+          }
+        });
+    },
   },
 };
 </script>
 
 <template>
-  <!-- <button @click="test">test</button> -->
   <div v-if="modelValue" class="ProfileSettings">
     <div class="SettingsBox">
       <h2 class="ProfileSettingsTitle">基本信息</h2>
-      <!-- <p class="ProfileText">
-                更改用户名：
-                <input v-model="newUserName" class="ProfileTextInputer" type="text" placeholder="新用户名？" />
-            </p> -->
       <p class="ProfileText">
         头像：
         <input
@@ -106,6 +150,24 @@ export default {
     <button @click="DiscardSettings" class="ProfileFinishButton">
       放弃
     </button>
+    <div class="PasswordChange">
+      <h2>更改密码</h2>
+      <div class="PasswordInputGroup">
+        <label>之前的密码：</label>
+        <input v-model="previousPassword" type="password" placeholder="输入之前的密码" class="PasswordInput" />
+      </div>
+      <div class="PasswordInputGroup">
+        <label>新密码：</label>
+        <input v-model="newPassword" type="password" placeholder="输入新密码" class="PasswordInput" />
+      </div>
+      <div class="PasswordInputGroup">
+        <label>确认新密码：</label>
+        <input v-model="confirmPassword" type="password" placeholder="确认新密码" class="PasswordInput" />
+      </div>
+      <button @click="changePassword" class="ProfileFinishButton">更改密码</button>
+      <p v-if="errorMessage" class="ErrorMessage">{{ errorMessage }}</p> <!-- Display error message -->
+      <p v-if="successMessage" class="SuccessMessage">{{ successMessage }}</p> <!-- Display success message -->
+    </div>
   </div>
 </template>
 
@@ -370,5 +432,65 @@ export default {
     color: #c5cae9;
     transition: background-color 0.5s ease;
   }
+}
+
+.PasswordChange {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #bdbdbd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.PasswordChange h2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #212121;
+}
+
+.PasswordInputGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.PasswordInputGroup label {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.PasswordInput {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+.PasswordInput::placeholder {
+  color: #757575;
+}
+
+.PasswordInput:focus {
+  border-color: #7c4dff;
+  outline: none;
+}
+
+.SuccessMessage {
+  color: #4caf50; /* Green color for success messages */
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.ErrorMessage {
+  color: #ff0000; /* Red color for error messages */
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  margin-top: 10px;
 }
 </style>
