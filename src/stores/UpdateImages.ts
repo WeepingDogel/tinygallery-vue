@@ -29,5 +29,8 @@ export const UpdateImages = defineStore("UpdateImage", {
     Update(status: number) {
       this.update = this.update + status;
     },
+    ResetUpdate() {
+      this.update = 1;
+    },
   },
 });

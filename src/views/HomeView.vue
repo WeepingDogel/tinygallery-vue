@@ -1,15 +1,11 @@
 <!-- @/views/HomeView.vue -->
 
-<script lang="ts">
-import Home from "@/components/Home/Home.vue";
-
-export default {
-  components: {
-    Home,
-  },
-};
+<script setup lang="ts">
+import Home from '@/components/Home/Home.vue'
 </script>
 
 <template>
-  <Home />
+  <main class="container mx-auto px-20 py-20">
+    <Home />
+  </main>
 </template>

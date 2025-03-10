@@ -58,6 +58,10 @@ export const Timezone = defineStore("TimeZone", {
       this.TimeZoneBrowser = TimeZone; // Sets the browser's timezone
       console.log(this.TimeZoneBrowser);
     },
+    // Manually sets the timezone of the server
+    SetTimeZoneServer(timeZone: string) {
+      this.TimeZoneServer = timeZone;
+    },
     // Calculates the correct date based on the original date, server's timezone, and browser's timezone
     CaculateTheCorrectDate(OriginalDate: String) {
       const dateString = OriginalDate;

@@ -1,505 +1,336 @@
-<!-- Home -->
-<!-- 
-    This is a Vue.js component that displays a set of images on a page and allows the user to lazy load more images, 
-    scroll back to the top of the page, and open a specific image as a "Remark" component.
- -->
-<script lang="ts">
-import axios from "axios"; // Import axios for making HTTP requests
-import { UpdateImages } from "@/stores/UpdateImages"; // Import the Pinia store
-import { Timezone } from "@/stores/TimeZone";
-import { storeToRefs } from "pinia"; // Import the `storeToRefs` function from Pinia
-import moment from 'moment-timezone';
-
-interface Post {
-  post_uuid: string;
-  cover_url: string;
-  nsfw: boolean;
-  post_title: string;
-  description: string;
-  avatar: string;
-  user_name: string;
-  dots: number;
-  date: string;
-}
-
-export default {
-  name: 'HomeView',
-  data() {
-    return {
-      pages: 1, // The current page number
-      displayData: [] as Post[], // An array to store the displayed images.
-    };
-  },
-  // Setup hook for Pinia store
-  setup() {
-    const PostsUpdate = UpdateImages(); // Get the UpdateImages Pinia store
-    const PostUpdateStatus = storeToRefs(PostsUpdate); // Convert the store to refs
-    const TimeZoneCaculator = Timezone();
-    return {
-      PostsUpdate,
-      PostUpdateStatus,
-      TimeZoneCaculator, // Return the store and its refs
-    };
-  },
-  methods: {
-    BackToTop() {
-      // Scroll to the top of the page
-      document.body.scrollTop = document.documentElement.scrollTop = 0;
-    },
-    displayIamges() {
-      // Display images on the page
-      this.pages = 1; // Reset the current page number to 1
-      axios.get("/resources/posts/" + this.pages).then((response) => {
-        // Make a GET request to the server API
-        const TextOfDisplayData = response.request.response; // Get the response text
-        const DisplayDataToJSON = JSON.parse(TextOfDisplayData); // Parse the response text to JSON format
-        console.log(DisplayDataToJSON); // Log the response data
-        this.displayData = DisplayDataToJSON; // Set the display data to the response data
-      });
-    },
-    lazyLoading() {
-      // Lazy load more images when the user scrolls to the bottom of the page
-      let scrollTop =
-        document.documentElement.scrollTop || document.body.scrollTop; // Get the current scroll location
-      let clientHeight = document.documentElement.clientHeight; // Get the client height of the window
-      let scrollHeight = document.documentElement.scrollHeight; // Get the total scroll height of the page
-      if (scrollTop + clientHeight >= scrollHeight) {
-        // If the user has scrolled to the bottom of the page
-        console.log("到底了"); // Log a message for testing purposes
-        this.fetchData(); // Load more images
-      }
-    },
-    async fetchData() {
-      // Fetch more image data from the server
-      this.pages = this.pages + 1; // Increment the current page number
-      const response = await axios.get("/resources/posts/" + this.pages); // Make a GET request to the server API
-      const newData = JSON.parse(response.request.response); // Parse the response text to JSON format
-      if (newData[0] == null) {
-        // If there is no new data
-        this.pages = this.pages - 1; // Decrement the current page number
-      } else {
-        // Otherwise
-        for (let i = 0; i < newData.length; i++) {
-          // Loop over the new data and add it to the display data array
-          (this.displayData as any).push(newData[i]);
-        }
-      }
-    },
-    OpenRemarkBySingleUUID(post_uuid: string) {
-      // Open a specific post by UUID in the "Remark" component
-      this.$router.push("/remark/" + post_uuid); // Navigate to the "Remark" component with the specified UUID
-    },
-    formatDate(dateString: string) {
-      return moment.utc(dateString).local().format('YYYY-MM-DD HH:mm:ss');
-    }
-  },
-  created() {
-    // Called when the component is created
-    window.addEventListener("scroll", this.lazyLoading); // Add a listener for scrolling events to trigger lazy loading
-  },
-  mounted() {
-    // Called after the component is mounted and ready to use
-    this.displayIamges(); // Display the initial set of images
-    this.TimeZoneCaculator.GetTheTimeZoneOfServer();
-    this.TimeZoneCaculator.GetTheLocalTimeZone();
-  },
-  unmounted() {
-    // Called before the component is unmounted
-    window.removeEventListener("scroll", this.lazyLoading); // Remove the scroll listener to prevent memory leaks
-  },
-  watch: {
-    // Watch the Pinia store for updates and re-fetch data as necessary
-    "PostsUpdate.update"(newValue, oldValue) {
-      this.displayData = []; // Clear the display data array
-      this.displayIamges(); // Refetch the image data from the server
-    },
-  },
-};
-</script>
-
 <template>
-  <div class="Container">
-    <!-- {{ convertedDate("2023-05-19 21:33") }} -->
-    <!-- 遍历 displayData 并将每个图像渲染为页面上的 "卡片" -->
-    <div class="Card" v-for="item in displayData" :key="item.post_uuid">
-      <img
-        @click="OpenRemarkBySingleUUID(item.post_uuid)"
-        class="displayImage_NSFW"
-        :src="item.cover_url"
-        :alt="item.post_uuid"
-        v-if="item.nsfw"
-      />
-      <img
-        @click="OpenRemarkBySingleUUID(item.post_uuid)"
-        class="displayImage"
-        :src="item.cover_url"
-        :alt="item.post_uuid"
-        v-else
-      />
-      <h2 class="ImageTitle">{{ item.post_title }}</h2>
-      <p class="ImageDescription">{{ item.description }}</p>
-      <div class="UserInfoBar">
-        <img class="UserAvatar" :src="item.avatar" />
-        <p class="ImageUserName">{{ item.user_name }}</p>
-        <p class="LikesDisplay">{{ item.dots }} 个赞</p>
-        <p class="ImageDate">
-          {{ formatDate(item.date) }}
-        </p>
+  <div class="p-4" ref="container">
+    <TransitionGroup 
+      name="card"
+      appear
+      tag="div"
+      class="waterfall"
+    >
+      <div v-for="post in posts" :key="post.id" class="waterfall-item">
+        <div class="card card-compact bg-base-100 hover:bg-base-200 shadow-lg hover:shadow-xl transition-all duration-300">
+          <figure>
+            <img 
+              :data-src="post.cover_url" 
+              :src="post.cover_url" 
+              alt="图片封面" 
+              class="w-full object-cover lazy-image" 
+              loading="lazy"
+              ref="lazyImages"
+            />
+          </figure>
+          <div class="card-body">
+            <h3 class="card-title">{{ post.post_title }}</h3>
+            <p class="text-base-content/70">{{ post.description }}</p>
+            <div class="flex items-center justify-between mt-4">
+              <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                  <img 
+                    :data-src="post.avatar" 
+                    alt="作者头像" 
+                    class="w-6 h-6 rounded-full lazy-image"
+                  />
+                  <span class="text-sm text-base-content/70">{{ post.user_name }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button 
+                    v-if="authStore.isLogged"
+                    @click.stop="toggleLike(post)" 
+                    class="btn btn-ghost btn-sm gap-2"
+                    :class="{ 'text-warning': post.isLiked }"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                         class="h-5 w-5" 
+                         :fill="post.isLiked ? 'currentColor' : 'none'"
+                         viewBox="0 0 24 24" 
+                         stroke="currentColor" 
+                         stroke-width="2">
+                      <path stroke-linecap="round" 
+                            stroke-linejoin="round" 
+                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                    </svg>
+                    <span :class="{ 'text-base-content': !post.isLiked }">
+                      <AnimatedNumber :number="post.dots" />
+                    </span>
+                  </button>
+                  <span v-else class="text-sm text-base-content/70">
+                    ⭐ {{ post.dots }}
+                  </span>
+                </div>
+              </div>
+              <router-link :to="`/remark/${post.post_uuid}`" class="btn btn-primary btn-sm">
+                查看详情
+              </router-link>
+            </div>
+          </div>
+        </div>
       </div>
+    </TransitionGroup>
+    <!-- 加载提示器 -->
+    <div ref="loadingTrigger" class="flex justify-center p-4">
+      <span v-if="loading" class="loading loading-dots loading-lg"></span>
     </div>
-  </div>
-  <!-- Button to scroll back to the top of the page -->
-  <div class="BackToTop">
-    <button @click="BackToTop" class="TopButton">Top</button>
   </div>
 </template>
 
+<script setup>
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import axiosInstance from '@/utilities/axios-instance'
+import { useAuthenticationStore } from '@/stores/Authentication'
+import { useNotificationStore } from '@/stores/NotificationStore'
+import AnimatedNumber from '@/components/Common/AnimatedNumber.vue'
+
+const POLL_INTERVAL = 3000 // 3秒轮询间隔
+let pollTimer = null
+
+const posts = ref([])
+const currentPage = ref(1)
+const loading = ref(false)
+const hasMore = ref(true)
+const loadingTrigger = ref(null)
+const waterfallContainer = ref(null)
+const lazyImages = ref([])
+let observer = null
+
+const authStore = useAuthenticationStore()
+const notificationStore = useNotificationStore()
+
+const toggleLike = async (post) => {
+  try {
+    if (!authStore.isLogged) {
+      notificationStore.addNotification('请先登录', 'error')
+      return
+    }
+
+    // 发送点赞请求
+    await axiosInstance.post('/likes/send/like', null, {
+      params: { post_uuid: post.post_uuid }
+    })
+
+    // 获取最新的点赞状态和数量
+    const statusRes = await axiosInstance.get('/likes/get/like_status', {
+      params: { post_uuid: post.post_uuid }
+    })
+    const countRes = await axiosInstance.get(`/resources/posts/single/${post.post_uuid}`)
+    
+    // 更新状态
+    post.isLiked = statusRes.data
+    post.dots = countRes.data.dots
+
+  } catch (error) {
+    notificationStore.addNotification('点赞失败', 'error')
+    console.error('Failed to toggle like:', error)
+  }
+}
+
+const fetchPosts = async (page) => {
+  if (loading.value || !hasMore.value) return
+  
+  loading.value = true
+  try {
+    const response = await axiosInstance.get(`/resources/posts/${page}`)
+    // Get like status for each post only if logged in
+    const postsWithStatus = await Promise.all(response.data.map(async post => {
+      if (authStore.isLogged) {
+        try {
+          const statusRes = await axiosInstance.get('/likes/get/like_status', {
+            params: { post_uuid: post.post_uuid }
+          })
+          return {
+            ...post,
+            isLiked: statusRes
+          }
+        } catch (error) {
+          return {
+            ...post,
+            isLiked: false
+          }
+        }
+      }
+      return {
+        ...post,
+        isLiked: false
+      }
+    }))
+
+    if (postsWithStatus.length === 0) {
+      hasMore.value = false
+    } else {
+      posts.value = [...posts.value, ...postsWithStatus]
+      currentPage.value = page
+    }
+  } catch (error) {
+    console.error('Failed to fetch posts:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+const refreshCurrentPosts = async () => {
+  try {
+    const promises = []
+    for (let page = 1; page <= currentPage.value; page++) {
+      promises.push(axiosInstance.get(`/resources/posts/${page}`))
+    }
+    
+    const responses = await Promise.all(promises)
+    let allPosts = []
+    
+    for (const response of responses) {
+      const postsWithStatus = await Promise.all(response.data.map(async post => {
+        if (authStore.isLogged) {
+          try {
+            const statusRes = await axiosInstance.get('/likes/get/like_status', {
+              params: { post_uuid: post.post_uuid }
+            })
+            return { ...post, isLiked: statusRes }
+          } catch (error) {
+            return { ...post, isLiked: false }
+          }
+        }
+        return { ...post, isLiked: false }
+      }))
+      allPosts = [...allPosts, ...postsWithStatus]
+    }
+    
+    posts.value = allPosts
+  } catch (error) {
+    console.error('Failed to refresh posts:', error)
+  }
+}
+
+const observeImages = () => {
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target
+        img.src = img.dataset.src
+        observer.unobserve(img)
+      }
+    })
+  }, {
+    rootMargin: '50px'
+  })
+
+  // 观察所有带有 lazy-image 类的图片
+  document.querySelectorAll('.lazy-image').forEach(img => {
+    observer.observe(img)
+  })
+}
+
+// 创建观察器
+const createObserver = () => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting && !loading.value && hasMore.value) {
+        fetchPosts(currentPage.value + 1)
+      }
+    },
+    {
+      threshold: 0.1
+    }
+  )
+  
+  if (loadingTrigger.value) {
+    observer.observe(loadingTrigger.value)
+  }
+  
+  return observer
+}
+
+const startPolling = () => {
+  pollTimer = setInterval(refreshCurrentPosts, POLL_INTERVAL)
+}
+
+onMounted(() => {
+  fetchPosts(1)
+    .then(() => {
+      // 在图片数据加载完成后初始化懒加载
+      setTimeout(observeImages, 100)
+      startPolling() // 启动轮询
+    })
+  observer = createObserver()
+})
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect()
+  }
+  if (pollTimer) {
+    clearInterval(pollTimer)
+    pollTimer = null
+  }
+})
+</script>
+
 <style scoped>
-/* CSS styling for the component */
+.lazy-image {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
 
-@keyframes FadeIn {
-  from {
-    opacity: 0;
-    top: 10px;
-  }
+.lazy-image[src] {
+  opacity: 1;
+}
 
-  to {
-    opacity: 1;
-    top: 0px;
+.waterfall {
+  column-count: 1;
+  column-gap: 1.5rem; 
+  padding: 0 1.5rem;  
+}
+
+.waterfall-item {
+  break-inside: avoid;
+  margin-bottom: 1.5rem;  
+}
+
+.shadow-hover {
+  transition: all 0.3s ease;
+}
+
+.shadow-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 640px) {
+  .waterfall {
+    column-count: 2;
   }
 }
 
-@keyframes FlashIn {
-  from {
-    scale: 0.5;
-    transform: translateY(90%);
-  }
-
-  to {
-    scale: 1;
-    transform: translateY(0%);
+@media (min-width: 768px) {
+  .waterfall {
+    column-count: 2;  
   }
 }
 
-.Container {
-  width: 100%;
-  /* height: 100vh; */
-  /* height: 200vh; */
-  /* Test ScrollTop */
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: row;
-  flex-wrap: wrap;
-  animation: FadeIn 0.5s;
+@media (min-width: 1024px) {
+  .waterfall {
+    column-count: 3;  
+  }
 }
 
-.Card {
-  width: 450px;
-  height: 440px;
-  border-radius: 10px;
-  margin-top: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  transition: 0.5s ease-in-out;
-  animation: FlashIn 1s;
-  background-color: #ffffff;
+@media (min-width: 1280px) {
+  .waterfall {
+    column-count: 4; 
+  }
 }
 
-.Card:hover {
-  scale: 0.9;
+.card {
+  @apply backdrop-blur-sm;
 }
 
-.ImageTitle {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bolder;
-  font-size: 25px;
-  text-indent: 0.5em;
-  color: #ffffff;
-  text-shadow: 2px 2px 4px #212121;
-  position: relative;
-  top: -40px;
-  text-overflow: ellipsis;
-  overflow: hidden;
+.card-enter-active,
+.card-leave-active {
+  transition: all 0.5s ease;
 }
 
-.displayImage {
-  width: 100%;
-  height: 300px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  object-fit: cover;
-  text-overflow: ellipsis;
-  cursor: pointer;
+.card-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
 }
 
-.displayImage_NSFW {
-  width: 100%;
-  height: 300px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  object-fit: cover;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  filter: blur(20px);
-}
-
-.ImageDescription {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: lighter;
-  font-size: 18px;
-  color: #757575;
-  position: relative;
-  top: -15px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  padding: 15px;
-}
-
-.BackToTop {
-  position: fixed;
-  float: right;
-  right: 2%;
-  top: 80%;
-}
-
-.TopButton {
-  padding: 2px;
-  width: 40px;
-  height: 40px;
-  outline: none;
-  border: none;
-  cursor: pointer;
-  background-color: #7c4dff;
-  color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-}
-
-.TopButton:hover {
-  background-color: #303f9f;
-  color: #c5cae9;
-  transition: background-color 0.5s ease;
-}
-
-.ImageUserName {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  color: #212121;
-  padding: 10px;
-  line-height: 40px;
-}
-
-.LikesDisplay {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bolder;
-  color: #7c4dff;
-  padding: 10px;
-  line-height: 40px;
-}
-
-.ImageDate {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  color: #757575;
-  padding: 10px;
-  line-height: 40px;
-  margin-left: auto;
-}
-
-.UserAvatar {
-  width: 40px;
-  height: 40px;
-  border: solid 1px #bdbdbd;
-  border-radius: 100%;
-  margin: 5px;
-}
-
-.UserInfoBar {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  position: relative;
-  bottom: 0;
-}
-
-@media only screen and (max-width: 768px) {
-  @keyframes FadeIn {
-    from {
-      opacity: 0;
-      top: 10px;
-    }
-
-    to {
-      opacity: 1;
-      top: 0px;
-    }
-  }
-
-  @keyframes FlashIn {
-    from {
-      scale: 0.5;
-      transform: translateY(90%);
-    }
-
-    to {
-      scale: 1;
-      transform: translateY(0%);
-    }
-  }
-
-  .Container {
-    width: 100%;
-    /* height: 100vh; */
-    /* height: 200vh; */
-    /* Test ScrollTop */
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: column;
-    flex-wrap: wrap;
-    animation: FadeIn 0.5s;
-  }
-
-  .Card {
-    width: 95%;
-    height: 450px;
-    border-radius: 10px;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    transition: 0.5s ease-in-out;
-    animation: FlashIn 0.5s;
-    background-color: #ffffff;
-  }
-
-  .Card:hover {
-    scale: 0.9;
-  }
-
-  .ImageTitle {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bolder;
-    font-size: 20px;
-    text-indent: 0.5em;
-    color: #ffffff;
-    text-shadow: 2px 2px 4px #212121;
-    position: relative;
-    top: -40px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-
-  .displayImage {
-    width: 100%;
-    height: 300px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    object-fit: cover;
-    text-overflow: ellipsis;
-    cursor: pointer;
-  }
-
-  .displayImage_NSFW {
-    width: 100%;
-    height: 300px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    object-fit: cover;
-    text-overflow: ellipsis;
-    cursor: pointer;
-    filter: blur(20px);
-  }
-
-  .ImageDescription {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    color: #757575;
-    position: relative;
-    top: -15px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    padding: 15px;
-  }
-
-  .BackToTop {
-    position: fixed;
-    float: right;
-    right: 2%;
-    top: 80%;
-    display: none;
-  }
-
-  .TopButton {
-    padding: 2px;
-    width: 40px;
-    height: 40px;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    background-color: #7c4dff;
-    color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
-
-  .TopButton:hover {
-    background-color: #303f9f;
-    color: #c5cae9;
-    transition: background-color 0.5s ease;
-  }
-
-  .ImageUserName {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    font-size: 14px;
-    color: #212121;
-    padding: 10px;
-    line-height: 40px;
-  }
-
-  .LikesDisplay {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bolder;
-    font-size: 14px;
-    color: #7c4dff;
-    padding: 10px;
-    line-height: 40px;
-  }
-
-  .ImageDate {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    font-size: 14px;
-    color: #757575;
-    padding: 10px;
-    line-height: 40px;
-    margin-left: auto;
-  }
-
-  .UserAvatar {
-    width: 25px;
-    height: 25px;
-    border: solid 1px #bdbdbd;
-    border-radius: 100%;
-    margin: 5px;
-  }
-
-  .UserInfoBar {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    position: relative;
-    bottom: -10px;
-  }
+.card-move {
+  transition: transform 0.5s ease;
 }
 </style>

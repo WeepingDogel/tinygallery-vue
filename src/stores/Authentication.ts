@@ -15,12 +15,14 @@
 // Overall, this code provides a simple implementation of a store for authentication management in a Vue.js app.
 
 import { defineStore } from "pinia"; // Import the `defineStore` function from Pinia library
+import axios from "axios"; // Import the `axios` library for making HTTP requests
 
 // Define a store named "Authentication" using the `defineStore` function
-export const Authentication = defineStore("Authentication", {
+export const useAuthenticationStore = defineStore("authentication", {
   // Define the initial state of the store
   state: () => ({
-    isLogged: false, // A boolean value to indicate whether the user is logged in or not
+    isLogged: !!localStorage.getItem("auth_token"), // 根据localStorage中的token初始化登录状态
+    token: localStorage.getItem("auth_token") || "", // A string to store the authentication token
   }),
 
   // Define actions that can be used to modify the state of the store
@@ -28,6 +30,44 @@ export const Authentication = defineStore("Authentication", {
     // This action takes a boolean value as its argument and sets the `isLogged` state variable accordingly
     setLogStatus(status: boolean) {
       this.isLogged = status;
+    },
+    // This action takes a username and password, sends a login request, and updates the state accordingly
+    async login(username: string, password: string) {
+      try {
+        const response = await axios.post('/user/token', 
+          new URLSearchParams({
+            username,
+            password
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          }
+        )
+        this.token = response.data.access_token
+        localStorage.setItem("auth_token", response.data.access_token)
+        this.isLogged = true
+      } catch (error: any) {
+        this.token = ""
+        localStorage.removeItem("auth_token")
+        this.isLogged = false
+        throw error // 确保错误被传递给调用者
+      }
+    },
+    // This action logs the user out by clearing the token and updating the state
+    logout() {
+      this.token = "";
+      localStorage.removeItem("auth_token");
+      this.setLogStatus(false);
+    },
+    // This action checks the authentication status based on the token
+    checkAuth() {
+      if (this.token) {
+        this.setLogStatus(true);
+      } else {
+        this.setLogStatus(false);
+      }
     },
   },
 });

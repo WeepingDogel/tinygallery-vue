@@ -11,5 +11,7 @@ export default {
 </script>
 
 <template>
-  <About />
+  <div class="container mx-auto px-20 py-20">
+    <About />
+  </div>
 </template>

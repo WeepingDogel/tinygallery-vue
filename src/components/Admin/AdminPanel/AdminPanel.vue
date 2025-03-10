@@ -1,56 +1,14 @@
-<script lang="ts">
-import SideMenu from "./SideMenu/SideMenu.vue";
-import Overview from "./Overview/Overview.vue";
-import UserManagement from "./DataManagement/UserManagement.vue";
-import PostsManagement from "./DataManagement/PostsManagement.vue";
-import CommentsAndRepliesManagement from "./DataManagement/CommentsAndRepliesManagement.vue";
-
-export default {
-  components: {
-    SideMenu,
-    Overview,
-    UserManagement,
-    PostsManagement,
-    CommentsAndRepliesManagement,
-  },
-  data() {
-    return {
-      PanelOpen: 0,
-    };
-  },
-  methods: {
-    UpdatePanelOpen(OpenNum: number) {
-      this.PanelOpen = OpenNum;
-    },
-  },
-};
-</script>
-
 <template>
-  <div class="AdminPanel">
-    <SideMenu :child-open-num="PanelOpen" @update-open-num="UpdatePanelOpen" />
-    <div class="ManagementDisplay">
-      <Overview v-if="PanelOpen == 0" />
-      <UserManagement v-if="PanelOpen == 1" />
-      <PostsManagement v-if="PanelOpen == 2" />
-      <CommentsAndRepliesManagement v-if="PanelOpen == 3" />
-    </div>
+  <div class="container mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-4">管理面板</h2>
+    <!-- 添加管理面板的内容 -->
   </div>
 </template>
 
-<style scoped>
-.AdminPanel {
-  width: 100%;
-  height: 90vh;
-  background-color: #ffffff;
-  display: flex;
-  flex-direction: row;
-}
+<script setup>
+// No script needed for this simple component
+</script>
 
-.ManagementDisplay {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
+<style scoped>
+/* Add any additional styles here */
 </style>

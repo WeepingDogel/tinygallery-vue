@@ -1,0 +1,1 @@
+@tailwind base;@tailwind components;@tailwind utilities;@layer components {  .btn-primary {    @apply btn btn-primary;  }  .card-normal {    @apply card bg-base-100 shadow-xl;  }  .input-normal {    @apply input input-bordered w-full;  }}

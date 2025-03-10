@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 添加一些基础样式 */
+:root {
+  background-color: hsl(var(--b1));
+  color: hsl(var(--bc));
+}
+
+@layer components {
+  .custom-button {
+    @apply bg-primary text-primary-content px-4 py-2 rounded;
+  }
+  .custom-card {
+    @apply bg-base-100 shadow-xl rounded-lg p-4;
+  }
+  .custom-input {
+    @apply border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary;
+  }
+}

@@ -13,6 +13,9 @@ COPY dist/ .
 # Copy custom nginx configuration file
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# Set environment variables
+ENV API_BASE_URL=http://your-domain.com/api/v1
+
 # Add metadata labels
 LABEL maintainer="WeepingDogel <weepingdogel@gmail.com>"
 LABEL version="1.0"
