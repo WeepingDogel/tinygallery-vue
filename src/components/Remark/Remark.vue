@@ -1,905 +1,346 @@
-<!-- Remark.vue -->
-<!-- 
-    The first two lines are import statements for two child components 
-    - RemarkPanel and ReplyPanel - which are used in the current component.
-
-    The third line imports a function called UpdateRemarks from a file located at '@/stores/UpdateRemarks'. 
-    This is likely a Vuex store action or mutation that updates the state of the 'Remarks' array 
-    when a new remark is added to the post.
-
-    The fourth line imports a library called axios, which is an HTTP client that helps make requests to an API.
-
-    The component definition begins on line 6 with the 'export default' statement. 
-    This is where we define the properties, methods, and other logic of the component.
-
-    Starting on line 7, we define the data property of the component using a function that returns an object 
-    with several properties:
-
-        ThePost: 
-        This is an empty object that will eventually hold the details of a single post.
-
-        Remarks: 
-        This is an empty array that will eventually hold all the remarks on the post.
-
-        RemarkPanelON:  
-        This boolean value represents whether the RemarkPanel component is open or closed. 
-        It is initially set to false.
-
-        ReplyPanelON: 
-        This boolean value represents whether the ReplyPanel component is open or closed. It is initially set to false.
-
-        ReplyToUUID: 
-        This variable is an empty string that will be used to store the UUID of the comment being replied to.
-
-        RemarkPage: 
-        This variable is set to 1 and represents the page number of remarks to be shown on the screen.
-
-    On line 14, we define the setup function of the component, which returns an object containing the constant RemarkUpdate. 
-    This function is used to set up any reactive variables that need to be watched by Vue.
-    
-    RemarkUpdate is a constant that calls the imported UpdateRemarks function. 
-    We can use this constant to reference the function in other parts of the component.
-
-    On line 20, we register the child components used in the current component - RemarkPanel and ReplyPanel.
-
-    Starting on line 24, we define several methods that will be used in the component:
-
-        GetTheSingleImageByPostUUID: 
-        This method takes a post UUID as an argument and makes a GET request to fetch the details of a single post 
-        from the API using axios. 
-        The response data is then stored in the ThePost object.
-
-        GetTheRmarksOfThePost: 
-        This method takes a post UUID as an argument and makes a GET request to fetch all the remarks for the post 
-        from the API using axios. 
-        The response data is then stored in the Remarks array.
-
-        GetTheRepliesOfTheRemark: 
-        This method takes a remark UUID as an argument and makes a GET request to fetch all the replies for the remark 
-        from the API using axios. T
-        his method is currently empty and needs to be implemented further to work correctly.
-
-        OpenImage: 
-        This method takes an image link as an argument and opens the link in a new window when called.
-
-        OpenRemarkPanel: 
-        This method takes a ReplyTo argument (which is likely a comment UUID) 
-        and sets the RemarkPanelON boolean value to true to open the RemarkPanel component. 
-        This method is currently commented out, so it doesn't actually do anything yet.
-
-        ReplyAComment: 
-        This method takes a CommentUUID argument (which is likely a comment UUID) 
-        and sets the ReplyToUUID variable to the UUID of the comment being replied to. 
-        It also sets the ReplyPanelON boolean value to true to open the ReplyPanel component.
-
-    The beforeMount lifecycle hook on line 51 is called just before the component is mounted. 
-    
-    Here, we call two methods - GetTheSingleImageByPostUUID and GetTheRmarksOfThePost - 
-    to fetch the post details and remarks from the API.
-
-    The watch object on line 56 is used to listen for changes in the RemarkUpdate property of the component. 
-    If this property changes, which occurs when a new remark is added to the post, 
-    we clear the Remarks array and call the GetTheRmarksOfThePost method again to refresh the remarks shown on the screen.
-
-That's a high-level explanation of what's going on in this Vue component! Let me know if you have any questions.
- -->
-<script lang="ts">
-import RemarkPanel from "./RemarkPanel.vue"; // Importing the component 'RemarkPanel' from its file path.
-import ReplyPanel from "./ReplyPanel.vue"; // Importing the component 'ReplyPanel' from its file path.
-import { UpdateRemarks } from "@/stores/UpdateRemarks"; // Importing the function 'UpdateRemarks' from its file path in the stores folder.
-import axios from "axios"; // Importing the HTTP client library 'axios'.
-import { Timezone } from "@/stores/TimeZone";
-
-export default {
-  data() {
-    // Defining the data property of the component.
-    return {
-      ThePost: Object, // Initializing an empty object to hold a single post.
-      Remarks: [], // Initializing an empty array to hold all the remarks on a post.
-      RemarkPanelON: false, // Setting the initial state of the 'RemarkPanel' component as closed.
-      ReplyPanelON: false, // Setting the initial state of the 'ReplyPanel' component as closed.
-      ReplyToUUID: "", // Initializing an empty string to hold the UUID of the comment being replied to.
-      RemarkPage: 1, // Initializing the page number of remarks to be shown on the screen.
-      LikesData: Object,
-    };
-  },
-  setup() {
-    // Defining the setup function of the component.
-    const RemarkUpdate = UpdateRemarks(); // Calling the imported 'UpdateRemarks' function and storing it in a constant.
-    const TimeZoneCaculator = Timezone();
-
-    return {
-      RemarkUpdate, // Returning the constant 'RemarkUpdate' to use it later in the component.
-      TimeZoneCaculator,
-    };
-  },
-  components: {
-    // Registering the child components used in the current component.
-    RemarkPanel,
-    ReplyPanel,
-  },
-  methods: {
-    // Defining the methods used in the component.
-    GetTheSingleImageByPostUUID(post_uuid: any) {
-      // A method that fetches a single post by UUID.
-      axios
-        .get("/resources/posts/single/" + post_uuid) // Making a GET request to the server endpoint that returns a single post.
-        .then((response) => {
-          // Handling the server response.
-          console.log(response.data); // Logging the received data in the console.
-          this.ThePost = response.data; // Updating the 'ThePost' object with the received post data.
-        });
-    },
-    GetTheRmarksOfThePost(post_uuid: any) {
-      // A method that fetches all the remarks of a post by UUID.
-      axios
-        .get("/remark/get/inpost/" + post_uuid + "/" + this.RemarkPage) // Making a GET request to the server endpoint that returns all the remarks of a post.
-        .then((response) => {
-          // Handling the server response.
-          console.log(response.data); // Logging the received data in the console.
-          this.Remarks = response.data; // Updating the 'Remarks' array with the received remark data.
-        });
-    },
-    GetTheRepliesOfTheRemark(remark_uuid: any) {
-      // A method that fetches all the replies of a remark by UUID.
-      axios
-        .get("/") // Making a GET request to the server endpoint that returns all the replies of a remark.
-        .then();
-    },
-    OpenImage(link: any) {
-      // A method that opens an image link in a new window.
-      window.open(link);
-    },
-    OpenRemarkPanel(ReplyTo: any) {
-      // A method that opens the 'RemarkPanel' component and passes the UUID of the comment being replied to.
-      const token = localStorage.getItem("Token");
-      axios
-        .get("/userdata/get/username", {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        })
-        .then((response) => {
-          const username = response.data.username;
-          if (username) {
-            this.RemarkPanelON = true; // Setting the state of 'RemarkPanel' component as open.
-          } else if (username == false) {
-            alert("Unauthorized!\nPlease login to comment!");
-          }
-        })
-        .catch((error) => {
-          console.log(error.detail);
-          alert("Error! \n" + error.detail);
-        });
-
-      // this.ReplyTo = ReplyTo
-    },
-    ReplyAComment(CommentUUID: any) {
-      // A method that opens the 'ReplyPanel' component and passes the UUID of the comment being replied to.
-      this.ReplyToUUID = CommentUUID; // Updating the 'ReplyToUUID' string with the passed UUID.
-      this.ReplyPanelON = true; // Setting the state of 'ReplyPanel' component as open.
-    },
-    CheckIfLiked() {
-      // A method that check if the user has already liked it.
-      const token = localStorage.getItem("Token");
-      axios
-        .get("/likes/get/like_status", {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-          params: {
-            post_uuid: this.$route.params.post_uuid,
-          },
-        })
-        .then((response) => {
-          console.log(response.data);
-          this.LikesData = response.data;
-        })
-        .catch((error) => {
-          console.log(error.detail);
-        });
-    },
-    SentLikeRequest() {
-      // A method that send Like request to the backend.
-      const token = localStorage.getItem("Token");
-      if (token == null || token == "") {
-        alert("Please login to like it!");
-      } else {
-        axios
-          .post(
-            "/likes/send/like",
-            {},
-            {
-              headers: {
-                Authorization: "Bearer " + token,
-              },
-              params: {
-                post_uuid: this.$route.params.post_uuid,
-              },
-            }
-          )
-          .then((response) => {
-            console.log(response.data);
-            this.CheckIfLiked();
-            this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid);
-          })
-          .catch((error) => {
-            console.log(error.detail);
-          });
-      }
-    },
-  },
-  beforeMount() {
-    // A lifecycle hook that runs before the component is mounted.
-    this.GetTheSingleImageByPostUUID(this.$route.params.post_uuid); // Calling the 'GetTheSingleImageByPostUUID' method to fetch a single post by UUID.
-    this.GetTheRmarksOfThePost(this.$route.params.post_uuid); // Calling the 'GetTheRmarksOfThePost' method to fetch all the remarks of a post by UUID.
-    this.TimeZoneCaculator.GetTheLocalTimeZone();
-    this.TimeZoneCaculator.GetTheTimeZoneOfServer();
-  },
-  mounted() {
-    this.CheckIfLiked();
-  },
-  watch: {
-    // Defining watchers to listen for changes in data properties of the component.
-    "RemarkUpdate.update"(newValue, oldValue) {
-      // Listening to any change in the 'update' property of 'RemarkUpdate'.
-      this.Remarks = []; // Clearing the 'Remarks' array.
-      this.GetTheRmarksOfThePost(this.$route.params.post_uuid); // Calling the 'GetTheRmarksOfThePost' method to fetch all the remarks of a post by UUID.
-    },
-  },
-};
-</script>
-
 <template>
-  <!-- 注释 #1: 这是一个 Vue 模板，包含一个 RemarkPanel 组件、一个 ReplyPanel 组件和一个用于显示评论的容器 -->
-  <!-- <button @click="test">测试</button> -->
-  <!-- 注释 #2: 这个按钮被注释掉了，所以不会显示在页面上 -->
-  <RemarkPanel
-    :PostUUID="(ThePost as any).post_uuid"
-    v-model="RemarkPanelON"
-    v-if="RemarkPanelON"
-  />
-  <!-- 注释 #3: RemarkPanel 组件用于显示提交新评论的面板 -->
-  <ReplyPanel
-    :RemarkUUID="ReplyToUUID"
-    v-model="ReplyPanelON"
-    v-if="ReplyPanelON"
-  />
-  <!-- 注释 #4: ReplyPanel 组件用于显示提交对现有评论的回复的面板 -->
-  <div class="RemarkContainer">
-    <!-- 注释 #5: 这个 div 用作显示所有评论的容器 -->
-    <div class="RemarkBox">
-      <!-- 注释 #6: 这个 div 包含帖子信息和评论列表 -->
-      <div class="ImageDisplayArea">
-        <!-- 注释 #7: 这个 div 包含封面图片和任何上传的附加图片 -->
-        <img
-          @click="OpenImage((ThePost as any).files_url.original_cover_url)"
-          v-if="(ThePost as any).files_url.image_files_url.length > 1"
-          class="DisplayedImage"
-          :src="(ThePost as any).files_url.original_cover_url"
+  <div class="container mx-auto px-20 py-8">
+    <div class="card bg-base-100 shadow-xl">
+      <figure class="h-96 relative overflow-hidden rounded-t-xl">
+        <!-- 模糊的背景图 -->
+        <img 
+          :src="post.files_url?.compressed_cover_url" 
+          :alt="post.post_title" 
+          class="absolute inset-0 w-full h-full object-cover blur-3xl scale-150" 
         />
-        <!-- 注释 #8: 这是帖子的封面图片，如果帖子中只有一张图片，将显示此图片 -->
-        <div v-for="items of (ThePost as any).files_url.image_files_url">
-          <img @click="OpenImage(items)" class="DisplayedImage" :src="items" />
-        </div>
-        <!-- 注释 #9: 这个循环用于显示任何上传的附加图片 -->
-      </div>
-      <div class="RemarksArea">
-        <!-- 注释 #10: 这个 div 包含帖子信息和评论列表 -->
-        <div class="InfoBox">
-          <!-- 注释 #11: 这个 div 包含帖子信息，如帖子标题、作者姓名、描述和点赞数 -->
-          <h1 class="InfoTitlte">{{ (ThePost as any).post_title }}</h1>
-          <!-- 注释 #12: 这是帖子的标题 -->
-          <p class="InfoDescription">
-            作者：
-            <b style="color: #7c4dff">{{ (ThePost as any).user_name }}</b>
-            <br />
-            {{ (ThePost as any).description }}
-            <br />
-            <b style="color: #7c4dff"
-              >{{ (ThePost as any).dots }} 总共点赞</b
-            >
-          </p>
-          <!-- 注释 #13: 这是帖子的描述，包括作者姓名和点赞数 -->
-          <div class="InfoBoxFoot">
-            <p class="PublishDate">
-              {{
-                TimeZoneCaculator.CaculateTheCorrectDate((ThePost as any).date)
-              }}
-            </p>
-            <button
-              class="LikeButton"
-              @click="SentLikeRequest"
-              v-if="(LikesData as any) == false || (LikesData as any).liked == false"
-            >
-              点赞
-            </button>
-            <button class="LikedButton" @click="SentLikeRequest" v-else>
-              已点赞！
-            </button>
-            <!-- 注释 #14: 这个按钮用于点赞帖子 -->
-            <button class="CommentButton" @click="OpenRemarkPanel">
-              评论
-            </button>
-            <!-- 注释 #15: 这个按钮用于打开 RemarkPanel 组件以提交新评论 -->
+        <!-- 清晰的主图 -->
+        <img 
+          :src="post.files_url?.compressed_cover_url" 
+          :alt="post.post_title" 
+          class="relative z-10 h-full w-full object-contain rounded-xl" 
+        />
+      </figure>
+      <div class="card-body">
+        <div class="flex items-center gap-4 mb-4">
+          <img 
+            :data-src="post.avatar" 
+            alt="作者头像" 
+            class="w-10 h-10 rounded-full lazy-image"
+          />
+          <div>
+            <h2 class="card-title">{{ post.post_title }}</h2>
+            <p class="text-sm">发布者: {{ post.user_name }}</p>
           </div>
+          <button 
+            v-if="authStore.isLogged"
+            @click="handleLike" 
+            class="btn btn-ghost gap-2"
+            :class="{ 'text-warning': isLiked }"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                 class="h-5 w-5" 
+                 :fill="isLiked ? 'currentColor' : 'none'"
+                 viewBox="0 0 24 24" 
+                 stroke="currentColor" 
+                 stroke-width="2">
+              <path stroke-linecap="round" 
+                    stroke-linejoin="round" 
+                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+            </svg>
+            <span :class="{ 'text-base-content': !isLiked }">
+              <AnimatedNumber :number="post.dots" />
+            </span>
+          </button>
+          <span v-else class="text-base-content/70">
+            ⭐ {{ post.dots }}
+          </span>
+          <StarPopAnimation v-if="showStar" :x="starX" :y="starY" />
         </div>
-        <div class="CommentDisplayArea">
-          <div class="CommentBox" v-for="items in Remarks">
-            <!-- 注释 #16: 这个 div 用于显示所有评论，这些评论由 Remarks 数组中的项表示 -->
-            <img class="UserAvatar" :src="(items as any).avatar" />
-            <!-- 注释 #17: 这是提交评论的用户的头像 -->
-            <h1 class="CommentUserName">{{ (items as any).user_name }}</h1>
-            <!-- 注释 #18: 这是提交评论的用户的用户名 -->
-            <p class="CommentText">{{ (items as any).content }}</p>
-            <!-- 注释 #19: 这是评论的内容 -->
-            <button
-              class="ReplyButton"
-              @click="ReplyAComment((items as any).remark_uuid)"
-            >
-              回复
-            </button>
-            <!-- 注释 #20: 这个按钮用于打开 ReplyPanel 组件以提交对现有评论的回复 -->
-            <span class="CommentTime">{{
-              TimeZoneCaculator.CaculateTheCorrectDate((items as any).date)
-            }}</span>
-            <!-- 注释 #21: 这是评论提交的日期 -->
-          </div>
+        <p class="text-base-content/70">{{ post.description }}</p>
+        <div class="flex items-center gap-4 mt-4">
+          <p class="text-sm">发布时间: {{ post.date }}</p>
+          <p class="text-sm">分享数: {{ post.share_num }}</p>
         </div>
       </div>
+    </div>
+
+    <!-- 显示所有图片 -->
+    <div class="flex flex-col gap-4 mt-8">
+      <div v-for="(imageUrl, index) in post.files_url?.image_files_url" :key="index" 
+        class="card bg-base-100 shadow-xl cursor-pointer overflow-hidden"
+        @click="openImageInNewWindow(imageUrl)">
+        <figure>
+          <img 
+            :data-src="imageUrl" 
+            :alt="`${post.post_title} - ${index + 1}`" 
+            class="w-full object-contain rounded-xl lazy-image" 
+            loading="lazy"
+          />
+        </figure>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <RemarkPanel :post-uuid="postUuid" @remark-added="fetchRemarks" />
+      
+      <TransitionGroup name="list" tag="div" class="space-y-4 mt-8">
+        <div v-for="remark in remarks" :key="remark.id" class="card bg-base-100 shadow-md">
+          <div class="card-body">
+            <div class="flex items-center gap-4">
+              <img 
+                :data-src="remark.avatar" 
+                alt="用户头像" 
+                class="w-10 h-10 rounded-full lazy-image" 
+              />
+              <div>
+                <h4 class="font-bold">{{ remark.user_name }}</h4>
+                <p class="text-sm text-base-content/70">{{ remark.date }}</p>
+              </div>
+            </div>
+            <p class="mt-4">{{ remark.content }}</p>
+            
+            <TransitionGroup name="reply" tag="div" class="mt-4 space-y-2">
+              <div v-for="reply in remark.replies" :key="reply.id" class="bg-base-200 p-4 rounded-lg">
+                <div class="flex items-center gap-4">
+                  <img 
+                    :data-src="reply.avatar" 
+                    alt="用户头像" 
+                    class="w-8 h-8 rounded-full lazy-image" 
+                  />
+                  <div>
+                    <h5 class="font-bold">{{ reply.user_name }}</h5>
+                    <p class="text-sm text-base-content/70">{{ reply.date }}</p>
+                  </div>
+                </div>
+                <p class="mt-2">
+                  <span class="text-primary">@{{ reply.reply_to_user_name }}</span>
+                  {{ reply.content }}
+                </p>
+              </div>
+            </TransitionGroup>
+            
+            <ReplyPanel 
+              :remark-uuid="remark.remark_uuid"
+              :reply-to-user-name="remark.user_name"  
+              @reply-added="fetchRemarks"
+            />
+          </div>
+        </div>
+      </TransitionGroup>
     </div>
   </div>
 </template>
 
-<style scoped>
-/* CSS styling for the component */
-@media only screen and (min-width: 768px) {
-  @keyframes FadeIn {
-    from {
-      opacity: 0;
-      top: 10px;
+<script setup>
+import { ref, onMounted, nextTick } from 'vue'
+import { useRoute } from 'vue-router'
+import axiosInstance from '@/utilities/axios-instance'
+import RemarkPanel from './RemarkPanel.vue'
+import ReplyPanel from './ReplyPanel.vue'
+import { useAuthenticationStore } from '@/stores/Authentication'
+import { useNotificationStore } from '@/stores/NotificationStore'
+import AnimatedNumber from '@/components/Common/AnimatedNumber.vue'
+import StarPopAnimation from '@/components/Common/StarPopAnimation.vue'
+
+const route = useRoute()
+const postUuid = route.params.uuid
+const post = ref({
+  id: 0,
+  description: '',
+  share_num: 0,
+  post_uuid: '',
+  nsfw: false,
+  user_name: '',
+  post_title: '',
+  dots: 0,
+  date: '',
+  files_url: {
+    image_files_url: [],
+    original_cover_url: '',
+    compressed_cover_url: ''
+  }
+})
+const currentPage = ref(1)
+const remarks = ref([])
+
+const isLiked = ref(false)
+
+const authStore = useAuthenticationStore()
+const notificationStore = useNotificationStore()
+
+const showStar = ref(false)
+const starX = ref(0)
+const starY = ref(0)
+
+const handleLike = async (event) => {
+  if (!authStore.isLogged) {
+    notificationStore.addNotification('请先登录', 'error')
+    return
+  }
+
+  // 设置动画位置
+  starX.value = event.clientX
+  starY.value = event.clientY
+  showStar.value = false
+  await nextTick()
+  showStar.value = true
+
+  // 延迟重置动画状态
+  setTimeout(() => {
+    showStar.value = false
+  }, 1000)
+
+  // 执行原有的点赞逻辑
+  toggleLike()
+}
+
+const toggleLike = async () => {
+  try {
+    if (!authStore.isLogged) {
+      notificationStore.addNotification('请先登录', 'error')
+      return
     }
 
-    to {
-      opacity: 1;
-      top: 0px;
-    }
-  }
+    // 发送点赞请求
+    await axiosInstance.post('/likes/send/like', null, {
+      params: { post_uuid: postUuid }
+    })
 
-  @keyframes CommentLoader {
-    from {
-      opacity: 0;
-      transform: translateY(80%);
-    }
+    // 获取最新的点赞状态和数量
+    const statusRes = await axiosInstance.get('/likes/get/like_status', {
+      params: { post_uuid: postUuid }
+    })
+    const countRes = await axiosInstance.get(`/resources/posts/single/${postUuid}`)
+    
+    // 更新状态
+    isLiked.value = statusRes.data
+    post.value.dots = countRes.data.dots
 
-    to {
-      opacity: 1;
-      transform: translateY(0%);
-    }
-  }
-
-  .LikeButton {
-    width: 50px;
-    height: 50px;
-    background-color: #ffffff;
-    color: #ffaab8;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    border: solid 1px #ffaab8;
-    outline: none;
-    border-radius: 10px;
-    margin-left: auto;
-    cursor: pointer;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
-
-  .LikeButton:hover {
-    background-color: #ffaab8;
-    color: #ffffff;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
-
-  .LikedButton {
-    width: 50px;
-    height: 50px;
-    background-color: #ffaab8;
-    color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    border: solid 1px #ffaab8;
-    outline: none;
-    border-radius: 10px;
-    margin-left: auto;
-    cursor: pointer;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
-
-  .LikedButton:hover {
-    background-color: #ffffff;
-    color: #ffaab8;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
-
-  .CommentButton {
-    width: 100px;
-    height: 50px;
-    background-color: #7c4dff;
-    color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    border: none;
-    outline: none;
-    border-radius: 10px;
-    margin-left: auto;
-    margin-right: 10px;
-    cursor: pointer;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
-
-  .CommentButton:hover {
-    background-color: #303f9f;
-    color: #c5cae9;
-    transition: background-color 0.5s ease;
-  }
-
-  .RemarkContainer {
-    width: 100%;
-    height: auto;
-    min-height: 90vh;
-    display: flex;
-    justify-content: center;
-    animation: FadeIn 0.5s;
-  }
-
-  .RemarkBox {
-    width: 100%;
-    height: auto;
-    min-height: 90vh;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    margin: 15px;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    transition: 1s ease-in-out;
-    background-color: #ffffff;
-  }
-
-  .ImageDisplayArea {
-    width: 80%;
-    height: auto;
-    min-height: 90vh;
-    /* background-color: #3F51B5; */
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    cursor: pointer;
-  }
-
-  .DisplayedImage {
-    width: 100%;
-    height: auto;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    cursor: pointer;
-  }
-
-  .RemarksArea {
-    margin-bottom: 15px;
-    width: 20%;
-    height: auto;
-    min-height: 90vh;
-    background-color: #ffffff;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
-
-  .InfoBox {
-    width: 100%;
-    height: auto;
-    min-height: 200px;
-    border-bottom: solid 1px #bdbdbd;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .InfoTitlte {
-    text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 20px;
-    line-height: 40px;
-  }
-
-  .InfoDescription {
-    line-height: 20px;
-    padding: 20px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    color: #757575;
-  }
-
-  .InfoBoxFoot {
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: flex-end;
-    margin-top: auto;
-    margin-bottom: 10px;
-  }
-
-  .PublishDate {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    color: #757575;
-    margin-left: 20px;
-    margin-right: auto;
-  }
-
-  .CommentBox {
-    width: 100%;
-    min-height: 80px;
-    border-bottom: solid 1px #bdbdbd;
-    animation: CommentLoader 0.5s;
-  }
-
-  .UserAvatar {
-    width: 60px;
-    height: 60px;
-    top: 15px;
-    left: 15px;
-    position: relative;
-    border: solid 1px #bdbdbd;
-    border-radius: 8px;
-  }
-
-  .CommentUserName {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    display: inline;
-    position: relative;
-    left: 30px;
-    top: -10px;
-    color: #212121;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .CommentText {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    text-align: justify;
-    line-height: 20px;
-    color: #757575;
-    position: relative;
-    overflow-wrap: break-word; /* Allow text to wrap */
-    white-space: pre-wrap; /* Allow text to wrap */
-    padding: 20px;
-  }
-
-  .CommentTime {
-    float: right;
-    right: 10px;
-    position: relative;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    color: #757575;
-  }
-
-  .CommentDisplayArea {
-    width: 100%;
-    height: 700px;
-    overflow-y: scroll;
-  }
-
-  .ReplyButton {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #7c4dff;
-    color: #ffffff;
-    outline: none;
-    border: none;
-    border-radius: 8px;
-    position: relative;
-    left: 15px;
-    bottom: 10px;
-    padding: 10px;
-    cursor: pointer;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
-
-  .ReplyButton:hover {
-    background-color: #303f9f;
-    color: #c5cae9;
-    transition: background-color 0.5s ease;
+  } catch (error) {
+    notificationStore.addNotification('点赞失败', 'error')
+    console.error('Failed to toggle like:', error)
   }
 }
 
-@media only screen and (max-width: 768px) {
-  @keyframes FadeIn {
-    from {
-      opacity: 0;
-      top: 10px;
+const fetchPost = async () => {
+  try {
+    const response = await axiosInstance.get(`/resources/posts/single/${postUuid}`)
+    post.value = response.data
+    
+    // 只在用户登录时获取点赞状态
+    if (authStore.isLogged) {
+      const statusRes = await axiosInstance.get('/likes/get/like_status', {
+        params: { post_uuid: postUuid }
+      })
+      isLiked.value = statusRes
+    } else {
+      isLiked.value = false
     }
-
-    to {
-      opacity: 1;
-      top: 0px;
-    }
+  } catch (error) {
+    console.error('Failed to fetch post:', error)
   }
+}
 
-  @keyframes CommentLoader {
-    from {
-      opacity: 0;
-      transform: translateY(80%);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0%);
-    }
+const fetchRemarks = async () => {
+  try {
+    const response = await axiosInstance.get(`/remark/get/inpost/${postUuid}/${currentPage.value}`)
+    remarks.value = await Promise.all(response.data.map(async remark => {
+      const replies = await axiosInstance.get(`/remark/get/reply/${remark.remark_uuid}/1`)
+      return {
+        ...remark,
+        replies: replies.data
+      }
+    }))
+  } catch (error) {
+    console.error('Failed to fetch remarks:', error)
   }
+}
 
-  .LikeButton {
-    width: 50px;
-    height: 50px;
-    background-color: #ffffff;
-    color: #ffaab8;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    border: solid 1px #ffaab8;
-    outline: none;
-    border-radius: 10px;
-    margin-left: auto;
-    cursor: pointer;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
+const initLazyLoading = () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target
+        img.src = img.dataset.src
+        observer.unobserve(img)
+      }
+    })
+  }, {
+    rootMargin: '50px',
+    threshold: 0.1
+  })
 
-  .LikeButton:hover {
-    background-color: #ffaab8;
-    color: #ffffff;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
+  document.querySelectorAll('.lazy-image').forEach(img => {
+    observer.observe(img)
+  })
+}
 
-  .LikedButton {
-    width: 50px;
-    height: 50px;
-    background-color: #ffaab8;
-    color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    border: solid 1px #ffaab8;
-    outline: none;
-    border-radius: 10px;
-    margin-left: auto;
-    cursor: pointer;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
+onMounted(() => {
+  Promise.all([fetchPost(), fetchRemarks()]).then(() => {
+    setTimeout(initLazyLoading, 100)
+  })
+})
 
-  .LikedButton:hover {
-    background-color: #ffffff;
-    color: #ffaab8;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
+const replyContent = ref('')
+const currentRemark = ref(null)
+const replyModal = ref(null)
 
-  .CommentButton {
-    width: 100px;
-    height: 50px;
-    background-color: #7c4dff;
-    color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    border: none;
-    outline: none;
-    border-radius: 10px;
-    margin-left: auto;
-    margin-right: 10px;
-    cursor: pointer;
-    transition: background-color 0.5s ease;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
+const openReplyModal = (remark) => {
+  currentRemark.value = remark
+  document.getElementById('reply_modal').showModal()
+}
 
-  .CommentButton:hover {
-    background-color: #303f9f;
-    color: #c5cae9;
-    transition: background-color 0.5s ease;
-  }
+const closeReplyModal = () => {
+  document.getElementById('reply_modal').close()
+  replyContent.value = ''
+  currentRemark.value = null
+}
 
-  .RemarkContainer {
-    width: 100%;
-    height: auto;
-    /* min-height: 90vh; */
-    display: flex;
-    justify-content: center;
-    animation: FadeIn 0.5s;
+const submitReply = async () => {
+  if (!replyContent.value.trim()) return
+  
+  try {
+    await axiosInstance.post(`/remarks/reply/${currentRemark.value.uuid}`, {
+      content: replyContent.value
+    })
+    closeReplyModal()
+    fetchRemarks()
+  } catch (error) {
+    console.error('Failed to submit reply:', error)
   }
+}
 
-  .RemarkBox {
-    width: 100%;
-    height: auto;
-    /* min-height: 90vh; */
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    margin: 5px;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    transition: 1s ease-in-out;
-    background-color: #ffffff;
-  }
+const openImageInNewWindow = (imageUrl) => {
+  window.open(imageUrl, '_blank')
+}
+</script>
 
-  .ImageDisplayArea {
-    width: 100%;
-    height: auto;
-    /* min-height: 90vh; */
-    /* background-color: #3F51B5; */
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    cursor: pointer;
-    position: relative;
-    bottom: 0;
-  }
+<style scoped>
+.lazy-image {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
 
-  .DisplayedImage {
-    width: 100%;
-    height: auto;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    cursor: pointer;
-  }
+.lazy-image[src] {
+  opacity: 1;
+}
 
-  .RemarksArea {
-    margin-bottom: 15px;
-    width: 100%;
-    height: auto;
-    /* min-height: 90vh; */
-    background-color: #ffffff;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
 
-  .InfoBox {
-    width: 100%;
-    height: auto;
-    min-height: 200px;
-    border-bottom: solid 1px #bdbdbd;
-    display: flex;
-    flex-direction: column;
-  }
+.list-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
 
-  .InfoTitlte {
-    text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 20px;
-    line-height: 40px;
-  }
+.reply-enter-active,
+.reply-leave-active {
+  transition: all 0.3s ease-in-out;
+}
 
-  .InfoDescription {
-    line-height: 20px;
-    padding: 20px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    color: #757575;
-  }
+.reply-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
 
-  .InfoBoxFoot {
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: flex-end;
-    margin-top: auto;
-    margin-bottom: 10px;
-  }
-
-  .PublishDate {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    color: #757575;
-    margin-left: 20px;
-    margin-right: auto;
-  }
-
-  .CommentBox {
-    width: 100%;
-    min-height: 80px;
-    border-bottom: solid 1px #bdbdbd;
-    animation: CommentLoader 0.5s;
-  }
-
-  .UserAvatar {
-    width: 60px;
-    height: 60px;
-    top: 15px;
-    left: 15px;
-    position: relative;
-    border: solid 1px #bdbdbd;
-    border-radius: 8px;
-  }
-
-  .CommentUserName {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 18px;
-    display: inline;
-    position: relative;
-    left: 30px;
-    top: -10px;
-    color: #212121;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .CommentText {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    text-align: justify;
-    line-height: 20px;
-    color: #757575;
-    position: relative;
-    white-space: pre-wrap; /* Allow text to wrap */
-    overflow-wrap: break-word; /* Break long words */
-    padding: 20px;
-  }
-
-  .CommentTime {
-    float: right;
-    right: 10px;
-    position: relative;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 16px;
-    color: #757575;
-  }
-
-  .CommentDisplayArea {
-    width: 100%;
-    height: auto;
-    overflow-y: scroll;
-  }
-
-  .ReplyButton {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #7c4dff;
-    color: #ffffff;
-    outline: none;
-    border: none;
-    border-radius: 8px;
-    position: relative;
-    left: 15px;
-    bottom: 10px;
-    padding: 10px;
-    cursor: pointer;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  }
-
-  .ReplyButton:hover {
-    background-color: #303f9f;
-    color: #c5cae9;
-    transition: background-color 0.5s ease;
-  }
+.reply-move {
+  transition: transform 0.3s ease;
 }
 </style>

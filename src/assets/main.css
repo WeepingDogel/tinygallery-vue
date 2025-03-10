@@ -17,5 +17,4 @@ which creates a smooth animation when navigating to different sections of the pa
 /* Set scrolling behavior of body to smooth */
 body {
     scroll-behavior: smooth;
-    background-color: #dbdbdb;
 }

@@ -1,15 +1,11 @@
 <!-- @/views/RemarkView.vue -->
 
-<script lang="ts">
-import Remark from "@/components/Remark/Remark.vue";
-
-export default {
-  components: {
-    Remark,
-  },
-};
+<script setup lang="ts">
+import Remark from '@/components/Remark/Remark.vue'
 </script>
 
 <template>
-  <Remark />
+  <div class="container mx-auto px-4 py-20">
+    <Remark />
+  </div>
 </template>

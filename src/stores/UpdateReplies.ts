@@ -28,6 +28,10 @@ export const UpdateReplies = defineStore(
         // The update property of the state is incremented by status
         this.update = this.update + status;
       },
+      // The ResetUpdate action resets the update property to 1
+      ResetUpdate() {
+        this.update = 1;
+      },
     },
   }
 );

@@ -70,8 +70,14 @@ const router = createRouter({
       component: () => import("../views/ProfileView.vue"),
     },
     {
+      // Define the edit profile page route
+      path: "/profile/edit",
+      name: "EditProfile",
+      component: () => import("../views/EditProfileView.vue"),
+    },
+    {
       // Define the remark page route with a dynamic parameter
-      path: "/remark/:post_uuid",
+      path: "/remark/:uuid",
       name: "Remark",
       component: () => import("../views/RemarkView.vue"),
     },
@@ -80,6 +86,11 @@ const router = createRouter({
       name: "Administration",
       component: () => import("../views/AdminView.vue"),
     },
+    {
+      path: "/register",
+      name: "register",
+      component: () => import("../views/RegisterView.vue"),
+    }
   ],
 });
 

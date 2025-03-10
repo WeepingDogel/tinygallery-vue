@@ -1,29 +1,23 @@
-<script lang="ts">
-export default {};
-</script>
-
 <template>
-  <div class="NavBarOfAdmin">
-    <h1 class="NavBarTitle">TinyGallery 管理</h1>
+  <div class="navbar bg-base-100">
+    <div class="flex-1">
+      <a class="btn btn-ghost normal-case text-xl">Admin Panel</a>
+    </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1">
+        <li><router-link to="/admin/overview">概览</router-link></li>
+        <li><router-link to="/admin/user-management">用户管理</router-link></li>
+        <li><router-link to="/admin/posts-management">帖子管理</router-link></li>
+        <li><router-link to="/admin/comments-management">评论管理</router-link></li>
+      </ul>
+    </div>
   </div>
 </template>
 
-<style scoped>
-.NavBarOfAdmin {
-  width: 100%;
-  height: 70px;
-  background-color: #3f51b5;
-  border-bottom: solid 1px #bdbdbd;
-  display: flex;
-}
+<script setup>
+// No script needed for this simple component
+</script>
 
-.NavBarTitle {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 26px;
-  font-weight: lighter;
-  letter-spacing: 2px;
-  color: #ffffff;
-  line-height: 70px;
-  margin-left: 20px;
-}
+<style scoped>
+/* Add any additional styles here */
 </style>

@@ -1,133 +1,60 @@
-<script lang="ts">
-import axios from "axios";
-import * as echarts from "echarts";
-
-export default {
-  data() {
-    return {
-      user_num: String,
-      posts_num: String,
-      comments_num: String,
-    };
-  },
-  methods: {
-    GetTheData() {
-      // You may need to update these endpoints if they've changed
-      axios.get("/userdata/get/user_num").then((response) => {
-        this.user_num = response.data.toLocaleString();
-      });
-      axios.get("/userdata/get/posts_num").then((response) => {
-        this.posts_num = response.data.toLocaleString();
-      });
-      axios.get("/userdata/get/comments_num").then((response) => {
-        this.comments_num = response.data.toLocaleString();
-      });
-    },
-    async renderChart() {
-      const Token = localStorage.getItem("Token");
-      const chartContainer = this.$refs.line_chart_tendency;
-      const chart = echarts.init(chartContainer as any);
-      try {
-        const response = await axios.get("/admin/user_tendency_addition", {
-          headers: { Authorization: "Bearer " + Token },
-        });
-        chart.setOption(JSON.parse(response.data));
-      } catch (error) {
-        console.error("Error fetching user tendency data:", error);
-      }
-    },
-    async renderToplistChart() {
-      const Token = localStorage.getItem("Token");
-      const chartContainer = this.$refs.bar_chart_tendency;
-      const chart = echarts.init(chartContainer as any);
-      try {
-        const response = await axios.get("/admin/posts_toplist", {
-          headers: { Authorization: "Bearer " + Token },
-        });
-        chart.setOption(JSON.parse(response.data));
-      } catch (error) {
-        console.error("Error fetching posts toplist data:", error);
-      }
-    },
-  },
-  mounted() {
-    this.GetTheData();
-    this.renderChart();
-    this.renderToplistChart();
-  },
-};
-</script>
-
 <template>
-  <div class="OverviewPanel">
-    <h1 class="OverviewTitle">当前数据统计</h1>
-    <p class="OverviewPara">
-      用户数量: <span class="InfoNumber">{{ user_num }}</span>
-    </p>
-    <p class="OverviewPara">
-      帖子数量: <span class="InfoNumber">{{ posts_num }}</span>
-    </p>
-    <p class="OverviewPara">
-      评论数量: <span class="InfoNumber">{{ comments_num }}</span>
-    </p>
-    <div
-      ref="line_chart_tendency"
-      style="width: 100%; height: 600px; margin-top: 20px"
-    ></div>
-    <div
-      ref="bar_chart_tendency"
-      style="width: 100%; height: 600px; margin-top: 20px"
-    ></div>
+  <div class="container mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-4">概览</h2>
+    <div class="p-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="stat bg-base-100 shadow rounded-lg">
+          <div class="stat-title">总用户数</div>
+          <div class="stat-value">{{ stats.userCount }}</div>
+        </div>
+        <div class="stat bg-base-100 shadow rounded-lg">
+          <div class="stat-title">总帖子数</div>
+          <div class="stat-value">{{ stats.postCount }}</div>
+        </div>
+        <div class="stat bg-base-100 shadow rounded-lg">
+          <div class="stat-title">总评论数</div>
+          <div class="stat-value">{{ stats.commentCount }}</div>
+        </div>
+        <div class="stat bg-base-100 shadow rounded-lg">
+          <div class="stat-title">今日新增用户</div>
+          <div class="stat-value">{{ stats.newUserToday }}</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
+<script setup>
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useAuthenticationStore } from '@/stores/Authentication'
+
+const authStore = useAuthenticationStore()
+const stats = ref({
+  userCount: 0,
+  postCount: 0,
+  commentCount: 0,
+  newUserToday: 0
+})
+
+const fetchStats = async () => {
+  try {
+    const response = await axios.get('/admin/stats', {
+      headers: {
+        Authorization: `Bearer ${authStore.token}`
+      }
+    })
+    stats.value = response.data
+  } catch (error) {
+    console.error('Failed to fetch stats:', error)
+  }
+}
+
+onMounted(() => {
+  fetchStats()
+})
+</script>
+
 <style scoped>
-@keyframes FadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-.OverviewPanel {
-  width: 90%;
-  height: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 25px;
-  animation: FadeIn 1s;
-  overflow-y: scroll;
-  scrollbar-width: none;
-}
-
-.OverviewTitle {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: lighter;
-  font-size: 25px;
-  line-height: 60px;
-  animation: FadeIn 1s;
-}
-
-.OverviewPara {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: lighter;
-  font-size: 18px;
-  padding: 10px;
-  text-align: justify;
-  line-height: 10px;
-  animation: FadeIn 1s;
-}
-
-.InfoNumber {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bolder;
-  font-size: 28px;
-  padding: 10px;
-  text-align: justify;
-  line-height: 20px;
-  color: #7c4dff;
-}
+/* Add any additional styles here */
 </style>

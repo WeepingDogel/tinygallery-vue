@@ -20,5 +20,8 @@ export const UpdateRemarks = defineStore("UpdateRemarks", {
       // Define an action to update the status
       this.update = this.update + status; // Update the status by adding the specified value to it
     },
+    ResetUpdate() {
+      this.update = 1;
+    },
   },
 });
