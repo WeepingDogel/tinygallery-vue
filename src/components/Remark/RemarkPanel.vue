@@ -31,6 +31,7 @@ const submitRemark = async () => {
       content: content.value
     })
     content.value = ''
+    // 立即触发一次更新
     emit('remarkAdded')
   } catch (error) {
     console.error('Failed to submit remark:', error)

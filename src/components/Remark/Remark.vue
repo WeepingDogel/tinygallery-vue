@@ -127,7 +127,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import axiosInstance from '@/utilities/axios-instance'
 import RemarkPanel from './RemarkPanel.vue'
@@ -136,6 +136,9 @@ import { useAuthenticationStore } from '@/stores/Authentication'
 import { useNotificationStore } from '@/stores/NotificationStore'
 import AnimatedNumber from '@/components/Common/AnimatedNumber.vue'
 import StarPopAnimation from '@/components/Common/StarPopAnimation.vue'
+
+const POLL_INTERVAL = 3000 // 3秒轮询间隔
+let pollTimer = null
 
 const route = useRoute()
 const postUuid = route.params.uuid
@@ -270,10 +273,29 @@ const initLazyLoading = () => {
   })
 }
 
+const refreshData = async () => {
+  await Promise.all([
+    fetchPost(),
+    fetchRemarks()
+  ])
+}
+
+const startPolling = () => {
+  pollTimer = setInterval(refreshData, POLL_INTERVAL)
+}
+
 onMounted(() => {
   Promise.all([fetchPost(), fetchRemarks()]).then(() => {
     setTimeout(initLazyLoading, 100)
+    startPolling() // 启动轮询
   })
+})
+
+onUnmounted(() => {
+  if (pollTimer) {
+    clearInterval(pollTimer)
+    pollTimer = null
+  }
 })
 
 const replyContent = ref('')
